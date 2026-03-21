@@ -11,12 +11,19 @@
 
 .nav-dropdown {
     position: relative;
+    padding-bottom: 0.8rem;
+    margin-bottom: -0.8rem;
 }
 
 .nav-link-dropdown {
     display: inline-flex;
     align-items: center;
     gap: 4px;
+}
+
+/* Remove the underline effect from dropdown trigger */
+.nav-link-dropdown::after {
+    display: none !important;
 }
 
 .nav-link-dropdown svg {
@@ -29,9 +36,9 @@
 
 .dropdown-menu {
     position: absolute;
-    top: 100%;
+    top: calc(100% + 0px);
     left: 50%;
-    transform: translateX(-50%) translateY(8px);
+    transform: translateX(-50%) translateY(0);
     background: rgba(14, 46, 36, 0.96);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
@@ -43,7 +50,7 @@
     visibility: hidden;
     transition: all 0.3s var(--ease-out-expo);
     box-shadow: 0 12px 40px rgba(0,0,0,0.2);
-    z-index: 100;
+    z-index: 1001;
 }
 
 .nav-dropdown:hover .dropdown-menu {
