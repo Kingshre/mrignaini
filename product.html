@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Mrignaini — Handblock printed ethnic wear product details.">
+    <title>Product — Mrignaini</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="shop.css">
+</head>
+<body>
+
+    <!-- ========== NAVIGATION ========== -->
+    <nav id="navbar" class="navbar scrolled">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">
+                <span class="brand-name">mrignaini</span>
+            </a>
+            <div class="nav-links" id="navLinks">
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link nav-link-dropdown">Shop <svg viewBox="0 0 12 8" width="10" height="8"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
+                    <div class="dropdown-menu">
+                        <a href="category.html?cat=sets" class="dropdown-item">Sets</a>
+                        <a href="category.html?cat=tops" class="dropdown-item">Tops</a>
+                        <a href="category.html?cat=kurtis" class="dropdown-item">Kurtis</a>
+                    </div>
+                </div>
+                <a href="index.html#story" class="nav-link">Our Story</a>
+                <a href="index.html#craft" class="nav-link">The Craft</a>
+                <a href="index.html#gallery" class="nav-link">Gallery</a>
+                <a href="index.html#contact" class="nav-link">Contact</a>
+            </div>
+            <div class="nav-right">
+                <a href="cart.html" class="nav-cart" aria-label="Shopping cart">
+                    <svg viewBox="0 0 24 24" width="22" height="22"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="1.5"/><path d="M16 10a4 4 0 01-8 0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span class="cart-badge">0</span>
+                </a>
+                <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ========== PRODUCT DETAIL ========== -->
+    <section class="product-detail">
+        <div class="section-container">
+            <nav class="breadcrumb" aria-label="Breadcrumb">
+                <a href="index.html">Home</a>
+                <span class="breadcrumb-sep">›</span>
+                <a href="#" id="breadcrumbCat">Shop</a>
+                <span class="breadcrumb-sep">›</span>
+                <span class="breadcrumb-current" id="breadcrumbProduct">Product</span>
+            </nav>
+
+            <div class="product-detail-grid" id="productDetailGrid">
+                <!-- Left: Image -->
+                <div class="product-image-section">
+                    <div class="product-image-main" id="productImageMain">
+                        <img src="" alt="" id="productImage">
+                        <div class="product-image-zoom-hint">Hover to zoom</div>
+                    </div>
+                </div>
+
+                <!-- Right: Info -->
+                <div class="product-info-section" id="productInfoSection">
+                    <span class="product-tag" id="productTag"></span>
+                    <h1 class="product-name" id="productName"></h1>
+                    <div class="product-pricing">
+                        <span class="product-price" id="productPrice"></span>
+                        <span class="product-original-price" id="productOriginalPrice"></span>
+                        <span class="product-discount" id="productDiscount"></span>
+                    </div>
+                    <p class="product-description" id="productDescription"></p>
+
+                    <!-- Size Selector -->
+                    <div class="size-section">
+                        <div class="size-header">
+                            <span class="size-label">Select Size</span>
+                            <button class="size-guide-btn" id="sizeGuideBtn">
+                                <svg viewBox="0 0 24 24" width="16" height="16"><path d="M21 10H7M21 6H3M21 14H3M21 18H7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                                Size Guide
+                            </button>
+                        </div>
+                        <div class="size-options" id="sizeOptions">
+                            <!-- Size pills injected via JS -->
+                        </div>
+                        <p class="size-error hidden" id="sizeError">Please select a size</p>
+                    </div>
+
+                    <!-- Quantity -->
+                    <div class="qty-section">
+                        <span class="qty-label">Quantity</span>
+                        <div class="qty-control">
+                            <button class="qty-btn" id="qtyMinus" aria-label="Decrease quantity">−</button>
+                            <span class="qty-value" id="qtyValue">1</span>
+                            <button class="qty-btn" id="qtyPlus" aria-label="Increase quantity">+</button>
+                        </div>
+                    </div>
+
+                    <!-- Add to Cart -->
+                    <button class="btn btn-primary btn-full add-to-cart-btn" id="addToCartBtn">
+                        <svg viewBox="0 0 24 24" width="20" height="20"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="1.5"/><path d="M16 10a4 4 0 01-8 0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <span>Add to Cart</span>
+                    </button>
+
+                    <!-- Details -->
+                    <div class="product-details-accordion">
+                        <div class="accordion-item open">
+                            <button class="accordion-header">
+                                <span>Product Details</span>
+                                <svg viewBox="0 0 24 24" width="18" height="18"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                            </button>
+                            <div class="accordion-content" id="productDetails">
+                                <!-- Details injected via JS -->
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <button class="accordion-header">
+                                <span>Shipping & Returns</span>
+                                <svg viewBox="0 0 24 24" width="18" height="18"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                            </button>
+                            <div class="accordion-content">
+                                <ul>
+                                    <li>Free shipping on orders above ₹1,999</li>
+                                    <li>Standard delivery: 5-7 business days</li>
+                                    <li>Express delivery: 2-3 business days (₹149)</li>
+                                    <li>Easy 7-day returns for unused items</li>
+                                    <li>Exchange available within 15 days</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Related Products -->
+            <div class="related-section">
+                <h2 class="section-title">You May Also Like</h2>
+                <div class="related-grid" id="relatedGrid">
+                    <!-- Injected via JS -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== SIZE GUIDE MODAL ========== -->
+    <div class="modal-overlay" id="sizeGuideModal">
+        <div class="modal">
+            <button class="modal-close" id="modalClose" aria-label="Close">
+                <svg viewBox="0 0 24 24" width="24" height="24"><path d="M18 6L6 18M6 6l12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </button>
+            <h2 class="modal-title">Size Guide</h2>
+            <p class="modal-subtitle">All measurements are in inches. We recommend measuring a garment that fits you well and comparing.</p>
+            <div class="size-guide-table-wrap">
+                <table class="size-guide-table" id="sizeGuideTable">
+                    <!-- Table injected via JS -->
+                </table>
+            </div>
+            <div class="modal-tip">
+                <strong>💡 Tip:</strong> If you're between sizes, we recommend going one size up for a relaxed fit.
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-brand">mrignaini</div>
+            <p class="footer-tagline">Handblock Printed Ethnic Wear — Made with love in Jaipur</p>
+            <div class="footer-divider"></div>
+            <div class="footer-links">
+                <a href="category.html?cat=sets">Sets</a>
+                <a href="category.html?cat=tops">Tops</a>
+                <a href="category.html?cat=kurtis">Kurtis</a>
+                <a href="index.html#story">Our Story</a>
+                <a href="index.html#craft">The Craft</a>
+                <a href="index.html#contact">Contact</a>
+            </div>
+            <p class="footer-copy">&copy; 2026 Mrignaini. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="products.js"></script>
+    <script src="cart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+            const product = getProductById(id);
+
+            if (!product) {
+                window.location.href = 'category.html?cat=sets';
+                return;
+            }
+
+            const categoryInfo = CATEGORIES[product.category];
+
+            // Update page
+            document.title = `${product.name} — Mrignaini`;
+            document.getElementById('productImage').src = product.image;
+            document.getElementById('productImage').alt = product.name;
+            document.getElementById('productTag').textContent = product.tag;
+            document.getElementById('productName').textContent = product.name;
+            document.getElementById('productPrice').textContent = formatPrice(product.price);
+            document.getElementById('productOriginalPrice').textContent = formatPrice(product.originalPrice);
+            document.getElementById('productDiscount').textContent = `${Math.round((1 - product.price / product.originalPrice) * 100)}% off`;
+            document.getElementById('productDescription').textContent = product.description;
+
+            // Breadcrumb
+            const breadcrumbCat = document.getElementById('breadcrumbCat');
+            breadcrumbCat.textContent = categoryInfo.name;
+            breadcrumbCat.href = `category.html?cat=${product.category}`;
+            document.getElementById('breadcrumbProduct').textContent = product.name;
+
+            // Sizes
+            const sizeOptions = document.getElementById('sizeOptions');
+            sizeOptions.innerHTML = product.sizes.map(s => `
+                <button class="size-pill" data-size="${s}">${s}</button>
+            `).join('');
+
+            let selectedSize = null;
+            sizeOptions.querySelectorAll('.size-pill').forEach(pill => {
+                pill.addEventListener('click', () => {
+                    sizeOptions.querySelectorAll('.size-pill').forEach(p => p.classList.remove('selected'));
+                    pill.classList.add('selected');
+                    selectedSize = pill.dataset.size;
+                    document.getElementById('sizeError').classList.add('hidden');
+                });
+            });
+
+            // Quantity
+            let qty = 1;
+            const qtyValue = document.getElementById('qtyValue');
+            document.getElementById('qtyMinus').addEventListener('click', () => {
+                if (qty > 1) { qty--; qtyValue.textContent = qty; }
+            });
+            document.getElementById('qtyPlus').addEventListener('click', () => {
+                if (qty < 10) { qty++; qtyValue.textContent = qty; }
+            });
+
+            // Add to cart
+            document.getElementById('addToCartBtn').addEventListener('click', () => {
+                if (!selectedSize) {
+                    document.getElementById('sizeError').classList.remove('hidden');
+                    return;
+                }
+                Cart.add(product.id, selectedSize, qty);
+                const btn = document.getElementById('addToCartBtn');
+                btn.innerHTML = '<span>✓ Added to Cart!</span>';
+                btn.style.background = 'linear-gradient(135deg, var(--clr-emerald), var(--clr-sage))';
+                setTimeout(() => {
+                    btn.innerHTML = `<svg viewBox="0 0 24 24" width="20" height="20"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="1.5"/><path d="M16 10a4 4 0 01-8 0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Add to Cart</span>`;
+                    btn.style.background = '';
+                }, 2000);
+            });
+
+            // Product details
+            document.getElementById('productDetails').innerHTML = '<ul>' + product.details.map(d => `<li>${d}</li>`).join('') + '</ul>';
+
+            // Accordion
+            document.querySelectorAll('.accordion-header').forEach(header => {
+                header.addEventListener('click', () => {
+                    const item = header.parentElement;
+                    item.classList.toggle('open');
+                });
+            });
+
+            // Image zoom
+            const imgMain = document.getElementById('productImageMain');
+            const img = document.getElementById('productImage');
+            imgMain.addEventListener('mousemove', (e) => {
+                const rect = imgMain.getBoundingClientRect();
+                const x = ((e.clientX - rect.left) / rect.width) * 100;
+                const y = ((e.clientY - rect.top) / rect.height) * 100;
+                img.style.transformOrigin = `${x}% ${y}%`;
+                img.style.transform = 'scale(1.8)';
+            });
+            imgMain.addEventListener('mouseleave', () => {
+                img.style.transform = 'scale(1)';
+            });
+
+            // Size guide modal
+            const modal = document.getElementById('sizeGuideModal');
+            document.getElementById('sizeGuideBtn').addEventListener('click', () => modal.classList.add('active'));
+            document.getElementById('modalClose').addEventListener('click', () => modal.classList.remove('active'));
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) modal.classList.remove('active');
+            });
+
+            // Size guide table
+            const table = document.getElementById('sizeGuideTable');
+            table.innerHTML = `
+                <thead><tr>${SIZE_GUIDE.headers.map(h => `<th>${h}</th>`).join('')}</tr></thead>
+                <tbody>${SIZE_GUIDE.rows.map(row => `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`).join('')}</tbody>
+            `;
+
+            // Related products
+            const related = PRODUCTS.filter(p => p.category === product.category && p.id !== product.id);
+            const relatedGrid = document.getElementById('relatedGrid');
+            relatedGrid.innerHTML = related.map(p => `
+                <a href="product.html?id=${p.id}" class="product-card">
+                    <div class="product-card-image">
+                        <img src="${p.image}" alt="${p.name}" loading="lazy">
+                        <span class="product-card-tag">${p.tag}</span>
+                    </div>
+                    <div class="product-card-info">
+                        <h3 class="product-card-name">${p.name}</h3>
+                        <div class="product-card-price">
+                            <span class="price-current">${formatPrice(p.price)}</span>
+                            <span class="price-original">${formatPrice(p.originalPrice)}</span>
+                        </div>
+                    </div>
+                </a>
+            `).join('');
+
+            // Mobile nav
+            const navToggle = document.getElementById('navToggle');
+            const navLinks = document.getElementById('navLinks');
+            navToggle.addEventListener('click', () => {
+                navToggle.classList.toggle('active');
+                navLinks.classList.toggle('open');
+            });
+        });
+    </script>
+</body>
+</html>

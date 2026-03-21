@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Mrignaini — Your shopping cart.">
+    <title>Cart — Mrignaini</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="shop.css">
+</head>
+<body>
+
+    <!-- ========== NAVIGATION ========== -->
+    <nav id="navbar" class="navbar scrolled">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">
+                <span class="brand-name">mrignaini</span>
+            </a>
+            <div class="nav-links" id="navLinks">
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link nav-link-dropdown">Shop <svg viewBox="0 0 12 8" width="10" height="8"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
+                    <div class="dropdown-menu">
+                        <a href="category.html?cat=sets" class="dropdown-item">Sets</a>
+                        <a href="category.html?cat=tops" class="dropdown-item">Tops</a>
+                        <a href="category.html?cat=kurtis" class="dropdown-item">Kurtis</a>
+                    </div>
+                </div>
+                <a href="index.html#story" class="nav-link">Our Story</a>
+                <a href="index.html#craft" class="nav-link">The Craft</a>
+                <a href="index.html#gallery" class="nav-link">Gallery</a>
+                <a href="index.html#contact" class="nav-link">Contact</a>
+            </div>
+            <div class="nav-right">
+                <a href="cart.html" class="nav-cart active-link" aria-label="Shopping cart">
+                    <svg viewBox="0 0 24 24" width="22" height="22"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="1.5"/><path d="M16 10a4 4 0 01-8 0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span class="cart-badge">0</span>
+                </a>
+                <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ========== CART PAGE ========== -->
+    <section class="cart-page">
+        <div class="section-container">
+            <nav class="breadcrumb" aria-label="Breadcrumb">
+                <a href="index.html">Home</a>
+                <span class="breadcrumb-sep">›</span>
+                <span class="breadcrumb-current">Shopping Cart</span>
+            </nav>
+
+            <h1 class="page-title">Shopping Cart</h1>
+
+            <!-- Empty cart state -->
+            <div class="cart-empty" id="cartEmpty" style="display:none;">
+                <div class="cart-empty-icon">
+                    <svg viewBox="0 0 80 80" width="80" height="80"><path d="M20 10L14 20v40a6 6 0 006 6h40a6 6 0 006-6V20l-6-10z" fill="none" stroke="var(--clr-gold)" stroke-width="2"/><line x1="14" y1="20" x2="66" y2="20" stroke="var(--clr-gold)" stroke-width="2"/><path d="M50 30a10 10 0 01-20 0" fill="none" stroke="var(--clr-gold)" stroke-width="2" stroke-linecap="round"/></svg>
+                </div>
+                <h2>Your cart is empty</h2>
+                <p>Looks like you haven't added anything yet. Explore our collections and find something you love.</p>
+                <a href="category.html?cat=sets" class="btn btn-primary">Start Shopping</a>
+            </div>
+
+            <!-- Cart with items -->
+            <div class="cart-content" id="cartContent" style="display:none;">
+                <div class="cart-grid">
+                    <div class="cart-items" id="cartItems">
+                        <!-- Cart items injected via JS -->
+                    </div>
+                    <div class="cart-summary">
+                        <div class="summary-card">
+                            <h3 class="summary-title">Order Summary</h3>
+                            <div class="summary-row">
+                                <span>Subtotal</span>
+                                <span id="summarySubtotal">₹0</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>You Save</span>
+                                <span class="summary-savings" id="summarySavings">₹0</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Shipping</span>
+                                <span id="summaryShipping">Free</span>
+                            </div>
+                            <div class="summary-divider"></div>
+                            <div class="summary-row summary-total">
+                                <span>Total</span>
+                                <span id="summaryTotal">₹0</span>
+                            </div>
+                            <a href="checkout.html" class="btn btn-primary btn-full" id="checkoutBtn">
+                                <span>Proceed to Checkout</span>
+                                <svg viewBox="0 0 24 24" width="18" height="18"><path d="M5 12h14M12 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </a>
+                            <a href="category.html?cat=sets" class="continue-shopping">← Continue Shopping</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-brand">mrignaini</div>
+            <p class="footer-tagline">Handblock Printed Ethnic Wear — Made with love in Jaipur</p>
+            <div class="footer-divider"></div>
+            <div class="footer-links">
+                <a href="category.html?cat=sets">Sets</a>
+                <a href="category.html?cat=tops">Tops</a>
+                <a href="category.html?cat=kurtis">Kurtis</a>
+                <a href="index.html#story">Our Story</a>
+                <a href="index.html#contact">Contact</a>
+            </div>
+            <p class="footer-copy">&copy; 2026 Mrignaini. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="products.js"></script>
+    <script src="cart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCart();
+
+            // Mobile nav
+            const navToggle = document.getElementById('navToggle');
+            const navLinks = document.getElementById('navLinks');
+            navToggle.addEventListener('click', () => {
+                navToggle.classList.toggle('active');
+                navLinks.classList.toggle('open');
+            });
+        });
+
+        function renderCart() {
+            const items = Cart.getItems();
+            const cartEmpty = document.getElementById('cartEmpty');
+            const cartContent = document.getElementById('cartContent');
+
+            if (items.length === 0) {
+                cartEmpty.style.display = 'block';
+                cartContent.style.display = 'none';
+                return;
+            }
+
+            cartEmpty.style.display = 'none';
+            cartContent.style.display = 'block';
+
+            const cartItemsEl = document.getElementById('cartItems');
+            cartItemsEl.innerHTML = items.map(item => {
+                const product = getProductById(item.productId);
+                if (!product) return '';
+                return `
+                    <div class="cart-item">
+                        <a href="product.html?id=${product.id}" class="cart-item-image">
+                            <img src="${product.image}" alt="${product.name}">
+                        </a>
+                        <div class="cart-item-details">
+                            <a href="product.html?id=${product.id}" class="cart-item-name">${product.name}</a>
+                            <span class="cart-item-size">Size: ${item.size}</span>
+                            <span class="cart-item-price">${formatPrice(product.price)}</span>
+                            <div class="cart-item-controls">
+                                <div class="qty-control">
+                                    <button class="qty-btn" onclick="changeQty('${product.id}','${item.size}',-1)" aria-label="Decrease">−</button>
+                                    <span class="qty-value">${item.qty}</span>
+                                    <button class="qty-btn" onclick="changeQty('${product.id}','${item.size}',1)" aria-label="Increase">+</button>
+                                </div>
+                                <button class="cart-item-remove" onclick="removeItem('${product.id}','${item.size}')">
+                                    <svg viewBox="0 0 24 24" width="16" height="16"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                    Remove
+                                </button>
+                            </div>
+                        </div>
+                        <div class="cart-item-total">
+                            ${formatPrice(product.price * item.qty)}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Update summary
+            const total = Cart.getTotal();
+            const originalTotal = Cart.getOriginalTotal();
+            const savings = originalTotal - total;
+            document.getElementById('summarySubtotal').textContent = formatPrice(total);
+            document.getElementById('summarySavings').textContent = `-${formatPrice(savings)}`;
+            document.getElementById('summaryShipping').textContent = total >= 1999 ? 'Free' : formatPrice(149);
+            const shippingCost = total >= 1999 ? 0 : 149;
+            document.getElementById('summaryTotal').textContent = formatPrice(total + shippingCost);
+        }
+
+        function changeQty(productId, size, delta) {
+            const items = Cart.getItems();
+            const item = items.find(i => i.productId === productId && i.size === size);
+            if (item) {
+                const newQty = item.qty + delta;
+                if (newQty <= 0) {
+                    Cart.remove(productId, size);
+                } else {
+                    Cart.updateQty(productId, size, Math.min(newQty, 10));
+                }
+                renderCart();
+            }
+        }
+
+        function removeItem(productId, size) {
+            Cart.remove(productId, size);
+            renderCart();
+        }
+    </script>
+</body>
+</html>

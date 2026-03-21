@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Mrignaini — Handblock printed Jaipur art ethnic wear. Discover luxurious sarees, dupattas, and kurtas crafted with centuries-old block printing traditions.">
+    <title>Mrignaini — Handblock Printed Ethnic Wear</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- ========== PRELOADER ========== -->
+    <div id="preloader">
+        <div class="preloader-inner">
+            <svg class="preloader-logo" viewBox="0 0 100 100" width="80" height="80">
+                <path class="preloader-spiral" d="M50 85 C50 85, 25 70, 30 50 C35 30, 50 25, 55 35 C60 45, 50 55, 45 50 C40 45, 45 38, 50 38" fill="none" stroke="#C8A96E" stroke-width="2" stroke-linecap="round"/>
+                <circle cx="52" cy="28" r="2" fill="#C8A96E" opacity="0.6"/>
+                <circle cx="58" cy="25" r="1.5" fill="#C8A96E" opacity="0.5"/>
+                <circle cx="46" cy="24" r="1.5" fill="#C8A96E" opacity="0.5"/>
+                <circle cx="55" cy="21" r="1" fill="#C8A96E" opacity="0.4"/>
+                <circle cx="48" cy="20" r="1" fill="#C8A96E" opacity="0.4"/>
+            </svg>
+            <div class="preloader-text">mrignaini</div>
+            <div class="preloader-bar"><div class="preloader-bar-fill"></div></div>
+        </div>
+    </div>
+
+    <!-- ========== NAVIGATION ========== -->
+    <nav id="navbar" class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">
+                <span class="brand-name">mrignaini</span>
+            </a>
+            <div class="nav-links" id="navLinks">
+                <div class="nav-dropdown">
+                    <a href="#collections" class="nav-link nav-link-dropdown">Shop <svg viewBox="0 0 12 8" width="10" height="8"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
+                    <div class="dropdown-menu">
+                        <a href="category.html?cat=sets" class="dropdown-item">Sets</a>
+                        <a href="category.html?cat=tops" class="dropdown-item">Tops</a>
+                        <a href="category.html?cat=kurtis" class="dropdown-item">Kurtis</a>
+                    </div>
+                </div>
+                <a href="#story" class="nav-link">Our Story</a>
+                <a href="#craft" class="nav-link">The Craft</a>
+                <a href="#gallery" class="nav-link">Gallery</a>
+                <a href="#contact" class="nav-link">Contact</a>
+            </div>
+            <div class="nav-right">
+                <a href="cart.html" class="nav-cart" aria-label="Shopping cart">
+                    <svg viewBox="0 0 24 24" width="22" height="22"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="1.5"/><path d="M16 10a4 4 0 01-8 0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span class="cart-badge">0</span>
+                </a>
+                <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ========== HERO SECTION ========== -->
+    <section id="hero" class="hero">
+        <div class="hero-video-container">
+            <video id="heroVideo" class="hero-video" autoplay muted loop playsinline>
+                <source src="assets/videos/demo.mp4" type="video/mp4">
+            </video>
+            <div class="hero-overlay"></div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-badge anim-reveal">✦ Handcrafted in Jaipur ✦</div>
+            <h1 class="hero-title">
+                <span class="hero-title-line anim-reveal" data-delay="0.2">mrignaini</span>
+            </h1>
+            <p class="hero-subtitle anim-reveal" data-delay="0.4">Where ancient Jaipur block printing meets modern ethnic elegance</p>
+            <div class="hero-cta anim-reveal" data-delay="0.6">
+                <a href="#collections" class="btn btn-primary">Discover Collections</a>
+                <a href="#craft" class="btn btn-outline">Watch the Craft</a>
+            </div>
+            <div class="hero-scroll-indicator anim-reveal" data-delay="0.8">
+                <div class="scroll-line"></div>
+                <span>Scroll to explore</span>
+            </div>
+        </div>
+        <!-- Decorative petals -->
+        <div class="floating-petal petal-1">❀</div>
+        <div class="floating-petal petal-2">✿</div>
+        <div class="floating-petal petal-3">❁</div>
+        <div class="floating-petal petal-4">❀</div>
+        <div class="floating-petal petal-5">✿</div>
+    </section>
+
+    <!-- ========== MARQUEE DIVIDER ========== -->
+    <div class="marquee-divider">
+        <div class="marquee-track">
+            <span>✦ Handblock Printed ✦ Jaipur Heritage ✦ Artisan Crafted ✦ Sustainable Fashion ✦ Natural Dyes ✦ Timeless Elegance ✦ Handblock Printed ✦ Jaipur Heritage ✦ Artisan Crafted ✦ Sustainable Fashion ✦ Natural Dyes ✦ Timeless Elegance ✦</span>
+        </div>
+    </div>
+
+    <!-- ========== COLLECTIONS SECTION ========== -->
+    <section id="collections" class="collections">
+        <div class="section-container">
+            <div class="section-header anim-reveal">
+                <span class="section-tag">Curated with Love</span>
+                <h2 class="section-title">Our Collections</h2>
+                <div class="section-divider">
+                    <svg viewBox="0 0 200 20" width="200" height="20">
+                        <path d="M0 10 Q25 0 50 10 Q75 20 100 10 Q125 0 150 10 Q175 20 200 10" fill="none" stroke="#C8A96E" stroke-width="1.5"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="collections-grid">
+                <article class="collection-card anim-reveal" data-delay="0.1">
+                    <div class="card-image-wrapper">
+                        <img src="assets/images/collection-saree.png" alt="Emerald Heritage Saree Collection" loading="lazy">
+                        <div class="card-overlay">
+                            <span class="card-cta">View Collection →</span>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <span class="card-tag">New Arrival</span>
+                        <h3 class="card-title">Emerald Heritage</h3>
+                        <p class="card-desc">Sarees adorned with centuries-old floral motifs in deep forest greens and gold</p>
+                    </div>
+                </article>
+                <article class="collection-card anim-reveal" data-delay="0.25">
+                    <div class="card-image-wrapper">
+                        <img src="assets/images/collection-dupatta.png" alt="Rose Garden Dupatta Collection" loading="lazy">
+                        <div class="card-overlay">
+                            <span class="card-cta">View Collection →</span>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <span class="card-tag">Bestseller</span>
+                        <h3 class="card-title">Rose Garden</h3>
+                        <p class="card-desc">Dupattas blooming with traditional Jaipur rose prints on handwoven fabric</p>
+                    </div>
+                </article>
+                <article class="collection-card anim-reveal" data-delay="0.4">
+                    <div class="card-image-wrapper">
+                        <img src="assets/images/collection-kurta.png" alt="Ivory Bloom Kurta Collection" loading="lazy">
+                        <div class="card-overlay">
+                            <span class="card-cta">View Collection →</span>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <span class="card-tag">Limited Edition</span>
+                        <h3 class="card-title">Ivory Bloom</h3>
+                        <p class="card-desc">Elegant kurta sets in natural cotton with delicate botanical block prints</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== STORY SECTION ========== -->
+    <section id="story" class="story">
+        <div class="story-bg-pattern"></div>
+        <div class="section-container">
+            <div class="story-grid">
+                <div class="story-image anim-reveal">
+                    <div class="story-image-frame">
+                        <img src="assets/images/artisan.png" alt="Artisan at work - handblock printing in Jaipur workshop" loading="lazy">
+                        <div class="story-image-accent"></div>
+                    </div>
+                    <div class="story-image-badge">
+                        <span class="badge-number">200+</span>
+                        <span class="badge-label">Years of Heritage</span>
+                    </div>
+                </div>
+                <div class="story-content">
+                    <span class="section-tag anim-reveal">The Mrignaini Story</span>
+                    <h2 class="section-title anim-reveal" data-delay="0.1">Rooted in Tradition,<br>Woven for Today</h2>
+                    <div class="section-divider anim-reveal" data-delay="0.15">
+                        <svg viewBox="0 0 200 20" width="160" height="20">
+                            <path d="M0 10 Q25 0 50 10 Q75 20 100 10 Q125 0 150 10 Q175 20 200 10" fill="none" stroke="#C8A96E" stroke-width="1.5"/>
+                        </svg>
+                    </div>
+                    <p class="story-text anim-reveal" data-delay="0.2">
+                        Born in the vibrant lanes of Jaipur, Mrignaini is a celebration of India's timeless block printing art. Each piece tells a story — carved by master artisans whose families have practised this craft for generations.
+                    </p>
+                    <p class="story-text anim-reveal" data-delay="0.3">
+                        We work hand-in-hand with local craftsmen, using natural dyes sourced from indigo, pomegranate, and marigold to create fabrics that breathe tradition and sustainability.
+                    </p>
+                    <div class="story-stats anim-reveal" data-delay="0.4">
+                        <div class="stat">
+                            <span class="stat-number" data-count="50">0</span><span class="stat-suffix">+</span>
+                            <span class="stat-label">Artisan Families</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number" data-count="100">0</span><span class="stat-suffix">%</span>
+                            <span class="stat-label">Natural Dyes</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number" data-count="12">0</span>
+                            <span class="stat-label">Unique Collections</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== CRAFT / PROCESS SECTION ========== -->
+    <section id="craft" class="craft">
+        <div class="section-container">
+            <div class="section-header anim-reveal">
+                <span class="section-tag">The Art of Creation</span>
+                <h2 class="section-title">How Our Fabrics Come to Life</h2>
+                <div class="section-divider">
+                    <svg viewBox="0 0 200 20" width="200" height="20">
+                        <path d="M0 10 Q25 0 50 10 Q75 20 100 10 Q125 0 150 10 Q175 20 200 10" fill="none" stroke="#C8A96E" stroke-width="1.5"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="process-timeline">
+                <div class="timeline-line"></div>
+                <div class="process-step anim-reveal" data-delay="0.1">
+                    <div class="step-icon">
+                        <svg viewBox="0 0 64 64" width="40" height="40"><path d="M32 8 L40 28 L56 28 L44 40 L48 56 L32 46 L16 56 L20 40 L8 28 L24 28 Z" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                    </div>
+                    <div class="step-number">01</div>
+                    <h3 class="step-title">Design & Carving</h3>
+                    <p class="step-desc">Master artisans hand-carve intricate motifs into teak wood blocks — each block a unique work of art taking days to perfect.</p>
+                </div>
+                <div class="process-step anim-reveal" data-delay="0.2">
+                    <div class="step-icon">
+                        <svg viewBox="0 0 64 64" width="40" height="40"><circle cx="32" cy="32" r="20" fill="none" stroke="currentColor" stroke-width="2"/><path d="M22 32 C22 22, 42 22, 42 32 C42 42, 22 42, 22 32" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                    </div>
+                    <div class="step-number">02</div>
+                    <h3 class="step-title">Natural Dyeing</h3>
+                    <p class="step-desc">Colours are extracted from nature — indigo for blues, pomegranate for yellows, madder root for reds — mixed to our heritage recipes.</p>
+                </div>
+                <div class="process-step anim-reveal" data-delay="0.3">
+                    <div class="step-icon">
+                        <svg viewBox="0 0 64 64" width="40" height="40"><rect x="12" y="20" width="40" height="30" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M20 30 L30 30 M20 38 L36 38 M20 46 L28 46" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                    </div>
+                    <div class="step-number">03</div>
+                    <h3 class="step-title">Block Printing</h3>
+                    <p class="step-desc">Each stamp is pressed by hand with rhythmic precision. The artisan dips, aligns, and presses — turning metres of fabric into living art.</p>
+                </div>
+                <div class="process-step anim-reveal" data-delay="0.4">
+                    <div class="step-icon">
+                        <svg viewBox="0 0 64 64" width="40" height="40"><path d="M16 48 Q32 8 48 48" fill="none" stroke="currentColor" stroke-width="2"/><line x1="16" y1="48" x2="48" y2="48" stroke="currentColor" stroke-width="2"/><circle cx="32" cy="24" r="6" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                    </div>
+                    <div class="step-number">04</div>
+                    <h3 class="step-title">Wash & Finish</h3>
+                    <p class="step-desc">Fabrics are sun-dried, washed, and finished with care — revealing the final vibrant colours that only deepen with time.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== VIDEO SHOWCASE ========== -->
+    <section id="video-showcase" class="video-showcase">
+        <div class="video-showcase-inner">
+            <div class="video-showcase-content anim-reveal">
+                <span class="section-tag">Watch the Magic</span>
+                <h2 class="section-title">Witness the Art<br>of Block Printing</h2>
+                <p class="video-showcase-text">Every stamp, every press, every colour tells a story of dedication passed down through generations.</p>
+            </div>
+            <div class="video-showcase-player anim-reveal" data-delay="0.2">
+                <div class="video-frame">
+                    <video id="showcaseVideo" class="showcase-video" muted loop playsinline poster="assets/images/artisan.png">
+                        <source src="assets/videos/demo.mp4" type="video/mp4">
+                    </video>
+                    <button class="video-play-btn" id="videoPlayBtn" aria-label="Play video">
+                        <svg viewBox="0 0 64 64" width="64" height="64">
+                            <circle cx="32" cy="32" r="30" fill="none" stroke="currentColor" stroke-width="2"/>
+                            <polygon points="26,20 48,32 26,44" fill="currentColor"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== TESTIMONIALS ========== -->
+    <section id="testimonials" class="testimonials">
+        <div class="section-container">
+            <div class="section-header anim-reveal">
+                <span class="section-tag">Words of Love</span>
+                <h2 class="section-title">What Our Patrons Say</h2>
+                <div class="section-divider">
+                    <svg viewBox="0 0 200 20" width="200" height="20">
+                        <path d="M0 10 Q25 0 50 10 Q75 20 100 10 Q125 0 150 10 Q175 20 200 10" fill="none" stroke="#C8A96E" stroke-width="1.5"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="testimonial-carousel" id="testimonialCarousel">
+                <div class="testimonial-card active">
+                    <div class="testimonial-quote">"</div>
+                    <p class="testimonial-text">The saree I received was nothing short of a masterpiece. You can feel the soul of Jaipur woven into every thread. Absolutely stunning craftsmanship.</p>
+                    <div class="testimonial-author">
+                        <span class="author-name">Priya Sharma</span>
+                        <span class="author-location">Mumbai</span>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-quote">"</div>
+                    <p class="testimonial-text">I gifted a Mrignaini dupatta to my mother and she was moved to tears. The natural dyes, the handwork — it reminded her of her grandmother's textiles.</p>
+                    <div class="testimonial-author">
+                        <span class="author-name">Ananya Reddy</span>
+                        <span class="author-location">Hyderabad</span>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-quote">"</div>
+                    <p class="testimonial-text">Mrignaini's kurtas are the perfect blend of comfort and heritage. I wear them to celebrations and always get compliments on the print quality.</p>
+                    <div class="testimonial-author">
+                        <span class="author-name">Kavita Joshi</span>
+                        <span class="author-location">Jaipur</span>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-dots" id="testimonialDots">
+                <button class="dot active" data-index="0" aria-label="Testimonial 1"></button>
+                <button class="dot" data-index="1" aria-label="Testimonial 2"></button>
+                <button class="dot" data-index="2" aria-label="Testimonial 3"></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== GALLERY ========== -->
+    <section id="gallery" class="gallery">
+        <div class="section-container">
+            <div class="section-header anim-reveal">
+                <span class="section-tag">Visual Stories</span>
+                <h2 class="section-title">Gallery</h2>
+                <div class="section-divider">
+                    <svg viewBox="0 0 200 20" width="200" height="20">
+                        <path d="M0 10 Q25 0 50 10 Q75 20 100 10 Q125 0 150 10 Q175 20 200 10" fill="none" stroke="#C8A96E" stroke-width="1.5"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="gallery-grid">
+                <div class="gallery-item gallery-item-tall anim-reveal" data-delay="0.05">
+                    <img src="assets/images/gallery-1.png" alt="Model wearing handblock printed saree" loading="lazy">
+                    <div class="gallery-item-overlay">
+                        <span>Emerald Heritage</span>
+                    </div>
+                </div>
+                <div class="gallery-item anim-reveal" data-delay="0.15">
+                    <img src="assets/images/collection-saree.png" alt="Emerald saree detail" loading="lazy">
+                    <div class="gallery-item-overlay">
+                        <span>Block Print Detail</span>
+                    </div>
+                </div>
+                <div class="gallery-item anim-reveal" data-delay="0.25">
+                    <img src="assets/images/gallery-2.png" alt="Wooden printing blocks" loading="lazy">
+                    <div class="gallery-item-overlay">
+                        <span>The Tools of Art</span>
+                    </div>
+                </div>
+                <div class="gallery-item gallery-item-wide anim-reveal" data-delay="0.1">
+                    <img src="assets/images/artisan.png" alt="Artisan at work" loading="lazy">
+                    <div class="gallery-item-overlay">
+                        <span>Master Artisan</span>
+                    </div>
+                </div>
+                <div class="gallery-item anim-reveal" data-delay="0.2">
+                    <img src="assets/images/collection-dupatta.png" alt="Rose dupatta" loading="lazy">
+                    <div class="gallery-item-overlay">
+                        <span>Rose Garden</span>
+                    </div>
+                </div>
+                <div class="gallery-item anim-reveal" data-delay="0.3">
+                    <img src="assets/images/collection-kurta.png" alt="Ivory kurta set" loading="lazy">
+                    <div class="gallery-item-overlay">
+                        <span>Ivory Bloom</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== CONTACT / FOOTER ========== -->
+    <section id="contact" class="contact">
+        <div class="contact-bg-pattern"></div>
+        <div class="section-container">
+            <div class="contact-grid">
+                <div class="contact-info anim-reveal">
+                    <span class="section-tag">Get in Touch</span>
+                    <h2 class="section-title">Let's Connect</h2>
+                    <div class="section-divider">
+                        <svg viewBox="0 0 200 20" width="160" height="20">
+                            <path d="M0 10 Q25 0 50 10 Q75 20 100 10 Q125 0 150 10 Q175 20 200 10" fill="none" stroke="#C8A96E" stroke-width="1.5"/>
+                        </svg>
+                    </div>
+                    <p class="contact-text">Whether you're looking for the perfect piece or want to learn about our craft, we'd love to hear from you.</p>
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <span class="contact-icon">✉</span>
+                            <span>hello@mrignaini.com</span>
+                        </div>
+                        <div class="contact-item">
+                            <span class="contact-icon">☏</span>
+                            <span>+91 98765 43210</span>
+                        </div>
+                        <div class="contact-item">
+                            <span class="contact-icon">⌂</span>
+                            <span>Johari Bazaar, Jaipur, Rajasthan</span>
+                        </div>
+                    </div>
+                    <div class="social-links">
+                        <a href="#" class="social-link" aria-label="Instagram">
+                            <svg viewBox="0 0 24 24" width="22" height="22"><rect x="2" y="2" width="20" height="20" rx="5" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor"/></svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Facebook">
+                            <svg viewBox="0 0 24 24" width="22" height="22"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Pinterest">
+                            <svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 16 C9 12, 10 8, 12 6 C14 8, 15 10, 14 14 M10 14 L8 20 M14 14 L16 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="contact-form-wrapper anim-reveal" data-delay="0.2">
+                    <form class="contact-form" id="contactForm">
+                        <div class="form-group">
+                            <input type="text" id="formName" placeholder="Your Name" required>
+                            <label for="formName">Your Name</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="formEmail" placeholder="Your Email" required>
+                            <label for="formEmail">Your Email</label>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="formMessage" placeholder="Your Message" rows="4" required></textarea>
+                            <label for="formMessage">Your Message</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-full">
+                            <span>Send Message</span>
+                            <svg viewBox="0 0 24 24" width="18" height="18"><path d="M5 12h14M12 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-brand">mrignaini</div>
+            <p class="footer-tagline">Handblock Printed Ethnic Wear — Made with love in Jaipur</p>
+            <div class="footer-divider"></div>
+            <div class="footer-links">
+                <a href="category.html?cat=sets">Sets</a>
+                <a href="category.html?cat=tops">Tops</a>
+                <a href="category.html?cat=kurtis">Kurtis</a>
+                <a href="#story">Our Story</a>
+                <a href="#craft">The Craft</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <p class="footer-copy">&copy; 2026 Mrignaini. All rights reserved. Crafted with ❤ and tradition.</p>
+        </div>
+    </footer>
+
+    <script src="products.js"></script>
+    <script src="cart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
