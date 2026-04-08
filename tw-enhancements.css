@@ -1,0 +1,334 @@
+/* ======================================
+   MRIGNAINI — TAILWIND ENHANCEMENTS
+   Supplementary styles for effects that
+   Tailwind utilities alone cannot achieve.
+   ====================================== */
+
+/* ---- ENHANCED CARD STYLING ---- */
+.collection-card {
+    transform-style: preserve-3d;
+    will-change: transform;
+}
+
+/* Gradient border accent — always visible, pulses on hover */
+.collection-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #A82039, #D4A017, #E8942A, #2d6a4f);
+    z-index: 10;
+    opacity: 0.5;
+    transition: opacity 0.4s, height 0.4s;
+}
+
+.collection-card:hover::before {
+    opacity: 1;
+    height: 5px;
+}
+
+/* Corner ornament — reveals on hover */
+.collection-card::after {
+    content: '✦';
+    position: absolute;
+    bottom: 12px;
+    right: 16px;
+    font-size: 1.2rem;
+    color: #D4A017;
+    opacity: 0;
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform: scale(0) rotate(-30deg);
+    z-index: 5;
+}
+
+.collection-card:hover::after {
+    opacity: 0.35;
+    transform: scale(1) rotate(0deg);
+}
+
+/* Card tag stamp texture overlay */
+.card-tag::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.15 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    border-radius: inherit;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+}
+
+/* ---- ENHANCED HERO OVERLAY ---- */
+.hero-overlay {
+    background: 
+        linear-gradient(180deg,
+            rgba(14, 46, 36, 0.75) 0%,
+            rgba(46, 64, 87, 0.35) 25%,
+            rgba(107, 45, 91, 0.2) 45%,
+            rgba(168, 32, 57, 0.25) 65%,
+            rgba(14, 46, 36, 0.9) 100%
+        ),
+        radial-gradient(ellipse at 20% 50%, rgba(212,160,17,0.18), transparent 60%),
+        radial-gradient(ellipse at 80% 30%, rgba(168,32,57,0.15), transparent 50%);
+}
+
+/* ---- FILM GRAIN TEXTURE ---- */
+.hero-grain {
+    opacity: 0.12;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-size: 256px 256px;
+    mix-blend-mode: overlay;
+    animation: grainShift 0.5s steps(4) infinite;
+}
+
+@keyframes grainShift {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(-2px, 2px); }
+    50% { transform: translate(2px, -1px); }
+    75% { transform: translate(-1px, -2px); }
+    100% { transform: translate(0, 0); }
+}
+
+/* ---- HERO CHARACTER ANIMATION ---- */
+.hero-char {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(60px) rotateX(40deg) scale(0.8);
+    animation: charReveal 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    background: linear-gradient(135deg, #F5F0E8 10%, #D4A017 45%, #E8942A 65%, #A82039 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+@keyframes charReveal {
+    0% { opacity: 0; transform: translateY(60px) rotateX(40deg) scale(0.8); }
+    60% { opacity: 1; transform: translateY(-5px) rotateX(-5deg) scale(1.02); }
+    100% { opacity: 1; transform: translateY(0) rotateX(0) scale(1); }
+}
+
+/* ---- HERO BADGE GLOW ---- */
+.hero-badge {
+    animation: badgePulse 3s ease-in-out infinite;
+}
+
+@keyframes badgePulse {
+    0%, 100% { text-shadow: 0 0 10px rgba(212,160,17,0.3); }
+    50% { text-shadow: 0 0 25px rgba(212,160,17,0.6), 0 0 50px rgba(212,160,17,0.2); }
+}
+
+/* Badge decorative lines */
+.hero-badge::before,
+.hero-badge::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 50px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #D4A017);
+}
+.hero-badge::before { right: calc(100% + 12px); }
+.hero-badge::after { left: calc(100% + 12px); background: linear-gradient(90deg, #D4A017, transparent); }
+
+/* ---- SCROLL INDICATOR ---- */
+.scroll-line {
+    animation: scrollLine 2s ease-in-out infinite;
+}
+
+@keyframes scrollLine {
+    0%, 100% { opacity: 0.3; transform: scaleY(0.4); transform-origin: top; }
+    50%      { opacity: 1;   transform: scaleY(1); transform-origin: top; }
+}
+
+.hero-scroll-indicator {
+    animation: scrollBounce 2s ease-in-out infinite;
+}
+
+@keyframes scrollBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(8px); }
+}
+
+/* ---- STORY STATS BORDER GRADIENT ---- */
+.border-gradient {
+    border-image: linear-gradient(90deg, #A82039, #D4A017, #2d6a4f) 1;
+}
+
+/* ---- STORY IMAGE DECORATIVE SHADOW ---- */
+.story-image-frame {
+    box-shadow: 
+        0 20px 60px rgba(0,0,0,0.12),
+        8px 8px 0 #A82039;
+}
+
+/* ---- VIDEO FRAME DECORATIVE SHADOW ---- */
+.video-frame {
+    box-shadow: 
+        0 20px 60px rgba(0,0,0,0.15),
+        6px 6px 0 #A82039;
+}
+
+.video-frame::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 2px solid rgba(212,160,17,0.25);
+    border-radius: 20px;
+    pointer-events: none;
+}
+
+/* ---- FLOATING PETALS STYLING ---- */
+.floating-petal {
+    position: absolute;
+    opacity: 0.4;
+    font-size: 2rem;
+    z-index: 1;
+    pointer-events: none;
+    filter: blur(0.5px);
+}
+
+.petal-1 { top: 12%; left: 6%; font-size: 2.5rem; color: #D4A017; }
+.petal-2 { top: 22%; right: 10%; font-size: 1.6rem; color: #D4A0A0; }
+.petal-3 { bottom: 28%; left: 12%; font-size: 2.2rem; color: #A82039; }
+.petal-4 { top: 55%; right: 6%; font-size: 1.8rem; color: #E8942A; }
+.petal-5 { bottom: 12%; right: 18%; font-size: 1.3rem; color: #E85D50; }
+.petal-6 { top: 40%; left: 3%; font-size: 1.5rem; color: #C8A96E; }
+.petal-7 { bottom: 40%; right: 4%; font-size: 2rem; color: #D4A017; }
+.petal-8 { top: 8%; right: 25%; font-size: 1.8rem; color: #6B2D5B; }
+
+/* ---- HERO MOTIF POSITIONS ---- */
+.hero-motif {
+    position: absolute;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.hero-motif-1 { top: 8%; left: 5%; }
+.hero-motif-2 { bottom: 20%; right: 8%; }
+.hero-motif-3 { top: 45%; left: 85%; }
+.hero-motif-4 { bottom: 10%; left: 8%; }
+
+/* ---- SECTION MOTIF FLOAT ANIMATION ---- */
+.section-motif {
+    position: absolute;
+    z-index: 1;
+    pointer-events: none;
+    animation: floatMotif 12s ease-in-out infinite;
+}
+
+.motif-paisley-left { top: 10%; left: 3%; transform: rotate(-15deg); }
+.motif-floral-right { bottom: 15%; right: 4%; transform: rotate(10deg); animation-delay: 3s; }
+.motif-pomegranate { top: 8%; right: 5%; animation-delay: 2s; }
+.motif-bird { top: 12%; right: 6%; animation-delay: 4s; }
+
+@keyframes floatMotif {
+    0%, 100% { transform: translateY(0) rotate(var(--motif-rotate, 0deg)); }
+    50% { transform: translateY(-15px) rotate(var(--motif-rotate, 0deg)); }
+}
+
+/* ---- GALLERY SPECIAL SPANS ---- */
+.gallery-item-tall { grid-row: span 2; }
+.gallery-item-wide { grid-column: span 2; }
+
+/* ---- GALLERY OVERLAY TEXT SLIDE ---- */
+.gallery-item-overlay span {
+    color: #D4A017;
+    font-family: 'Caveat', cursive;
+    font-size: 1.6rem;
+    font-weight: 700;
+    transform: translateY(15px);
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.gallery-item:hover .gallery-item-overlay span { transform: translateY(0); }
+
+/* ---- TESTIMONIAL ANIMATIONS ---- */
+.testimonial-card {
+    position: absolute;
+    inset: 0;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+}
+
+.testimonial-card.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+    position: relative;
+}
+
+/* ---- DECORATIVE DIVIDER STYLING ---- */
+.illustrated-divider {
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 0;
+}
+
+/* ---- CONTACT FORM CORNER ACCENTS ---- */
+.contact-form-wrapper::before,
+.contact-form-wrapper::after {
+    content: '✦';
+    position: absolute;
+    font-size: 1rem;
+    color: #D4A017;
+    opacity: 0.3;
+}
+
+.contact-form-wrapper::before { top: 1rem; left: 1rem; }
+.contact-form-wrapper::after { bottom: 1rem; right: 1rem; }
+
+/* ---- ENHANCED ANIM-REVEAL SYSTEM ---- */
+.anim-reveal {
+    opacity: 0;
+    transform: translateY(50px) scale(0.97);
+    transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.anim-reveal.revealed {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+/* ---- SECTION ENTRANCE ---- */
+.section-visible .section-header {
+    animation: sectionHeaderIn 1s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes sectionHeaderIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---- RESPONSIVE OVERRIDES ---- */
+@media (max-width: 1024px) {
+    .section-motif { display: none; }
+    .hero-motif-3 { display: none; }
+    .cursor-trail { display: none; }
+}
+
+@media (max-width: 768px) {
+    .hero-scroll-indicator { display: none; }
+    .hero-motif { display: none; }
+    .floating-petal { display: none; }
+    .illustrated-divider { padding: 0.25rem 0; }
+    .cursor-trail { display: none; }
+    
+    .gallery-item-tall { grid-row: span 1; }
+    .gallery-item-wide { grid-column: span 1; }
+}
+
+@media (max-width: 480px) {
+    .hero-badge::before,
+    .hero-badge::after { display: none; }
+}
+
+@media (hover: none) {
+    .cursor-trail { display: none; }
+}

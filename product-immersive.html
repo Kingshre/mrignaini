@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Mrignaini — Immersive product experience. Handblock printed ethnic wear from Jaipur.">
+    <title>Mrignaini — Product Experience</title>
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Outfit:wght@300;400;500;600&family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="shop.css">
+    <link rel="stylesheet" href="product-immersive.css">
+</head>
+<body class="immersive-body">
+
+    <!-- ========== MINIMAL NAVBAR ========== -->
+    <nav id="navbar" class="navbar imm-navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand"><span class="brand-name">mrignaini</span></a>
+            <div class="nav-links" id="navLinks">
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link nav-link-dropdown">Shop <svg viewBox="0 0 12 8" width="10" height="8"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
+                    <div class="dropdown-menu">
+                        <a href="category.html?cat=tops" class="dropdown-item">Tops</a>
+                        <a href="category.html?cat=layers" class="dropdown-item">Layers</a>
+                    </div>
+                </div>
+                <a href="index.html#story" class="nav-link">Our Story</a>
+                <a href="index.html#craft" class="nav-link">The Craft</a>
+                <a href="index.html#gallery" class="nav-link">Gallery</a>
+                <a href="index.html#contact" class="nav-link">Contact</a>
+            </div>
+            <div class="nav-right">
+                <a href="cart.html" class="nav-cart" aria-label="Shopping cart">
+                    <svg viewBox="0 0 24 24" width="22" height="22"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="1.5"/><path d="M16 10a4 4 0 01-8 0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span class="cart-badge">0</span>
+                </a>
+                <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ========== SCROLL PROGRESS ========== -->
+    <div class="imm-scroll-progress" id="scrollProgress"></div>
+
+    <!-- ========== 1. FULL-SCREEN HERO ========== -->
+    <section class="imm-hero" id="immHero">
+        <div class="imm-hero-bg">
+            <div class="imm-hero-image-wrap">
+                <img src="" alt="" id="heroProductImage" class="imm-hero-img">
+            </div>
+            <div class="imm-hero-overlay"></div>
+            <div class="imm-hero-grain"></div>
+        </div>
+
+        <!-- Floating Motifs -->
+        <svg class="imm-motif imm-motif-1" viewBox="0 0 140 180" width="110" height="142"><path d="M70 170 C70 170, 24 135, 26 90 C28 55, 45 32, 70 30 C95 32, 112 55, 114 90 C116 135, 70 170, 70 170Z" fill="none" stroke="#C8A96E" stroke-width="1.5" opacity="0.3"/><path d="M70 150 C70 150, 40 122, 42 85 C43 62, 53 48, 70 46 C87 48, 97 62, 98 85 C100 122, 70 150, 70 150Z" fill="none" stroke="#D4A0A0" stroke-width="1" opacity="0.2"/><circle cx="70" cy="75" r="10" fill="none" stroke="#A82039" stroke-width="1" opacity="0.2"/></svg>
+        <svg class="imm-motif imm-motif-2" viewBox="0 0 100 100" width="75" height="75"><circle cx="50" cy="50" r="35" fill="none" stroke="#D4A0A0" stroke-width="1" opacity="0.25"/><circle cx="50" cy="50" r="22" fill="none" stroke="#C8A96E" stroke-width="1" opacity="0.2"/><path d="M50 15 C65 30, 65 70, 50 85 C35 70, 35 30, 50 15Z" fill="none" stroke="#C8A96E" stroke-width="1" opacity="0.15"/></svg>
+        <svg class="imm-motif imm-motif-3" viewBox="0 0 80 80" width="60" height="60"><path d="M40 5 Q70 20 60 50 Q50 72 40 75 Q30 72 20 50 Q10 20 40 5Z" fill="none" stroke="#D4A017" stroke-width="1.2" opacity="0.2"/><circle cx="40" cy="38" r="6" fill="#8B2252" opacity="0.06"/></svg>
+        <div class="imm-petal imm-petal-1">❀</div>
+        <div class="imm-petal imm-petal-2">✿</div>
+        <div class="imm-petal imm-petal-3">❁</div>
+        <div class="imm-petal imm-petal-4">✦</div>
+
+        <!-- Hero Content -->
+        <div class="imm-hero-content">
+            <div class="imm-hero-tag" id="heroTag">✦ New Arrival ✦</div>
+            <h1 class="imm-hero-title" id="heroTitle">Vrindavan Floral Set</h1>
+            <p class="imm-hero-subtitle" id="heroSubtitle">Handblock printed in the heart of Jaipur</p>
+            <div class="imm-hero-price" id="heroPrice">₹3,499</div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="imm-scroll-cue">
+            <span>Explore the Story</span>
+            <div class="imm-scroll-line"></div>
+        </div>
+    </section>
+
+    <!-- ========== 2. THE STORY ========== -->
+    <section class="imm-section imm-story" id="immStory">
+        <div class="imm-section-grain"></div>
+        <div class="imm-story-inner">
+            <div class="imm-reveal imm-story-text-block">
+                <span class="imm-tag">✦ The Heritage ✦</span>
+                <h2 class="imm-section-title">Born from <em>centuries</em> of craft</h2>
+                <p class="imm-paragraph" id="storyText1">Every piece carries the soul of Jaipur — a city where artisans have been hand-carving wooden blocks and pressing them into fabric for over 500 years. This garment is not just clothing; it is a living tradition, passed down through generations of master craftspeople.</p>
+            </div>
+            <div class="imm-reveal imm-story-text-block" data-delay="0.2">
+                <p class="imm-paragraph" id="storyText2">The prints you see tell stories of Mughal gardens, Rajasthani landscapes, and the wild flowers that bloom across the Aravalli hills. Each motif is hand-carved into teak wood blocks, then carefully stamped onto fabric — one impression at a time.</p>
+            </div>
+            <!-- Decorative motif between */
+            <svg class="imm-section-motif imm-reveal" viewBox="0 0 200 60" width="200" height="60"><path d="M0 30 C30 10, 70 50, 100 30 C130 10, 170 50, 200 30" fill="none" stroke="#C8A96E" stroke-width="1.5" opacity="0.4"/><circle cx="100" cy="30" r="5" fill="#A82039" opacity="0.15"/><circle cx="50" cy="30" r="3" fill="#D4A017" opacity="0.2"/><circle cx="150" cy="30" r="3" fill="#D4A017" opacity="0.2"/></svg>
+        </div>
+    </section>
+
+    <!-- ========== 3. FABRIC DETAIL - Parallax Image ========== -->
+    <section class="imm-section imm-fabric" id="immFabric">
+        <div class="imm-fabric-parallax">
+            <img src="" alt="" id="fabricImage" class="imm-fabric-img">
+        </div>
+        <div class="imm-fabric-overlay"></div>
+        <div class="imm-fabric-content imm-reveal">
+            <span class="imm-tag imm-tag-light">✦ The Fabric ✦</span>
+            <h2 class="imm-fabric-title">Feel the <em>texture</em></h2>
+            <div class="imm-fabric-details" id="fabricDetails">
+                <div class="imm-fabric-detail">
+                    <span class="imm-detail-icon">🌿</span>
+                    <span class="imm-detail-label" id="fabricType">100% Hand-spun Cotton</span>
+                </div>
+                <div class="imm-fabric-detail">
+                    <span class="imm-detail-icon">🎨</span>
+                    <span class="imm-detail-label" id="fabricPrint">Hand Block Printed</span>
+                </div>
+                <div class="imm-fabric-detail">
+                    <span class="imm-detail-icon">🌸</span>
+                    <span class="imm-detail-label" id="fabricDye">Natural vegetable dyes</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== 4. THE PROCESS - Horizontal Scroll ========== -->
+    <section class="imm-section imm-process" id="immProcess">
+        <div class="imm-section-grain"></div>
+        <div class="imm-process-inner">
+            <div class="imm-reveal">
+                <span class="imm-tag">✦ The Making ✦</span>
+                <h2 class="imm-section-title">From block to <em>beauty</em></h2>
+            </div>
+            <div class="imm-process-steps">
+                <div class="imm-step imm-reveal" data-delay="0">
+                    <div class="imm-step-number">01</div>
+                    <div class="imm-step-icon">🪵</div>
+                    <h3 class="imm-step-title">Carving</h3>
+                    <p class="imm-step-desc">Master artisans hand-carve teak wood blocks with traditional motifs — a process that takes days to perfect a single block.</p>
+                </div>
+                <div class="imm-step imm-reveal" data-delay="0.15">
+                    <div class="imm-step-number">02</div>
+                    <div class="imm-step-icon">🫧</div>
+                    <h3 class="imm-step-title">Dahi Wash</h3>
+                    <p class="imm-step-desc">The fabric is soaked in a mixture of curd, oil, and castor — an ancient Jaipur technique that softens the cotton and helps it absorb natural dyes.</p>
+                </div>
+                <div class="imm-step imm-reveal" data-delay="0.3">
+                    <div class="imm-step-number">03</div>
+                    <div class="imm-step-icon">🖌️</div>
+                    <h3 class="imm-step-title">Block Printing</h3>
+                    <p class="imm-step-desc">The carved block is dipped in natural dye and pressed onto the fabric by hand — each impression aligned with the precision of centuries of practice.</p>
+                </div>
+                <div class="imm-step imm-reveal" data-delay="0.45">
+                    <div class="imm-step-number">04</div>
+                    <div class="imm-step-icon">☀️</div>
+                    <h3 class="imm-step-title">Sun Drying</h3>
+                    <p class="imm-step-desc">Printed fabrics are laid out under the Rajasthani sun — the heat sets the natural dyes and deepens the colors to their final richness.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== 5. EDITORIAL IMAGE BREAK ========== -->
+    <section class="imm-section imm-editorial" id="immEditorial">
+        <div class="imm-editorial-image-wrap imm-reveal">
+            <img src="" alt="" id="editorialImage" class="imm-editorial-img">
+            <div class="imm-editorial-caption">
+                <span class="imm-editorial-quote" id="editorialQuote">"Each mark is a memory — of the artisan's hands, the Jaipur wind, the morning light."</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== 6. PURCHASE SECTION ========== -->
+    <section class="imm-section imm-purchase" id="immPurchase">
+        <div class="imm-section-grain"></div>
+        <!-- Decorative motifs -->
+        <svg class="imm-purchase-motif imm-purchase-motif-1" viewBox="0 0 100 100" width="80" height="80"><circle cx="50" cy="50" r="35" fill="none" stroke="#C8A96E" stroke-width="1" opacity="0.12"/><circle cx="50" cy="50" r="22" fill="none" stroke="#D4A017" stroke-width="0.8" opacity="0.1"/></svg>
+        <svg class="imm-purchase-motif imm-purchase-motif-2" viewBox="0 0 120 160" width="90" height="120"><path d="M60 150 C60 150, 20 120, 22 80 C24 50, 40 30, 60 28 C80 30, 96 50, 98 80 C100 120, 60 150, 60 150Z" fill="none" stroke="#A82039" stroke-width="1" opacity="0.08"/></svg>
+
+        <div class="imm-purchase-inner">
+            <div class="imm-purchase-image imm-reveal">
+                <div class="imm-purchase-img-frame">
+                    <img src="" alt="" id="purchaseImage">
+                </div>
+            </div>
+            <div class="imm-purchase-info imm-reveal" data-delay="0.15">
+                <span class="imm-tag" id="purchaseTag">✦ New Arrival ✦</span>
+                <h2 class="imm-purchase-title" id="purchaseName">Vrindavan Floral Set</h2>
+                <div class="imm-purchase-pricing">
+                    <span class="imm-purchase-price" id="purchasePrice">₹3,499</span>
+                    <span class="imm-purchase-original" id="purchaseOriginal">₹4,999</span>
+                    <span class="imm-purchase-discount" id="purchaseDiscount">30% off</span>
+                </div>
+                <p class="imm-purchase-desc" id="purchaseDesc"></p>
+
+                <!-- Special Note -->
+                <div class="imm-special-note" id="immSpecialNote" style="display:none; margin-top:1.25rem; padding:14px 18px; background:linear-gradient(135deg, rgba(200,169,110,0.1), rgba(168,32,57,0.06)); border:1px solid rgba(200,169,110,0.25); border-left:4px solid #C8A96E; border-radius:10px; font-family:'Outfit',sans-serif; font-size:0.85rem; color:#555; line-height:1.5;">
+                    <span style="margin-right:6px; font-size:1rem;">✦</span>
+                    <strong style="color:#1a4a3a; font-weight:600;">Note:</strong> <span id="immSpecialNoteText"></span>
+                </div>
+
+                <!-- Size Selection -->
+                <div class="imm-size-section" id="immSizeSection">
+                    <div class="imm-size-header">
+                        <span>Select Size</span>
+                        <button class="imm-size-guide-btn" id="sizeGuideBtn2">📏 Size Guide</button>
+                    </div>
+                    <div class="imm-size-options" id="sizeOptions2"></div>
+                    <p class="imm-size-error hidden" id="sizeError2">Please select a size</p>
+                </div>
+
+                <!-- Quantity -->
+                <div class="imm-qty-row">
+                    <span>Quantity</span>
+                    <div class="imm-qty-control">
+                        <button class="imm-qty-btn" id="qtyMinus2">−</button>
+                        <span class="imm-qty-value" id="qtyValue2">1</span>
+                        <button class="imm-qty-btn" id="qtyPlus2">+</button>
+                    </div>
+                </div>
+
+                <!-- Add to Cart -->
+                <button class="imm-add-btn" id="addToCartBtn2">
+                    <span>Add to Cart</span>
+                    <svg viewBox="0 0 24 24" width="20" height="20"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="1.5"/><path d="M16 10a4 4 0 01-8 0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+
+                <!-- Details accordion -->
+                <div class="imm-details-list" id="immDetailsList"></div>
+
+                <div class="imm-shipping-info">
+                    <span>🚚 Free shipping on orders above ₹1,999</span>
+                    <span>↩️ Easy 7-day returns</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== 7. RELATED ========== -->
+    <section class="imm-section imm-related" id="immRelated">
+        <div class="imm-related-inner">
+            <div class="imm-reveal">
+                <span class="imm-tag">✦ More to Explore ✦</span>
+                <h2 class="imm-section-title">You may also love</h2>
+            </div>
+            <div class="imm-related-grid" id="relatedGrid2"></div>
+        </div>
+    </section>
+
+    <!-- ========== STICKY PURCHASE BAR ========== -->
+    <div class="imm-sticky-bar" id="stickyBar">
+        <div class="imm-sticky-inner">
+            <div class="imm-sticky-info">
+                <span class="imm-sticky-name" id="stickyName">Vrindavan Floral Set</span>
+                <span class="imm-sticky-price" id="stickyPrice">₹3,499</span>
+            </div>
+            <a href="#immPurchase" class="imm-sticky-btn">Select & Add to Cart</a>
+        </div>
+    </div>
+
+    <!-- ========== SIZE GUIDE MODAL ========== -->
+    <div class="modal-overlay" id="sizeGuideModal2">
+        <div class="modal">
+            <button class="modal-close" id="modalClose2" aria-label="Close">
+                <svg viewBox="0 0 24 24" width="24" height="24"><path d="M18 6L6 18M6 6l12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </button>
+            <h2 class="modal-title">Size Guide</h2>
+            <p class="modal-subtitle">All measurements are in inches.</p>
+            <div class="size-guide-table-wrap">
+                <table class="size-guide-table" id="sizeGuideTable2"></table>
+            </div>
+            <div class="modal-tip"><strong>💡 Tip:</strong> If you're between sizes, we recommend going one size up for a relaxed fit.</div>
+        </div>
+    </div>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-brand">mrignaini</div>
+            <p class="footer-tagline">Handblock Printed Ethnic Wear — Made with love in Jaipur</p>
+            <div class="footer-divider"></div>
+            <div class="footer-links">
+                <a href="category.html?cat=tops">Tops</a>
+                <a href="category.html?cat=layers">Layers</a>
+                <a href="index.html#story">Our Story</a>
+                <a href="index.html#craft">The Craft</a>
+                <a href="index.html#contact">Contact</a>
+            </div>
+            <p class="footer-copy">&copy; 2026 Mrignaini. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="products.js"></script>
+    <script src="cart.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id') || 'top-iktara';
+        const product = getProductById(id);
+
+        if (!product) { window.location.href = 'category.html?cat=sets'; return; }
+
+        const cat = CATEGORIES[product.category];
+
+        // ---- POPULATE DATA ----
+        document.title = `${product.name} — Mrignaini`;
+
+        // Hero
+        document.getElementById('heroProductImage').src = product.image;
+        document.getElementById('heroProductImage').alt = product.name;
+        document.getElementById('heroTag').textContent = `✦ ${product.tag} ✦`;
+        document.getElementById('heroTitle').textContent = product.name;
+        document.getElementById('heroSubtitle').textContent = product.description.split('.')[0] + '.';
+        document.getElementById('heroPrice').textContent = formatPrice(product.price);
+
+        // Fabric section
+        document.getElementById('fabricImage').src = product.image;
+        if (product.details.length >= 3) {
+            document.getElementById('fabricType').textContent = product.details[0];
+            document.getElementById('fabricPrint').textContent = product.details[1];
+            document.getElementById('fabricDye').textContent = product.details[2];
+        }
+
+        // Editorial
+        document.getElementById('editorialImage').src = product.image;
+
+        // Purchase
+        document.getElementById('purchaseImage').src = product.image;
+        document.getElementById('purchaseTag').textContent = `✦ ${product.tag} ✦`;
+        document.getElementById('purchaseName').textContent = product.name;
+        document.getElementById('purchasePrice').textContent = formatPrice(product.price);
+        document.getElementById('purchaseOriginal').textContent = formatPrice(product.originalPrice);
+        const discountPct = Math.round((1 - product.price / product.originalPrice) * 100);
+        document.getElementById('purchaseDiscount').textContent = `${discountPct}% off`;
+        document.getElementById('purchaseDesc').textContent = product.description;
+
+        // Sticky bar
+        document.getElementById('stickyName').textContent = product.name;
+        document.getElementById('stickyPrice').textContent = formatPrice(product.price);
+
+        // Special Note
+        if (product.specialNote) {
+            document.getElementById('immSpecialNoteText').textContent = product.specialNote;
+            document.getElementById('immSpecialNote').style.display = 'block';
+        }
+
+        // Size options
+        const sizeContainer = document.getElementById('sizeOptions2');
+        sizeContainer.innerHTML = product.sizes.map(s => `<button class="imm-size-pill" data-size="${s}">${s}</button>`).join('');
+        let selectedSize = null;
+
+        // Auto-select Free Size and hide size guide
+        if (product.sizes.length === 1 && product.sizes[0] === 'Free Size') {
+            selectedSize = 'Free Size';
+            sizeContainer.querySelector('.imm-size-pill').classList.add('selected');
+            document.getElementById('sizeGuideBtn2').style.display = 'none';
+        }
+
+        sizeContainer.querySelectorAll('.imm-size-pill').forEach(pill => {
+            pill.addEventListener('click', () => {
+                sizeContainer.querySelectorAll('.imm-size-pill').forEach(p => p.classList.remove('selected'));
+                pill.classList.add('selected');
+                selectedSize = pill.dataset.size;
+                document.getElementById('sizeError2').classList.add('hidden');
+            });
+        });
+
+        // Quantity
+        let qty = 1;
+        document.getElementById('qtyMinus2').addEventListener('click', () => {
+            if (qty > 1) { qty--; document.getElementById('qtyValue2').textContent = qty; }
+        });
+        document.getElementById('qtyPlus2').addEventListener('click', () => {
+            if (qty < 10) { qty++; document.getElementById('qtyValue2').textContent = qty; }
+        });
+
+        // Add to cart
+        document.getElementById('addToCartBtn2').addEventListener('click', () => {
+            if (!selectedSize) {
+                document.getElementById('sizeError2').classList.remove('hidden');
+                return;
+            }
+            Cart.add(product.id, selectedSize, qty);
+            const btn = document.getElementById('addToCartBtn2');
+            btn.innerHTML = '<span>✓ Added!</span>';
+            btn.classList.add('added');
+            setTimeout(() => {
+                btn.innerHTML = `<span>Add to Cart</span><svg viewBox="0 0 24 24" width="20" height="20"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="1.5"/><path d="M16 10a4 4 0 01-8 0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+                btn.classList.remove('added');
+            }, 2000);
+        });
+
+        // Product details
+        const detailsList = document.getElementById('immDetailsList');
+        detailsList.innerHTML = product.details.map(d => `<div class="imm-detail-row"><span class="imm-detail-dot">◆</span><span>${d}</span></div>`).join('');
+
+        // Size guide
+        const table2 = document.getElementById('sizeGuideTable2');
+        table2.innerHTML = `<thead><tr>${SIZE_GUIDE.headers.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>${SIZE_GUIDE.rows.map(row => `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`).join('')}</tbody>`;
+        const modal2 = document.getElementById('sizeGuideModal2');
+        document.getElementById('sizeGuideBtn2').addEventListener('click', () => modal2.classList.add('active'));
+        document.getElementById('modalClose2').addEventListener('click', () => modal2.classList.remove('active'));
+        modal2.addEventListener('click', (e) => { if (e.target === modal2) modal2.classList.remove('active'); });
+
+        // Related
+        const related = PRODUCTS.filter(p => p.category === product.category && p.id !== product.id);
+        document.getElementById('relatedGrid2').innerHTML = related.map(p => `
+            <a href="product-immersive.html?id=${p.id}" class="imm-related-card imm-reveal">
+                <div class="imm-related-img"><img src="${p.image}" alt="${p.name}" loading="lazy"></div>
+                <div class="imm-related-info">
+                    <span class="imm-related-tag">${p.tag}</span>
+                    <h3>${p.name}</h3>
+                    <span class="imm-related-price">${formatPrice(p.price)} <s>${formatPrice(p.originalPrice)}</s></span>
+                </div>
+            </a>
+        `).join('');
+
+        // Mobile nav
+        document.getElementById('navToggle').addEventListener('click', () => {
+            document.getElementById('navToggle').classList.toggle('active');
+            document.getElementById('navLinks').classList.toggle('open');
+        });
+
+        // ---- SCROLL ANIMATIONS ----
+        // Scroll progress
+        window.addEventListener('scroll', () => {
+            const docH = document.documentElement.scrollHeight - window.innerHeight;
+            const pct = (window.scrollY / docH) * 100;
+            document.getElementById('scrollProgress').style.width = pct + '%';
+        }, { passive: true });
+
+        // Reveal on scroll
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const delay = parseFloat(entry.target.dataset.delay) || 0;
+                    setTimeout(() => entry.target.classList.add('revealed'), delay * 1000);
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        document.querySelectorAll('.imm-reveal').forEach(el => revealObserver.observe(el));
+
+        // Sticky bar visibility
+        const purchaseSection = document.getElementById('immPurchase');
+        const stickyBar = document.getElementById('stickyBar');
+        const heroSection = document.getElementById('immHero');
+
+        window.addEventListener('scroll', () => {
+            const heroBottom = heroSection.getBoundingClientRect().bottom;
+            const purchaseTop = purchaseSection.getBoundingClientRect().top;
+
+            if (heroBottom < 0 && purchaseTop > window.innerHeight * 0.5) {
+                stickyBar.classList.add('visible');
+            } else {
+                stickyBar.classList.remove('visible');
+            }
+        }, { passive: true });
+
+        // Hero parallax
+        const heroImg = document.getElementById('heroProductImage');
+        const heroContent = document.querySelector('.imm-hero-content');
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            const heroH = window.innerHeight;
+            if (scrollY < heroH) {
+                const pct = scrollY / heroH;
+                heroImg.style.transform = `scale(${1.05 + pct * 0.15}) translateY(${scrollY * 0.2}px)`;
+                heroContent.style.opacity = 1 - pct * 1.6;
+                heroContent.style.transform = `translateY(${scrollY * 0.4}px)`;
+            }
+        }, { passive: true });
+
+        // Fabric parallax
+        const fabricImg = document.querySelector('.imm-fabric-img');
+        const fabricSection = document.getElementById('immFabric');
+        window.addEventListener('scroll', () => {
+            const rect = fabricSection.getBoundingClientRect();
+            if (rect.top < window.innerHeight && rect.bottom > 0) {
+                const pct = (window.innerHeight - rect.top) / (window.innerHeight + rect.height);
+                fabricImg.style.transform = `scale(1.15) translateY(${(pct - 0.5) * -60}px)`;
+            }
+        }, { passive: true });
+
+        // Floating motifs
+        const motifs = document.querySelectorAll('.imm-motif, .imm-petal');
+        function animateMotifs() {
+            const t = Date.now() * 0.001;
+            const scrollY = window.scrollY;
+            motifs.forEach((m, i) => {
+                const speed = 0.03 + i * 0.012;
+                const xW = Math.sin(t * 0.7 + i * 1.3) * 15;
+                const yW = Math.cos(t * 0.5 + i * 1.7) * 10;
+                const rot = Math.sin(t * 0.3 + i) * 12;
+                m.style.transform = `translateY(${-scrollY * speed + yW}px) translateX(${xW}px) rotate(${rot}deg)`;
+            });
+            requestAnimationFrame(animateMotifs);
+        }
+        animateMotifs();
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

@@ -8,9 +8,692 @@
     <link rel="icon" type="image/png" href="assets/logo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Outfit:wght@300;400;500;600&family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="shop.css">
+    <style>
+        /* ===== PRODUCT PAGE STYLES ===== */
+        .product-page {
+            padding-top: 100px;
+            min-height: 100vh;
+            background: #FDF8F0;
+        }
+
+        .product-layout {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 4rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        /* --- Breadcrumb --- */
+        .product-breadcrumb {
+            grid-column: 1 / -1;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.8rem;
+            color: #999;
+            margin-bottom: -1rem;
+        }
+        .product-breadcrumb a {
+            color: #888;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .product-breadcrumb a:hover { color: #A82039; }
+        .product-breadcrumb .sep { color: #ccc; }
+        .product-breadcrumb .current { color: #1a4a3a; font-weight: 500; }
+
+        /* --- IMAGE GALLERY --- */
+        .gallery-section {
+            position: sticky;
+            top: 100px;
+        }
+
+        .gallery-main {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 3/4;
+            border-radius: 16px;
+            overflow: hidden;
+            background: #f0ebe3;
+            cursor: default;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+        }
+        .gallery-main img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* Navigation arrows */
+        .gallery-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(200, 169, 110, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 5;
+            color: #1a4a3a;
+            opacity: 0;
+        }
+        .gallery-main:hover .gallery-nav { opacity: 1; }
+        .gallery-nav:hover {
+            background: #1a4a3a;
+            color: #FDF8F0;
+            border-color: #1a4a3a;
+            transform: translateY(-50%) scale(1.1);
+        }
+        .gallery-nav--prev { left: 12px; }
+        .gallery-nav--next { right: 12px; }
+
+        /* Image counter */
+        .gallery-counter {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: rgba(26, 74, 58, 0.75);
+            backdrop-filter: blur(8px);
+            color: #FDF8F0;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            padding: 5px 12px;
+            border-radius: 16px;
+            z-index: 5;
+        }
+
+        .gallery-thumbnails {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+        }
+        .gallery-thumb {
+            width: 72px;
+            height: 90px;
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+            opacity: 0.6;
+            background: #f0ebe3;
+        }
+        .gallery-thumb:hover { opacity: 0.85; transform: translateY(-2px); }
+        .gallery-thumb.active {
+            border-color: #A82039;
+            opacity: 1;
+            box-shadow: 0 4px 16px rgba(168, 32, 57, 0.15);
+        }
+        .gallery-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* --- PRODUCT INFO --- */
+        .info-section {
+            padding-top: 0.5rem;
+        }
+
+        .product-tag-badge {
+            display: inline-block;
+            font-family: 'Caveat', cursive;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #fff;
+            background: linear-gradient(135deg, #A82039, #8B2252);
+            padding: 5px 16px;
+            border-radius: 6px;
+            transform: rotate(-1deg);
+            box-shadow: 3px 3px 0 #5C1A33;
+            margin-bottom: 1rem;
+            letter-spacing: 0.02em;
+        }
+
+        .product-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            font-weight: 500;
+            color: #1a4a3a;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+        .product-pricing {
+            display: flex;
+            align-items: baseline;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+        .price-sale {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            font-weight: 600;
+            color: #A82039;
+        }
+        .price-original {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            color: #999;
+            text-decoration: line-through;
+        }
+        .price-discount {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #fff;
+            background: #2d6a4f;
+            padding: 3px 10px;
+            border-radius: 12px;
+        }
+
+        .shipping-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.8rem;
+            color: #888;
+            margin-bottom: 1.5rem;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(200, 169, 110, 0.2);
+        }
+        .shipping-info svg { flex-shrink: 0; }
+
+        .product-desc {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.92rem;
+            color: #666;
+            line-height: 1.7;
+            margin-bottom: 2rem;
+        }
+
+        /* --- SIZE SELECTOR --- */
+        .size-section {
+            margin-bottom: 1.5rem;
+        }
+        .size-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+        .size-label {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #1a4a3a;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+        .size-guide-link {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.78rem;
+            color: #A82039;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: color 0.3s;
+        }
+        .size-guide-link:hover { color: #8B2252; }
+
+        .size-pills {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .size-pill {
+            width: 52px;
+            height: 44px;
+            border: 2px solid #d4ccc0;
+            border-radius: 10px;
+            background: #fff;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #1a4a3a;
+            cursor: pointer;
+            transition: all 0.25s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .size-pill:hover {
+            border-color: #A82039;
+            color: #A82039;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(168, 32, 57, 0.1);
+        }
+        .size-pill.selected {
+            background: #1a4a3a;
+            border-color: #1a4a3a;
+            color: #FDF8F0;
+            box-shadow: 0 4px 16px rgba(26, 74, 58, 0.3);
+            transform: translateY(-2px);
+        }
+        .size-error {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.78rem;
+            color: #A82039;
+            margin-top: 0.5rem;
+            display: none;
+        }
+        .size-error.show { display: block; animation: shake 0.4s ease; }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            50% { transform: translateX(6px); }
+            75% { transform: translateX(-3px); }
+        }
+
+        /* --- QUANTITY --- */
+        .qty-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .qty-label {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #1a4a3a;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+        .qty-control {
+            display: flex;
+            align-items: center;
+            border: 2px solid #d4ccc0;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #fff;
+        }
+        .qty-btn {
+            width: 40px;
+            height: 40px;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: #1a4a3a;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .qty-btn:hover { background: #1a4a3a; color: #FDF8F0; }
+        .qty-value {
+            width: 40px;
+            text-align: center;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #1a4a3a;
+            border-left: 1px solid #e8e0d4;
+            border-right: 1px solid #e8e0d4;
+            line-height: 40px;
+        }
+
+        /* --- ADD TO CART BUTTON --- */
+        .add-to-cart {
+            width: 100%;
+            padding: 16px 24px;
+            background: linear-gradient(135deg, #1a4a3a 0%, #2d6a4f 100%);
+            color: #FDF8F0;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 500;
+            letter-spacing: 0.06em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 6px 24px rgba(26, 74, 58, 0.25);
+        }
+        .add-to-cart::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #A82039 0%, #8B2252 100%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+        .add-to-cart:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 32px rgba(26, 74, 58, 0.35);
+        }
+        .add-to-cart:hover::before { opacity: 1; }
+        .add-to-cart span, .add-to-cart svg { position: relative; z-index: 1; }
+        .add-to-cart.added {
+            background: linear-gradient(135deg, #2d6a4f, #1a4a3a);
+        }
+        .add-to-cart.added::before { opacity: 0; }
+
+        /* --- DETAILS ACCORDION --- */
+        .details-accordion {
+            margin-top: 2rem;
+            border-top: 1px solid rgba(200, 169, 110, 0.2);
+        }
+        .acc-item {
+            border-bottom: 1px solid rgba(200, 169, 110, 0.2);
+        }
+        .acc-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            cursor: pointer;
+            background: none;
+            border: none;
+            width: 100%;
+            text-align: left;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: #1a4a3a;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            transition: color 0.3s;
+        }
+        .acc-header:hover { color: #A82039; }
+        .acc-header svg {
+            transition: transform 0.3s;
+            flex-shrink: 0;
+        }
+        .acc-item.open .acc-header svg { transform: rotate(180deg); }
+        .acc-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.3s;
+        }
+        .acc-item.open .acc-body {
+            max-height: 300px;
+            padding-bottom: 16px;
+        }
+        .acc-body ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .acc-body li {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.84rem;
+            color: #666;
+            padding: 5px 0;
+            padding-left: 18px;
+            position: relative;
+        }
+        .acc-body li::before {
+            content: '◆';
+            position: absolute;
+            left: 0;
+            color: #C8A96E;
+            font-size: 0.55rem;
+            top: 8px;
+        }
+
+        /* --- TRUST BADGES --- */
+        .trust-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+        .trust-badge {
+            text-align: center;
+            padding: 14px 8px;
+            border-radius: 10px;
+            background: rgba(200, 169, 110, 0.08);
+            border: 1px solid rgba(200, 169, 110, 0.15);
+        }
+        .trust-badge-icon {
+            font-size: 1.4rem;
+            margin-bottom: 6px;
+        }
+        .trust-badge-label {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 500;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            line-height: 1.3;
+        }
+
+        /* --- LIGHTBOX --- */
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 31, 24, 0.95);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s;
+            backdrop-filter: blur(10px);
+        }
+        .lightbox.active { opacity: 1; visibility: visible; }
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 24px;
+            background: none;
+            border: none;
+            color: #FDF8F0;
+            cursor: pointer;
+            z-index: 10;
+            transition: transform 0.3s;
+        }
+        .lightbox-close:hover { transform: rotate(90deg); }
+        .lightbox-img {
+            max-width: 85vw;
+            max-height: 85vh;
+            object-fit: contain;
+            border-radius: 12px;
+            box-shadow: 0 20px 80px rgba(0,0,0,0.4);
+        }
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #FDF8F0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        .lightbox-nav:hover { background: rgba(255,255,255,0.3); }
+        .lightbox-nav--prev { left: 24px; }
+        .lightbox-nav--next { right: 24px; }
+        .lightbox-dots {
+            position: absolute;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+        }
+        .lightbox-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .lightbox-dot.active { background: #C8A96E; transform: scale(1.3); }
+
+        /* --- SIZE GUIDE MODAL --- */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 31, 24, 0.7);
+            z-index: 9998;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            backdrop-filter: blur(6px);
+        }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-box {
+            background: #FDF8F0;
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 520px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+        .modal-close-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s;
+        }
+        .modal-close-btn:hover { color: #A82039; }
+        .modal-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            color: #1a4a3a;
+            margin-bottom: 0.25rem;
+        }
+        .modal-subtitle {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.8rem;
+            color: #999;
+            margin-bottom: 1.25rem;
+        }
+        .sg-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.82rem;
+        }
+        .sg-table th {
+            background: #1a4a3a;
+            color: #FDF8F0;
+            padding: 10px 12px;
+            text-align: left;
+            font-weight: 500;
+        }
+        .sg-table th:first-child { border-radius: 8px 0 0 0; }
+        .sg-table th:last-child { border-radius: 0 8px 0 0; }
+        .sg-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e8e0d4;
+            color: #555;
+        }
+        .sg-table tr:hover td { background: rgba(200, 169, 110, 0.06); }
+        .modal-tip {
+            margin-top: 1rem;
+            padding: 10px 14px;
+            background: rgba(200, 169, 110, 0.1);
+            border-radius: 8px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.78rem;
+            color: #555;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            .product-layout {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+                padding: 1rem 1rem 3rem;
+            }
+            .gallery-section {
+                position: relative;
+                top: 0;
+            }
+            .product-title { font-size: 1.6rem; }
+            .price-sale { font-size: 1.6rem; }
+            .gallery-thumbnails { gap: 6px; }
+            .gallery-thumb { width: 56px; height: 70px; }
+            .gallery-nav { opacity: 1; width: 34px; height: 34px; }
+            .trust-row { grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
+        }
+
+        /* --- SPECIAL NOTE --- */
+        .special-note {
+            margin-top: 1.25rem;
+            padding: 14px 18px;
+            background: linear-gradient(135deg, rgba(200, 169, 110, 0.1), rgba(168, 32, 57, 0.06));
+            border: 1px solid rgba(200, 169, 110, 0.25);
+            border-left: 4px solid #C8A96E;
+            border-radius: 10px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.82rem;
+            color: #555;
+            line-height: 1.5;
+            display: none;
+        }
+        .special-note.show { display: block; }
+        .special-note-icon {
+            display: inline-block;
+            margin-right: 6px;
+            font-size: 1rem;
+        }
+        .special-note strong {
+            color: #1a4a3a;
+            font-weight: 600;
+        }
+
+        /* --- ENTRANCE ANIMATIONS --- */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
 </head>
 <body>
 
@@ -24,9 +707,8 @@
                 <div class="nav-dropdown">
                     <a href="#" class="nav-link nav-link-dropdown">Shop <svg viewBox="0 0 12 8" width="10" height="8"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
                     <div class="dropdown-menu">
-                        <a href="category.html?cat=sets" class="dropdown-item">Sets</a>
                         <a href="category.html?cat=tops" class="dropdown-item">Tops</a>
-                        <a href="category.html?cat=kurtis" class="dropdown-item">Kurtis</a>
+                        <a href="category.html?cat=layers" class="dropdown-item">Layers</a>
                     </div>
                 </div>
                 <a href="index.html#story" class="nav-link">Our Story</a>
@@ -48,121 +730,142 @@
         </div>
     </nav>
 
-    <!-- ========== PRODUCT DETAIL ========== -->
-    <section class="product-detail">
-        <div class="section-container">
-            <nav class="breadcrumb" aria-label="Breadcrumb">
+    <!-- ========== PRODUCT PAGE ========== -->
+    <section class="product-page">
+        <div class="product-layout">
+            <!-- Breadcrumb -->
+            <nav class="product-breadcrumb" aria-label="Breadcrumb">
                 <a href="index.html">Home</a>
-                <span class="breadcrumb-sep">›</span>
-                <a href="#" id="breadcrumbCat">Shop</a>
-                <span class="breadcrumb-sep">›</span>
-                <span class="breadcrumb-current" id="breadcrumbProduct">Product</span>
+                <span class="sep">›</span>
+                <a href="category.html?cat=tops" id="breadcrumbCat">Tops</a>
+                <span class="sep">›</span>
+                <span class="current" id="breadcrumbProduct">Product</span>
             </nav>
 
-            <div class="product-detail-grid" id="productDetailGrid">
-                <!-- Left: Image -->
-                <div class="product-image-section">
-                    <div class="product-image-main" id="productImageMain">
-                        <img src="" alt="" id="productImage">
-                        <div class="product-image-zoom-hint">Hover to zoom</div>
-                    </div>
-                </div>
+            <!-- LEFT: Image Gallery -->
+            <div class="gallery-section fade-up" id="gallerySection">
+                <div class="gallery-main" id="galleryMain">
+                    <img src="" alt="" id="mainImage">
 
-                <!-- Right: Info -->
-                <div class="product-info-section" id="productInfoSection">
-                    <span class="product-tag" id="productTag"></span>
-                    <h1 class="product-name" id="productName"></h1>
-                    <div class="product-pricing">
-                        <span class="product-price" id="productPrice"></span>
-                        <span class="product-original-price" id="productOriginalPrice"></span>
-                        <span class="product-discount" id="productDiscount"></span>
-                    </div>
-                    <p class="product-description" id="productDescription"></p>
-
-                    <!-- Size Selector -->
-                    <div class="size-section">
-                        <div class="size-header">
-                            <span class="size-label">Select Size</span>
-                            <button class="size-guide-btn" id="sizeGuideBtn">
-                                <svg viewBox="0 0 24 24" width="16" height="16"><path d="M21 10H7M21 6H3M21 14H3M21 18H7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                                Size Guide
-                            </button>
-                        </div>
-                        <div class="size-options" id="sizeOptions">
-                            <!-- Size pills injected via JS -->
-                        </div>
-                        <p class="size-error hidden" id="sizeError">Please select a size</p>
-                    </div>
-
-                    <!-- Quantity -->
-                    <div class="qty-section">
-                        <span class="qty-label">Quantity</span>
-                        <div class="qty-control">
-                            <button class="qty-btn" id="qtyMinus" aria-label="Decrease quantity">−</button>
-                            <span class="qty-value" id="qtyValue">1</span>
-                            <button class="qty-btn" id="qtyPlus" aria-label="Increase quantity">+</button>
-                        </div>
-                    </div>
-
-                    <!-- Add to Cart -->
-                    <button class="btn btn-primary btn-full add-to-cart-btn" id="addToCartBtn">
-                        <svg viewBox="0 0 24 24" width="20" height="20"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="1.5"/><path d="M16 10a4 4 0 01-8 0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                        <span>Add to Cart</span>
+                    <span class="gallery-counter" id="galleryCounter">1 / 4</span>
+                    <button class="gallery-nav gallery-nav--prev" id="prevBtn" aria-label="Previous image">
+                        <svg viewBox="0 0 24 24" width="18" height="18"><path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                     </button>
-
-                    <!-- Details -->
-                    <div class="product-details-accordion">
-                        <div class="accordion-item open">
-                            <button class="accordion-header">
-                                <span>Product Details</span>
-                                <svg viewBox="0 0 24 24" width="18" height="18"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                            </button>
-                            <div class="accordion-content" id="productDetails">
-                                <!-- Details injected via JS -->
-                            </div>
-                        </div>
-                        <div class="accordion-item">
-                            <button class="accordion-header">
-                                <span>Shipping & Returns</span>
-                                <svg viewBox="0 0 24 24" width="18" height="18"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                            </button>
-                            <div class="accordion-content">
-                                <ul>
-                                    <li>Free shipping on orders above ₹1,999</li>
-                                    <li>Standard delivery: 5-7 business days</li>
-                                    <li>Express delivery: 2-3 business days (₹149)</li>
-                                    <li>Easy 7-day returns for unused items</li>
-                                    <li>Exchange available within 15 days</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+                    <button class="gallery-nav gallery-nav--next" id="nextBtn" aria-label="Next image">
+                        <svg viewBox="0 0 24 24" width="18" height="18"><path d="M9 18l6-6-6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
                 </div>
+                <div class="gallery-thumbnails" id="thumbnails"></div>
             </div>
 
-            <!-- Related Products -->
-            <div class="related-section">
-                <h2 class="section-title">You May Also Like</h2>
-                <div class="related-grid" id="relatedGrid">
-                    <!-- Injected via JS -->
+            <!-- RIGHT: Product Info -->
+            <div class="info-section fade-up" style="transition-delay: 0.15s">
+                <span class="product-tag-badge" id="productTag">✦ New Arrival</span>
+                <h1 class="product-title" id="productTitle"></h1>
+                <div class="product-pricing">
+                    <span class="price-sale" id="priceSale"></span>
+                    <span class="price-original" id="priceOriginal"></span>
+                    <span class="price-discount" id="priceDiscount"></span>
+                </div>
+                <div class="shipping-info" id="shippingInfo">
+                    <svg viewBox="0 0 24 24" width="16" height="16"><path d="M5 18h14M3 12h18M7 6h10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                    <span>Shipping: ₹99</span>
+                </div>
+                <p class="product-desc" id="productDesc"></p>
+
+                <!-- Size Selector -->
+                <div class="size-section">
+                    <div class="size-header">
+                        <span class="size-label">Select Size</span>
+                        <button class="size-guide-link" id="sizeGuideBtn">
+                            <svg viewBox="0 0 24 24" width="14" height="14"><path d="M21 10H7M21 6H3M21 14H3M21 18H7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                            Size Guide
+                        </button>
+                    </div>
+                    <div class="size-pills" id="sizePills"></div>
+                    <p class="size-error" id="sizeError">Please select a size</p>
+                </div>
+
+                <!-- Quantity -->
+                <div class="qty-section">
+                    <span class="qty-label">Quantity</span>
+                    <div class="qty-control">
+                        <button class="qty-btn" id="qtyMinus" aria-label="Decrease quantity">−</button>
+                        <span class="qty-value" id="qtyValue">1</span>
+                        <button class="qty-btn" id="qtyPlus" aria-label="Increase quantity">+</button>
+                    </div>
+                </div>
+
+                <!-- Add to Cart -->
+                <button class="add-to-cart" id="addToCartBtn">
+                    <svg viewBox="0 0 24 24" width="20" height="20"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="1.5"/><path d="M16 10a4 4 0 01-8 0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span>Add to Cart</span>
+                </button>
+
+                <!-- Trust Badges (dynamic) -->
+                <div class="trust-row" id="trustRow"></div>
+
+                <!-- Special Note -->
+                <div class="special-note" id="specialNote">
+                    <span class="special-note-icon">✦</span>
+                    <strong>Note:</strong> <span id="specialNoteText"></span>
+                </div>
+
+                <!-- Details Accordion -->
+                <div class="details-accordion">
+                    <div class="acc-item open">
+                        <button class="acc-header" id="accDetails">
+                            <span>Product Details</span>
+                            <svg viewBox="0 0 24 24" width="18" height="18"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                        </button>
+                        <div class="acc-body" id="detailsBody">
+                            <ul id="detailsList"></ul>
+                        </div>
+                    </div>
+                    <div class="acc-item">
+                        <button class="acc-header" id="accShipping">
+                            <span>Shipping & Returns</span>
+                            <svg viewBox="0 0 24 24" width="18" height="18"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                        </button>
+                        <div class="acc-body">
+                            <ul>
+                                <li>Shipping charge: ₹99</li>
+                                <li>Standard delivery: 5-7 business days</li>
+                                <li>Express delivery: 2-3 business days (₹149)</li>
+                                <li>Easy 7-day returns for unused items</li>
+                                <li>Exchange available within 15 days</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- ========== LIGHTBOX ========== -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" id="lightboxClose" aria-label="Close">
+            <svg viewBox="0 0 24 24" width="28" height="28"><path d="M18 6L6 18M6 6l12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <button class="lightbox-nav lightbox-nav--prev" id="lightboxPrev" aria-label="Previous">
+            <svg viewBox="0 0 24 24" width="20" height="20"><path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <img class="lightbox-img" id="lightboxImg" src="" alt="">
+        <button class="lightbox-nav lightbox-nav--next" id="lightboxNext" aria-label="Next">
+            <svg viewBox="0 0 24 24" width="20" height="20"><path d="M9 18l6-6-6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="lightbox-dots" id="lightboxDots"></div>
+    </div>
+
     <!-- ========== SIZE GUIDE MODAL ========== -->
     <div class="modal-overlay" id="sizeGuideModal">
-        <div class="modal">
-            <button class="modal-close" id="modalClose" aria-label="Close">
+        <div class="modal-box">
+            <button class="modal-close-btn" id="modalClose" aria-label="Close">
                 <svg viewBox="0 0 24 24" width="24" height="24"><path d="M18 6L6 18M6 6l12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
             </button>
             <h2 class="modal-title">Size Guide</h2>
-            <p class="modal-subtitle">All measurements are in inches. We recommend measuring a garment that fits you well and comparing.</p>
-            <div class="size-guide-table-wrap">
-                <table class="size-guide-table" id="sizeGuideTable">
-                    <!-- Table injected via JS -->
-                </table>
-            </div>
+            <p class="modal-subtitle">All measurements are in inches. Measure a garment that fits you well and compare.</p>
+            <table class="sg-table" id="sizeGuideTable"></table>
             <div class="modal-tip">
                 <strong>💡 Tip:</strong> If you're between sizes, we recommend going one size up for a relaxed fit.
             </div>
@@ -176,9 +879,8 @@
             <p class="footer-tagline">Handblock Printed Ethnic Wear — Made with love in Jaipur</p>
             <div class="footer-divider"></div>
             <div class="footer-links">
-                <a href="category.html?cat=sets">Sets</a>
                 <a href="category.html?cat=tops">Tops</a>
-                <a href="category.html?cat=kurtis">Kurtis</a>
+                <a href="category.html?cat=layers">Layers</a>
                 <a href="index.html#story">Our Story</a>
                 <a href="index.html#craft">The Craft</a>
                 <a href="index.html#contact">Contact</a>
@@ -192,50 +894,174 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
-            const id = params.get('id');
+            const id = params.get('id') || 'top-iktara';
             const product = getProductById(id);
 
             if (!product) {
-                window.location.href = 'category.html?cat=sets';
+                window.location.href = 'index.html';
                 return;
             }
 
-            const categoryInfo = CATEGORIES[product.category];
-
-            // Update page
+            // --- Page Title ---
             document.title = `${product.name} — Mrignaini`;
-            document.getElementById('productImage').src = product.image;
-            document.getElementById('productImage').alt = product.name;
-            document.getElementById('productTag').textContent = product.tag;
-            document.getElementById('productName').textContent = product.name;
-            document.getElementById('productPrice').textContent = formatPrice(product.price);
-            document.getElementById('productOriginalPrice').textContent = formatPrice(product.originalPrice);
-            document.getElementById('productDiscount').textContent = `${Math.round((1 - product.price / product.originalPrice) * 100)}% off`;
-            document.getElementById('productDescription').textContent = product.description;
 
-            // Breadcrumb
-            const breadcrumbCat = document.getElementById('breadcrumbCat');
-            breadcrumbCat.textContent = categoryInfo.name;
-            breadcrumbCat.href = `category.html?cat=${product.category}`;
+            // --- Breadcrumb ---
+            const cat = CATEGORIES[product.category];
+            if (cat) {
+                document.getElementById('breadcrumbCat').textContent = cat.name;
+                document.getElementById('breadcrumbCat').href = `category.html?cat=${product.category}`;
+            }
             document.getElementById('breadcrumbProduct').textContent = product.name;
 
-            // Sizes
-            const sizeOptions = document.getElementById('sizeOptions');
-            sizeOptions.innerHTML = product.sizes.map(s => `
+            // --- Product Info ---
+            document.getElementById('productTag').textContent = `✦ ${product.tag}`;
+            document.getElementById('productTitle').textContent = product.name;
+            document.getElementById('priceSale').textContent = formatPrice(product.price);
+            document.getElementById('priceOriginal').textContent = formatPrice(product.originalPrice);
+            const discount = Math.round((1 - product.price / product.originalPrice) * 100);
+            document.getElementById('priceDiscount').textContent = `${discount}% off`;
+            document.getElementById('productDesc').textContent = product.description;
+
+            // Shipping
+            if (product.shipping) {
+                document.getElementById('shippingInfo').querySelector('span').textContent = `Shipping: ₹${product.shipping}`;
+            }
+
+            // --- IMAGE GALLERY ---
+            const images = product.images || [product.image];
+            let currentIndex = 0;
+            const mainImage = document.getElementById('mainImage');
+            const counter = document.getElementById('galleryCounter');
+
+            function showImage(index) {
+                currentIndex = index;
+                mainImage.src = images[index];
+                mainImage.alt = `${product.name} - Image ${index + 1}`;
+                counter.textContent = `${index + 1} / ${images.length}`;
+                // Update thumbnails
+                document.querySelectorAll('.gallery-thumb').forEach((t, i) => {
+                    t.classList.toggle('active', i === index);
+                });
+                // Update lightbox dots
+                document.querySelectorAll('.lightbox-dot').forEach((d, i) => {
+                    d.classList.toggle('active', i === index);
+                });
+            }
+
+            // Create thumbnails
+            const thumbContainer = document.getElementById('thumbnails');
+            thumbContainer.innerHTML = images.map((img, i) => `
+                <div class="gallery-thumb ${i === 0 ? 'active' : ''}" data-index="${i}">
+                    <img src="${img}" alt="${product.name} thumbnail ${i + 1}" loading="lazy">
+                </div>
+            `).join('');
+
+            thumbContainer.querySelectorAll('.gallery-thumb').forEach(thumb => {
+                thumb.addEventListener('click', () => showImage(parseInt(thumb.dataset.index)));
+            });
+
+            // Nav arrows
+            document.getElementById('prevBtn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                showImage((currentIndex - 1 + images.length) % images.length);
+            });
+            document.getElementById('nextBtn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                showImage((currentIndex + 1) % images.length);
+            });
+
+            showImage(0);
+
+            // Click to open lightbox
+            const galleryMain = document.getElementById('galleryMain');
+            galleryMain.addEventListener('click', () => {
+                openLightbox(currentIndex);
+            });
+
+            // --- LIGHTBOX ---
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightboxImg');
+            const dotsContainer = document.getElementById('lightboxDots');
+
+            // Create lightbox dots
+            dotsContainer.innerHTML = images.map((_, i) => `
+                <button class="lightbox-dot ${i === 0 ? 'active' : ''}" data-index="${i}" aria-label="Image ${i + 1}"></button>
+            `).join('');
+
+            dotsContainer.querySelectorAll('.lightbox-dot').forEach(dot => {
+                dot.addEventListener('click', () => {
+                    showImage(parseInt(dot.dataset.index));
+                    lightboxImg.src = images[currentIndex];
+                });
+            });
+
+            function openLightbox(index) {
+                showImage(index);
+                lightboxImg.src = images[index];
+                lightbox.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeLightbox() {
+                lightbox.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+            lightbox.addEventListener('click', (e) => {
+                if (e.target === lightbox) closeLightbox();
+            });
+            document.getElementById('lightboxPrev').addEventListener('click', (e) => {
+                e.stopPropagation();
+                showImage((currentIndex - 1 + images.length) % images.length);
+                lightboxImg.src = images[currentIndex];
+            });
+            document.getElementById('lightboxNext').addEventListener('click', (e) => {
+                e.stopPropagation();
+                showImage((currentIndex + 1) % images.length);
+                lightboxImg.src = images[currentIndex];
+            });
+
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (!lightbox.classList.contains('active')) return;
+                if (e.key === 'Escape') closeLightbox();
+                if (e.key === 'ArrowLeft') {
+                    showImage((currentIndex - 1 + images.length) % images.length);
+                    lightboxImg.src = images[currentIndex];
+                }
+                if (e.key === 'ArrowRight') {
+                    showImage((currentIndex + 1) % images.length);
+                    lightboxImg.src = images[currentIndex];
+                }
+            });
+
+            // --- SIZE SELECTOR ---
+            const sizePills = document.getElementById('sizePills');
+            sizePills.innerHTML = product.sizes.map(s => `
                 <button class="size-pill" data-size="${s}">${s}</button>
             `).join('');
 
             let selectedSize = null;
-            sizeOptions.querySelectorAll('.size-pill').forEach(pill => {
+
+            // Auto-select if Free Size
+            if (product.sizes.length === 1 && product.sizes[0] === 'Free Size') {
+                selectedSize = 'Free Size';
+                sizePills.querySelector('.size-pill').classList.add('selected');
+                // Hide size guide for free-size products
+                document.getElementById('sizeGuideBtn').style.display = 'none';
+            }
+
+            sizePills.querySelectorAll('.size-pill').forEach(pill => {
                 pill.addEventListener('click', () => {
-                    sizeOptions.querySelectorAll('.size-pill').forEach(p => p.classList.remove('selected'));
+                    sizePills.querySelectorAll('.size-pill').forEach(p => p.classList.remove('selected'));
                     pill.classList.add('selected');
                     selectedSize = pill.dataset.size;
-                    document.getElementById('sizeError').classList.add('hidden');
+                    document.getElementById('sizeError').classList.remove('show');
                 });
             });
 
-            // Quantity
+            // --- QUANTITY ---
             let qty = 1;
             const qtyValue = document.getElementById('qtyValue');
             document.getElementById('qtyMinus').addEventListener('click', () => {
@@ -245,88 +1071,74 @@
                 if (qty < 10) { qty++; qtyValue.textContent = qty; }
             });
 
-            // Add to cart
+            // --- ADD TO CART ---
             document.getElementById('addToCartBtn').addEventListener('click', () => {
                 if (!selectedSize) {
-                    document.getElementById('sizeError').classList.remove('hidden');
+                    document.getElementById('sizeError').classList.add('show');
                     return;
                 }
                 Cart.add(product.id, selectedSize, qty);
                 const btn = document.getElementById('addToCartBtn');
                 btn.innerHTML = '<span>✓ Added to Cart!</span>';
-                btn.style.background = 'linear-gradient(135deg, var(--clr-emerald), var(--clr-sage))';
+                btn.classList.add('added');
                 setTimeout(() => {
                     btn.innerHTML = `<svg viewBox="0 0 24 24" width="20" height="20"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="1.5"/><path d="M16 10a4 4 0 01-8 0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Add to Cart</span>`;
-                    btn.style.background = '';
+                    btn.classList.remove('added');
                 }, 2000);
             });
 
-            // Product details
-            document.getElementById('productDetails').innerHTML = '<ul>' + product.details.map(d => `<li>${d}</li>`).join('') + '</ul>';
+            // --- PRODUCT DETAILS ---
+            document.getElementById('detailsList').innerHTML = product.details.map(d => `<li>${d}</li>`).join('');
 
-            // Accordion
-            document.querySelectorAll('.accordion-header').forEach(header => {
+            // --- TRUST BADGES (dynamic) ---
+            const trustRow = document.getElementById('trustRow');
+            if (product.trustBadges && product.trustBadges.length) {
+                trustRow.innerHTML = product.trustBadges.map(b => `
+                    <div class="trust-badge">
+                        <div class="trust-badge-icon">${b.icon}</div>
+                        <div class="trust-badge-label">${b.label}</div>
+                    </div>
+                `).join('');
+            } else {
+                trustRow.style.display = 'none';
+            }
+
+            // --- SPECIAL NOTE ---
+            if (product.specialNote) {
+                document.getElementById('specialNoteText').textContent = product.specialNote;
+                document.getElementById('specialNote').classList.add('show');
+            }
+
+            // --- ACCORDION ---
+            document.querySelectorAll('.acc-header').forEach(header => {
                 header.addEventListener('click', () => {
-                    const item = header.parentElement;
-                    item.classList.toggle('open');
+                    header.parentElement.classList.toggle('open');
                 });
             });
 
-            // Image zoom
-            const imgMain = document.getElementById('productImageMain');
-            const img = document.getElementById('productImage');
-            imgMain.addEventListener('mousemove', (e) => {
-                const rect = imgMain.getBoundingClientRect();
-                const x = ((e.clientX - rect.left) / rect.width) * 100;
-                const y = ((e.clientY - rect.top) / rect.height) * 100;
-                img.style.transformOrigin = `${x}% ${y}%`;
-                img.style.transform = 'scale(1.8)';
-            });
-            imgMain.addEventListener('mouseleave', () => {
-                img.style.transform = 'scale(1)';
-            });
-
-            // Size guide modal
+            // --- SIZE GUIDE MODAL ---
             const modal = document.getElementById('sizeGuideModal');
-            document.getElementById('sizeGuideBtn').addEventListener('click', () => modal.classList.add('active'));
-            document.getElementById('modalClose').addEventListener('click', () => modal.classList.remove('active'));
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) modal.classList.remove('active');
-            });
-
-            // Size guide table
             const table = document.getElementById('sizeGuideTable');
             table.innerHTML = `
                 <thead><tr>${SIZE_GUIDE.headers.map(h => `<th>${h}</th>`).join('')}</tr></thead>
                 <tbody>${SIZE_GUIDE.rows.map(row => `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`).join('')}</tbody>
             `;
+            document.getElementById('sizeGuideBtn').addEventListener('click', () => modal.classList.add('active'));
+            document.getElementById('modalClose').addEventListener('click', () => modal.classList.remove('active'));
+            modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
 
-            // Related products
-            const related = PRODUCTS.filter(p => p.category === product.category && p.id !== product.id);
-            const relatedGrid = document.getElementById('relatedGrid');
-            relatedGrid.innerHTML = related.map(p => `
-                <a href="product.html?id=${p.id}" class="product-card">
-                    <div class="product-card-image">
-                        <img src="${p.image}" alt="${p.name}" loading="lazy">
-                        <span class="product-card-tag">${p.tag}</span>
-                    </div>
-                    <div class="product-card-info">
-                        <h3 class="product-card-name">${p.name}</h3>
-                        <div class="product-card-price">
-                            <span class="price-current">${formatPrice(p.price)}</span>
-                            <span class="price-original">${formatPrice(p.originalPrice)}</span>
-                        </div>
-                    </div>
-                </a>
-            `).join('');
-
-            // Mobile nav
+            // --- MOBILE NAV ---
             const navToggle = document.getElementById('navToggle');
             const navLinks = document.getElementById('navLinks');
             navToggle.addEventListener('click', () => {
                 navToggle.classList.toggle('active');
                 navLinks.classList.toggle('open');
             });
+
+            // --- ENTRANCE ANIMATIONS ---
+            setTimeout(() => {
+                document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
+            }, 100);
         });
     </script>
 </body>
