@@ -185,12 +185,15 @@ const PRODUCTS = [
         price: 699,
         originalPrice: 899,
         images: [
-            'assets/images/dopatti1.jpg',
-            'assets/images/dopatti2.jpg',
-            'assets/images/dopatti3.jpg',
-            'assets/images/dopatti4.jpg'
+            'assets/images/dopatti1.png',
+            'assets/images/dopatti2.png',
+            'assets/images/dopatti3.png',
+            'assets/images/dopatti4.png',
+            'assets/images/dopatti5.png',
+            'assets/images/dopatti6.png',
+            'assets/images/dopatti7.png'
         ],
-        image: 'assets/images/dopatti1.jpg',
+        image: 'assets/images/dopatti1.png',
         sizes: ['XS', 'S', 'M', 'L'],
         tag: 'Upcycled',
         description: 'The Do Patti Upcycled Spaghetti Strap Top is a celebration of sustainable fashion and artisanal craft. Handcrafted using carefully repurposed hand-block printed cotton offcuts, each top is a unique patchwork of heritage prints.\n\nThe relaxed spaghetti strap silhouette keeps it breezy and effortless, making it perfect for layering with jackets or wearing solo on warm days. Each piece is one-of-a-kind — embracing the beauty of imperfection and circular fashion.',

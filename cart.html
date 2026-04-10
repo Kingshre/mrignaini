@@ -93,7 +93,7 @@
                 </div>
                 <h2>Your cart is empty</h2>
                 <p>Looks like you haven't added anything yet. Explore our collections and find something you love.</p>
-                <a href="category.html?cat=tops" class="btn btn-primary">Start Shopping</a>
+                <a href="category.html?cat=tops" class="btn btn-primary">Continue Shopping</a>
             </div>
 
             <!-- Cart with items -->
@@ -334,20 +334,22 @@
 
         function changeQty(productId, size, delta) {
             const items = Cart.getItems();
-            const item = items.find(i => i.productId === productId && i.size === size);
+            let sizeStr = size === 'undefined' ? undefined : size;
+            const item = items.find(i => i.productId === productId && String(i.size) === String(sizeStr));
             if (item) {
                 const newQty = item.qty + delta;
                 if (newQty <= 0) {
-                    Cart.remove(productId, size);
+                    Cart.remove(productId, sizeStr);
                 } else {
-                    Cart.updateQty(productId, size, Math.min(newQty, 10));
+                    Cart.updateQty(productId, sizeStr, Math.min(newQty, 10));
                 }
                 renderCart();
             }
         }
 
         function removeItem(productId, size) {
-            Cart.remove(productId, size);
+            let sizeStr = size === 'undefined' ? undefined : size;
+            Cart.remove(productId, sizeStr);
             renderCart();
         }
     </script>

@@ -9,7 +9,15 @@ const Cart = {
     // Get all cart items
     getItems() {
         const data = localStorage.getItem(CART_KEY);
-        return data ? JSON.parse(data) : [];
+        let items = data ? JSON.parse(data) : [];
+        if (typeof getProductById === 'function') {
+            const valid = items.filter(i => getProductById(i.productId));
+            if (valid.length !== items.length) {
+                localStorage.setItem(CART_KEY, JSON.stringify(valid));
+                items = valid;
+            }
+        }
+        return items;
     },
 
     // Save items
@@ -34,14 +42,14 @@ const Cart = {
     // Remove item from cart
     remove(productId, size) {
         let items = Cart.getItems();
-        items = items.filter(i => !(i.productId === productId && i.size === size));
+        items = items.filter(i => !(i.productId === productId && String(i.size) === String(size)));
         Cart._save(items);
     },
 
     // Update quantity
     updateQty(productId, size, newQty) {
         const items = Cart.getItems();
-        const item = items.find(i => i.productId === productId && i.size === size);
+        const item = items.find(i => i.productId === productId && String(i.size) === String(size));
         if (item) {
             if (newQty <= 0) {
                 Cart.remove(productId, size);

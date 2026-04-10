@@ -518,9 +518,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     <button class="coupon-popup-close" aria-label="Close">&times;</button>
                     <div class="coupon-popup-emoji">🎁</div>
                     <h3>Welcome to Mrignaini!</h3>
-                    <p>Enter this code at checkout for <strong>₹200 off</strong> your first order</p>
+                    <p>Use this code at checkout for <strong>₹200 off</strong></p>
                     <div class="coupon-popup-code">MRIG200</div>
-                    <div class="coupon-popup-hint">Use at checkout • Min order ₹999</div>
                 </div>
             `;
             document.body.appendChild(overlay);

@@ -1173,6 +1173,17 @@
             function showImage(index) {
                 currentIndex = index;
                 mainImage.src = images[index];
+                
+                mainImage.onerror = () => {
+                    if (currentIndex === 0 && images.length > 1) {
+                        mainImage.src = images[1]; // fallback to next
+                    } else if (currentIndex !== 0) {
+                        mainImage.src = images[0]; // fallback to first
+                    } else {
+                        mainImage.src = 'assets/logo.png'; // ultimate fallback
+                    }
+                };
+
                 mainImage.alt = `${product.name} - Image ${index + 1}`;
                 counter.textContent = `${index + 1} / ${images.length}`;
                 // Update thumbnails
@@ -1188,7 +1199,7 @@
             function buildThumbnails() {
                 thumbContainer.innerHTML = images.map((img, i) => `
                     <div class="gallery-thumb ${i === 0 ? 'active' : ''}" data-index="${i}">
-                        <img src="${img}" alt="${product.name} thumbnail ${i + 1}" loading="lazy">
+                        <img src="${img}" alt="${product.name} thumbnail ${i + 1}" loading="lazy" onerror="this.parentElement.style.display='none'">
                     </div>
                 `).join('');
                 thumbContainer.querySelectorAll('.gallery-thumb').forEach(thumb => {
