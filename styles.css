@@ -14,9 +14,9 @@
     --clr-wine:       #5C1A33;
     --clr-rose:       #D4A0A0;
     --clr-blush:      #e8c4c4;
-    --clr-gold:       #C8A96E;
-    --clr-gold-light: #dfc99e;
-    --clr-gold-dark:  #a8894e;
+    --clr-gold:       #C6A56B;
+    --clr-gold-light: #EADFCF;
+    --clr-gold-dark:  #B8945A;
     --clr-ivory:      #F5F0E8;
     --clr-cream:      #FDF8F0;
     --clr-white:      #FFFFFF;
@@ -26,7 +26,7 @@
 
     --clr-deep-red:   #A82039;
     --clr-indigo:     #2E4057;
-    --clr-mustard:    #D4A017;
+    --clr-mustard:    #B8945A;
     --clr-muted-pink: #C9918F;
     --clr-terracotta: #C0623A;
     --clr-saffron:    #E8942A;
@@ -377,7 +377,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
    ========================= */
 .navbar {
     position: fixed;
-    top: 0;
+    top: 38px;
     left: 0;
     right: 0;
     z-index: var(--z-navbar);
@@ -548,6 +548,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
     text-align: center;
     padding: 0 2rem;
     padding-bottom: 5rem;
+    padding-top: 80px;
     will-change: transform, opacity;
 }
 
@@ -592,6 +593,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
     display: block;
     font-size: clamp(3.5rem, 10vw, 8rem);
     letter-spacing: 0.18em;
+    padding-bottom: 0.15em;
 }
 
 /* Character-by-character entrance */
@@ -600,10 +602,8 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
     opacity: 0;
     transform: translateY(60px) rotateX(40deg) scale(0.8);
     animation: charReveal 0.8s var(--ease-spring) forwards;
-    background: linear-gradient(135deg, var(--clr-ivory) 10%, var(--clr-mustard) 45%, var(--clr-saffron) 65%, var(--clr-deep-red) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--clr-ivory);
+    text-shadow: 0 4px 24px rgba(10, 31, 24, 0.6), 0 2px 10px rgba(10, 31, 24, 0.4);
 }
 
 @keyframes charReveal {
