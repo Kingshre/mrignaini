@@ -1,6 +1,13 @@
 /* ======================================
    MRIGNAINI — PRODUCT CATALOG
-   ====================================== */
+const ICONS = {
+    cotton: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M11 21c-4.478 0-8.118-3.64-8.118-8.118 0-4.478 3.64-8.118 8.118-8.118M13 3c4.478 0 8.118 3.64 8.118 8.118 0 4.478-3.64 8.118-8.118 8.118M12 11a2 2 0 100-4 2 2 0 000 4z"/></svg>',
+    print: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg>',
+    indigo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>',
+    upcycled: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8M21 3v5h-5M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16M3 21v-5h5"/></svg>',
+    statement: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
+    wrap: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M4 19V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v14M8 3v18M16 3v18"/></svg>'
+};
 
 const PRODUCTS = [
     {
@@ -27,17 +34,17 @@ const PRODUCTS = [
             'Wash & Care: Treat your handcrafted piece to a gentle hand wash in cold water. Dry in the shade to preserve the artisanal vibrancy of the hand-blocked prints.'
         ],
         trustBadges: [
-            { icon: '🌿', label: '100% Cotton' },
-            { icon: '🎨', label: 'Hand Block Printed' },
-            { icon: '💙', label: 'Indigo Dyed' }
+            { icon: ICONS.cotton, label: '100% Cotton' },
+            { icon: ICONS.print, label: 'Hand Block Printed' },
+            { icon: ICONS.indigo, label: 'Indigo Dyed' }
         ]
     },
     {
         id: 'layer-paltu',
         name: 'Paltu Reversible Patchwork Cotton Jacket',
         category: 'layers',
-        price: 1000,
-        originalPrice: 1199,
+        price: 1199,
+        originalPrice: 1399,
         images: [
             'assets/images/paltujacket1.jpg',
             'assets/images/paltujacket2.jpg',
@@ -64,9 +71,9 @@ const PRODUCTS = [
         ],
         specialNote: 'Every piece is unique. The design may vary slightly from the images.',
         trustBadges: [
-            { icon: '♻️', label: 'Upcycled' },
-            { icon: '🔄', label: 'Reversible' },
-            { icon: '🌿', label: '100% Cotton' }
+            { icon: ICONS.upcycled, label: 'Upcycled' },
+            { icon: ICONS.wrap, label: 'Reversible' },
+            { icon: ICONS.cotton, label: '100% Cotton' }
         ]
     },
     {
@@ -119,9 +126,9 @@ const PRODUCTS = [
             'Wash & Care: Treat your handcrafted piece to a gentle hand wash in cold water. Dry in the shade to preserve the artisanal vibrancy of the hand-blocked prints.'
         ],
         trustBadges: [
-            { icon: '🌿', label: '100% Cotton' },
-            { icon: '🎨', label: 'Hand Block Printed' },
-            { icon: '🪡', label: 'Wrap Construction' }
+            { icon: ICONS.cotton, label: '100% Cotton' },
+            { icon: ICONS.print, label: 'Hand Block Printed' },
+            { icon: ICONS.wrap, label: 'Wrap Construction' }
         ]
     },
     {
@@ -173,17 +180,17 @@ const PRODUCTS = [
             'Wash & Care: Treat your handcrafted piece to a gentle hand wash in cold water. Dry in the shade to preserve the artisanal vibrancy of the hand-blocked prints.'
         ],
         trustBadges: [
-            { icon: '🌿', label: '100% Cotton' },
-            { icon: '🎨', label: 'Hand Block Printed' },
-            { icon: '🪡', label: 'Wrap Construction' }
+            { icon: ICONS.cotton, label: '100% Cotton' },
+            { icon: ICONS.print, label: 'Hand Block Printed' },
+            { icon: ICONS.wrap, label: 'Wrap Construction' }
         ]
     },
     {
         id: 'top-dopatti',
         name: 'Do Patti Upcycled Spaghetti Strap Top',
         category: 'tops',
-        price: 699,
-        originalPrice: 899,
+        price: 899,
+        originalPrice: 1099,
         images: [
             'assets/images/dopatti1.png',
             'assets/images/dopatti2.png',
@@ -208,9 +215,9 @@ const PRODUCTS = [
         ],
         specialNote: 'Every piece is unique. The patchwork design may vary slightly from the images.',
         trustBadges: [
-            { icon: '♻️', label: 'Upcycled' },
-            { icon: '🌿', label: '100% Cotton' },
-            { icon: '✨', label: 'One-of-a-Kind' }
+            { icon: ICONS.upcycled, label: 'Upcycled' },
+            { icon: ICONS.cotton, label: '100% Cotton' },
+            { icon: ICONS.statement, label: 'One-of-a-Kind' }
         ]
     },
     {
@@ -241,9 +248,9 @@ const PRODUCTS = [
             'Wash & Care: Treat your handcrafted piece to a gentle hand wash in cold water. Dry in the shade to preserve the artisanal vibrancy of the hand-blocked prints.'
         ],
         trustBadges: [
-            { icon: '\uD83C\uDF3F', label: '100% Cotton' },
-            { icon: '\uD83C\uDFA8', label: 'Hand Block Printed' },
-            { icon: '\u2728', label: 'Statement Piece' }
+            { icon: ICONS.cotton, label: '100% Cotton' },
+            { icon: ICONS.print, label: 'Hand Block Printed' },
+            { icon: ICONS.statement, label: 'Statement Piece' }
         ]
     },
     {
@@ -298,9 +305,9 @@ const PRODUCTS = [
         ],
         careNote: 'This garment is dyed using blue dye. Colour bleeding during initial washes is normal. Hand wash separately in cold water and dry in shade.',
         trustBadges: [
-            { icon: '\uD83C\uDF3F', label: '100% Cotton' },
-            { icon: '\uD83C\uDFA8', label: 'Sanganeri Print' },
-            { icon: '\uD83D\uDC99', label: 'Blue Dyed' }
+            { icon: ICONS.cotton, label: '100% Cotton' },
+            { icon: ICONS.print, label: 'Sanganeri Print' },
+            { icon: ICONS.indigo, label: 'Blue Dyed' }
         ]
     }
 ];

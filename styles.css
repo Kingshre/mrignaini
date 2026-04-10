@@ -2002,3 +2002,18 @@ section {
     
     .hero-char { font-size: 2.8rem; }
 }
+
+/* Delivery Message / Shared utility */
+.delivery-message {
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    color: var(--clr-forest-light, #4a6a5f);
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+}
+.delivery-message svg {
+    color: var(--clr-mustard);
+}
