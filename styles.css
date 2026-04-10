@@ -501,14 +501,15 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
     position: absolute;
     inset: 0;
     background: 
+        radial-gradient(ellipse at 50% 50%, rgba(10, 31, 24, 0.5) 0%, transparent 55%),
         linear-gradient(180deg,
             rgba(14, 46, 36, 0.7) 0%,
             rgba(46, 64, 87, 0.4) 25%,
-            rgba(107, 45, 91, 0.2) 45%,
-            rgba(168, 32, 57, 0.2) 65%,
+            rgba(107, 45, 91, 0.15) 45%,
+            rgba(168, 32, 57, 0.15) 65%,
             rgba(14, 46, 36, 0.85) 100%
         ),
-        radial-gradient(ellipse at 20% 50%, rgba(212,160,17,0.15), transparent 60%),
+        radial-gradient(ellipse at 20% 50%, rgba(184,148,90,0.15), transparent 60%),
         radial-gradient(ellipse at 80% 30%, rgba(168,32,57,0.12), transparent 50%);
 }
 
@@ -586,14 +587,16 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
     font-weight: 300;
     color: var(--clr-ivory);
     margin-bottom: 1.5rem;
-    line-height: 1;
+    line-height: 1.3;
+    overflow: visible;
 }
 
 .hero-title-line {
     display: block;
     font-size: clamp(3.5rem, 10vw, 8rem);
     letter-spacing: 0.18em;
-    padding-bottom: 0.15em;
+    padding-bottom: 0.1em;
+    padding-top: 0.1em;
 }
 
 /* Character-by-character entrance */
@@ -603,7 +606,9 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
     transform: translateY(60px) rotateX(40deg) scale(0.8);
     animation: charReveal 0.8s var(--ease-spring) forwards;
     color: var(--clr-ivory);
-    text-shadow: 0 4px 24px rgba(10, 31, 24, 0.6), 0 2px 10px rgba(10, 31, 24, 0.4);
+    text-shadow: 0 4px 30px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2);
+    line-height: inherit;
+    vertical-align: bottom;
 }
 
 @keyframes charReveal {
