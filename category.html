@@ -11,8 +11,37 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="shop.css">
+    <link rel="stylesheet" href="announcement.css">
 </head>
 <body>
+
+    <!-- ========== ANNOUNCEMENT BAR ========== -->
+    <div class="announcement-bar" id="announcementBar">
+        <div class="announcement-track">
+            <div class="announcement-content">
+                <span class="ann-item">Use code <span class="ann-code" data-code="MRIG500">MRIG500</span> for <strong>₹500 off</strong> above ₹3999</span>
+                <span class="ann-sep">✦</span>
+                <span class="ann-item">Use code <span class="ann-code" data-code="MRIG1000">MRIG1000</span> for <strong>₹1000 off</strong> above ₹7999</span>
+                <span class="ann-sep">✦</span>
+                <span class="ann-item">Free shipping above ₹1999 — Use <span class="ann-code" data-code="FREESHIP">FREESHIP</span></span>
+                <span class="ann-sep">✦</span>
+                <span class="ann-item">✋ Handcrafted in Jaipur</span>
+                <span class="ann-sep">✦</span>
+                <span class="ann-item">🎨 Block printed with love</span>
+                <span class="ann-sep">✦</span>
+                <span class="ann-item">Use code <span class="ann-code" data-code="MRIG500">MRIG500</span> for <strong>₹500 off</strong> above ₹3999</span>
+                <span class="ann-sep">✦</span>
+                <span class="ann-item">Use code <span class="ann-code" data-code="MRIG1000">MRIG1000</span> for <strong>₹1000 off</strong> above ₹7999</span>
+                <span class="ann-sep">✦</span>
+                <span class="ann-item">Free shipping above ₹1999 — Use <span class="ann-code" data-code="FREESHIP">FREESHIP</span></span>
+                <span class="ann-sep">✦</span>
+                <span class="ann-item">✋ Handcrafted in Jaipur</span>
+                <span class="ann-sep">✦</span>
+                <span class="ann-item">🎨 Block printed with love</span>
+                <span class="ann-sep">✦</span>
+            </div>
+        </div>
+    </div>
 
     <!-- ========== NAVIGATION ========== -->
     <nav id="navbar" class="navbar scrolled">
@@ -136,8 +165,6 @@
                         <h3 class="product-card-name">${p.name}</h3>
                         <div class="product-card-price">
                             <span class="price-current">${formatPrice(p.price)}</span>
-                            <span class="price-original">${formatPrice(p.originalPrice)}</span>
-                            <span class="price-discount">${Math.round((1 - p.price / p.originalPrice) * 100)}% off</span>
                         </div>
                     </div>
                 </a>
@@ -159,5 +186,6 @@
             });
         });
     </script>
+    <script src="coupons.js"></script>
 </body>
 </html>

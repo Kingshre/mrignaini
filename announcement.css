@@ -1,0 +1,260 @@
+/* ======================================
+   MRIGNAINI — ANNOUNCEMENT BAR
+   Premium coupon/offer marquee bar
+   ====================================== */
+
+/* --- ANNOUNCEMENT BAR --- */
+.announcement-bar {
+    background: linear-gradient(135deg, #0a1f18 0%, #1a4a3a 100%);
+    overflow: hidden;
+    position: relative;
+    z-index: 1001;
+    border-bottom: 1px solid rgba(200, 169, 110, 0.15);
+}
+
+.announcement-track {
+    display: flex;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.announcement-content {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    animation: marquee 45s linear infinite;
+    padding: 9px 0;
+}
+
+.announcement-content:hover {
+    animation-play-state: paused;
+}
+
+@keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+.ann-item {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.72rem;
+    color: rgba(253, 248, 240, 0.85);
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    padding: 0 16px;
+}
+
+.ann-item strong {
+    color: #C8A96E;
+    font-weight: 600;
+}
+
+.ann-sep {
+    color: rgba(200, 169, 110, 0.4);
+    font-size: 0.55rem;
+    flex-shrink: 0;
+}
+
+.ann-code {
+    display: inline-block;
+    background: rgba(200, 169, 110, 0.15);
+    border: 1px solid rgba(200, 169, 110, 0.3);
+    color: #C8A96E;
+    font-weight: 600;
+    font-size: 0.68rem;
+    padding: 1px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.ann-code:hover {
+    background: rgba(200, 169, 110, 0.25);
+    border-color: #C8A96E;
+}
+
+.ann-code::after {
+    content: 'Copy';
+    position: absolute;
+    top: -22px;
+    left: 50%;
+    transform: translateX(-50%) scale(0.8);
+    background: #C8A96E;
+    color: #0a1f18;
+    font-size: 0.6rem;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 3px;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.ann-code:hover::after {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+}
+
+.ann-code.copied::after {
+    content: 'Copied!';
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+    background: #2d6a4f;
+    color: #fff;
+}
+
+/* --- COPY TOAST --- */
+.copy-toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: #1a4a3a;
+    color: #FDF8F0;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 10px 24px;
+    border-radius: 10px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+.copy-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* --- OFFERS HELPER TEXT (product page) --- */
+.offers-hint {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.75rem;
+    color: #888;
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.offers-hint svg {
+    flex-shrink: 0;
+    color: #C8A96E;
+}
+.offers-hint a {
+    color: #1a4a3a;
+    font-weight: 500;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+/* --- COUPON INPUT (cart & checkout) --- */
+.coupon-section {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(200, 169, 110, 0.15);
+}
+.coupon-label {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #1a4a3a;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.coupon-input-row {
+    display: flex;
+    gap: 8px;
+}
+.coupon-input {
+    flex: 1;
+    padding: 10px 14px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.82rem;
+    color: #333;
+    border: 1.5px solid #d4ccc0;
+    border-radius: 8px;
+    background: #faf8f5;
+    outline: none;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    transition: border-color 0.3s;
+}
+.coupon-input:focus {
+    border-color: #1a4a3a;
+}
+.coupon-apply-btn {
+    padding: 10px 20px;
+    background: #1a4a3a;
+    color: #FDF8F0;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    white-space: nowrap;
+}
+.coupon-apply-btn:hover {
+    background: #2d6a4f;
+}
+.coupon-message {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.72rem;
+    margin-top: 6px;
+    display: none;
+}
+.coupon-message.show { display: block; }
+.coupon-message.success {
+    color: #2d6a4f;
+}
+.coupon-message.error {
+    color: #A82039;
+}
+
+/* Applied coupon display */
+.coupon-applied {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: rgba(45, 106, 79, 0.06);
+    border: 1px solid rgba(45, 106, 79, 0.2);
+    border-radius: 8px;
+    margin-top: 8px;
+}
+.coupon-applied.show {
+    display: flex;
+}
+.coupon-applied-text {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.78rem;
+    color: #2d6a4f;
+    font-weight: 500;
+}
+.coupon-applied-code {
+    font-weight: 700;
+    letter-spacing: 0.05em;
+}
+.coupon-remove-btn {
+    background: none;
+    border: none;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.72rem;
+    color: #A82039;
+    cursor: pointer;
+    font-weight: 500;
+    text-decoration: underline;
+}
+
+/* Summary coupon discount row */
+.summary-row.coupon-row {
+    color: #2d6a4f;
+    font-weight: 500;
+}

@@ -11,6 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Outfit:wght@300;400;500;600&family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="shop.css">
+    <link rel="stylesheet" href="announcement.css">
     <style>
         /* ===== PRODUCT PAGE STYLES ===== */
         .product-page {
@@ -886,6 +887,34 @@
 </head>
 <body>
 
+    <!-- ========== ANNOUNCEMENT BAR ========== -->
+    <div class="announcement-bar" id="announcementBar">
+        <div class="announcement-track">
+            <div class="announcement-content">
+                <span class="ann-item">Use code <span class="ann-code" data-code="MRIG500">MRIG500</span> for <strong>₹500 off</strong> above ₹3999</span>
+                <span class="ann-sep">✦</span>
+                <span class="ann-item">Use code <span class="ann-code" data-code="MRIG1000">MRIG1000</span> for <strong>₹1000 off</strong> above ₹7999</span>
+                <span class="ann-sep">✦</span>
+                <span class="ann-item">Free shipping above ₹1999 — Use <span class="ann-code" data-code="FREESHIP">FREESHIP</span></span>
+                <span class="ann-sep">✦</span>
+                <span class="ann-item">✋ Handcrafted in Jaipur</span>
+                <span class="ann-sep">✦</span>
+                <span class="ann-item">🎨 Block printed with love</span>
+                <span class="ann-sep">✦</span>
+                <span class="ann-item">Use code <span class="ann-code" data-code="MRIG500">MRIG500</span> for <strong>₹500 off</strong> above ₹3999</span>
+                <span class="ann-sep">✦</span>
+                <span class="ann-item">Use code <span class="ann-code" data-code="MRIG1000">MRIG1000</span> for <strong>₹1000 off</strong> above ₹7999</span>
+                <span class="ann-sep">✦</span>
+                <span class="ann-item">Free shipping above ₹1999 — Use <span class="ann-code" data-code="FREESHIP">FREESHIP</span></span>
+                <span class="ann-sep">✦</span>
+                <span class="ann-item">✋ Handcrafted in Jaipur</span>
+                <span class="ann-sep">✦</span>
+                <span class="ann-item">🎨 Block printed with love</span>
+                <span class="ann-sep">✦</span>
+            </div>
+        </div>
+    </div>
+
     <!-- ========== NAVIGATION ========== -->
     <nav id="navbar" class="navbar scrolled">
         <div class="nav-container">
@@ -955,8 +984,10 @@
                 <h1 class="product-title" id="productTitle"></h1>
                 <div class="product-pricing">
                     <span class="price-sale" id="priceSale"></span>
-                    <span class="price-original" id="priceOriginal"></span>
-                    <span class="price-discount" id="priceDiscount"></span>
+                </div>
+                <div class="offers-hint" id="offersHint">
+                    <svg viewBox="0 0 24 24" width="14" height="14"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span>Offers available at checkout — check codes above</span>
                 </div>
                 <div class="shipping-info" id="shippingInfo">
                     <svg viewBox="0 0 24 24" width="16" height="16"><path d="M5 18h14M3 12h18M7 6h10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
@@ -1132,9 +1163,6 @@
             document.getElementById('productTag').textContent = `✦ ${product.tag}`;
             document.getElementById('productTitle').textContent = product.name;
             document.getElementById('priceSale').textContent = formatPrice(product.price);
-            document.getElementById('priceOriginal').textContent = formatPrice(product.originalPrice);
-            const discount = Math.round((1 - product.price / product.originalPrice) * 100);
-            document.getElementById('priceDiscount').textContent = `${discount}% off`;
             document.getElementById('productDesc').innerHTML = product.description.replace(/\n/g, '<br>');
 
             // Shipping
@@ -1470,5 +1498,6 @@
             }, 100);
         });
     </script>
+    <script src="coupons.js"></script>
 </body>
 </html>

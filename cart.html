@@ -11,8 +11,37 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="shop.css">
+    <link rel="stylesheet" href="announcement.css">
 </head>
 <body>
+
+    <!-- ========== ANNOUNCEMENT BAR ========== -->
+    <div class="announcement-bar" id="announcementBar">
+        <div class="announcement-track">
+            <div class="announcement-content">
+                <span class="ann-item">Use code <span class="ann-code" data-code="MRIG500">MRIG500</span> for <strong>₹500 off</strong> above ₹3999</span>
+                <span class="ann-sep">✦</span>
+                <span class="ann-item">Use code <span class="ann-code" data-code="MRIG1000">MRIG1000</span> for <strong>₹1000 off</strong> above ₹7999</span>
+                <span class="ann-sep">✦</span>
+                <span class="ann-item">Free shipping above ₹1999 — Use <span class="ann-code" data-code="FREESHIP">FREESHIP</span></span>
+                <span class="ann-sep">✦</span>
+                <span class="ann-item">✋ Handcrafted in Jaipur</span>
+                <span class="ann-sep">✦</span>
+                <span class="ann-item">🎨 Block printed with love</span>
+                <span class="ann-sep">✦</span>
+                <span class="ann-item">Use code <span class="ann-code" data-code="MRIG500">MRIG500</span> for <strong>₹500 off</strong> above ₹3999</span>
+                <span class="ann-sep">✦</span>
+                <span class="ann-item">Use code <span class="ann-code" data-code="MRIG1000">MRIG1000</span> for <strong>₹1000 off</strong> above ₹7999</span>
+                <span class="ann-sep">✦</span>
+                <span class="ann-item">Free shipping above ₹1999 — Use <span class="ann-code" data-code="FREESHIP">FREESHIP</span></span>
+                <span class="ann-sep">✦</span>
+                <span class="ann-item">✋ Handcrafted in Jaipur</span>
+                <span class="ann-sep">✦</span>
+                <span class="ann-item">🎨 Block printed with love</span>
+                <span class="ann-sep">✦</span>
+            </div>
+        </div>
+    </div>
 
     <!-- ========== NAVIGATION ========== -->
     <nav id="navbar" class="navbar scrolled">
@@ -84,18 +113,36 @@
                                 <span id="summarySubtotal">₹0</span>
                             </div>
                             <div class="summary-row">
-                                <span>You Save</span>
-                                <span class="summary-savings" id="summarySavings">₹0</span>
-                            </div>
-                            <div class="summary-row">
                                 <span>Shipping</span>
-                                <span id="summaryShipping">Free</span>
+                                <span id="summaryShipping">₹99</span>
+                            </div>
+                            <div class="summary-row coupon-row" id="couponDiscountRow" style="display:none">
+                                <span>Coupon (<span id="appliedCouponName"></span>)</span>
+                                <span id="couponDiscountAmt"></span>
                             </div>
                             <div class="summary-divider"></div>
                             <div class="summary-row summary-total">
                                 <span>Total</span>
                                 <span id="summaryTotal">₹0</span>
                             </div>
+
+                            <!-- Coupon section -->
+                            <div class="coupon-section">
+                                <div class="coupon-label">
+                                    <svg viewBox="0 0 24 24" width="14" height="14"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="7" y1="7" x2="7.01" y2="7" stroke="currentColor" stroke-width="1.5"/></svg>
+                                    Have a coupon code?
+                                </div>
+                                <div class="coupon-input-row">
+                                    <input type="text" class="coupon-input" id="cartCouponInput" placeholder="Enter code">
+                                    <button class="coupon-apply-btn" id="cartCouponApply">Apply</button>
+                                </div>
+                                <p class="coupon-message" id="cartCouponMsg"></p>
+                                <div class="coupon-applied" id="cartCouponApplied">
+                                    <span class="coupon-applied-text">✓ <span class="coupon-applied-code" id="cartAppliedCode"></span> applied</span>
+                                    <button class="coupon-remove-btn" id="cartCouponRemove">Remove</button>
+                                </div>
+                            </div>
+
                             <a href="checkout.html" class="btn btn-primary btn-full" id="checkoutBtn">
                                 <span>Proceed to Checkout</span>
                                 <svg viewBox="0 0 24 24" width="18" height="18"><path d="M5 12h14M12 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -187,16 +234,78 @@
                 `;
             }).join('');
 
-            // Update summary
-            const total = Cart.getTotal();
-            const originalTotal = Cart.getOriginalTotal();
-            const savings = originalTotal - total;
-            document.getElementById('summarySubtotal').textContent = formatPrice(total);
-            document.getElementById('summarySavings').textContent = `-${formatPrice(savings)}`;
-            document.getElementById('summaryShipping').textContent = total >= 1999 ? 'Free' : formatPrice(149);
-            const shippingCost = total >= 1999 ? 0 : 149;
-            document.getElementById('summaryTotal').textContent = formatPrice(total + shippingCost);
+            updateCartSummary();
         }
+
+        let appliedCoupon = null;
+
+        function updateCartSummary() {
+            const total = Cart.getTotal();
+            // Calculate shipping per item
+            let totalShipping = 0;
+            Cart.getItems().forEach(item => {
+                const product = getProductById(item.productId);
+                if (product) totalShipping += (product.shipping || 99) * item.qty;
+            });
+
+            let couponDiscount = 0;
+            const couponRow = document.getElementById('couponDiscountRow');
+
+            if (appliedCoupon) {
+                if (appliedCoupon.type === 'freeship') {
+                    totalShipping = 0;
+                    couponRow.style.display = 'flex';
+                    document.getElementById('appliedCouponName').textContent = 'FREESHIP';
+                    document.getElementById('couponDiscountAmt').textContent = 'Free Shipping';
+                } else {
+                    couponDiscount = appliedCoupon.discount;
+                    couponRow.style.display = 'flex';
+                    document.getElementById('appliedCouponName').textContent = appliedCoupon.code;
+                    document.getElementById('couponDiscountAmt').textContent = `-${formatPrice(couponDiscount)}`;
+                }
+            } else {
+                couponRow.style.display = 'none';
+            }
+
+            document.getElementById('summarySubtotal').textContent = formatPrice(total);
+            document.getElementById('summaryShipping').textContent = totalShipping === 0 ? 'Free' : formatPrice(totalShipping);
+            document.getElementById('summaryTotal').textContent = formatPrice(total + totalShipping - couponDiscount);
+        }
+
+        // Coupon logic
+        document.getElementById('cartCouponApply').addEventListener('click', () => {
+            const code = document.getElementById('cartCouponInput').value.trim().toUpperCase();
+            const total = Cart.getTotal();
+            const result = validateCoupon(code, total);
+            const msg = document.getElementById('cartCouponMsg');
+
+            if (result.valid) {
+                appliedCoupon = { ...result.coupon, code: code };
+                msg.textContent = result.message;
+                msg.className = 'coupon-message show success';
+                document.getElementById('cartCouponApplied').classList.add('show');
+                document.getElementById('cartAppliedCode').textContent = code;
+                document.getElementById('cartCouponInput').style.display = 'none';
+                document.getElementById('cartCouponApply').style.display = 'none';
+                // Store coupon for checkout
+                sessionStorage.setItem('mrignaini_coupon', JSON.stringify(appliedCoupon));
+                updateCartSummary();
+            } else {
+                msg.textContent = result.message;
+                msg.className = 'coupon-message show error';
+            }
+        });
+
+        document.getElementById('cartCouponRemove').addEventListener('click', () => {
+            appliedCoupon = null;
+            sessionStorage.removeItem('mrignaini_coupon');
+            document.getElementById('cartCouponApplied').classList.remove('show');
+            document.getElementById('cartCouponInput').style.display = '';
+            document.getElementById('cartCouponInput').value = '';
+            document.getElementById('cartCouponApply').style.display = '';
+            document.getElementById('cartCouponMsg').className = 'coupon-message';
+            updateCartSummary();
+        });
 
         function changeQty(productId, size, delta) {
             const items = Cart.getItems();
@@ -217,5 +326,6 @@
             renderCart();
         }
     </script>
+    <script src="coupons.js"></script>
 </body>
 </html>
