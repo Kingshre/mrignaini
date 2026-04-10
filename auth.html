@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication — Mrignaini</title>
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            forest: { DEFAULT: '#1a4a3a', deep: '#0e2e24', light: '#2d6a4f' },
+            maroon: { DEFAULT: '#A82039', dark: '#5C1A33' },
+            gold: { DEFAULT: '#C6A56B', light: '#EADFCF', dark: '#B8945A' },
+            ivory: '#F5F0E8',
+            cream: '#FDF8F0',
+            mustard: '#B8945A',
+          },
+          fontFamily: {
+            heading: ['Cormorant Garamond', 'serif'],
+            body: ['Outfit', 'sans-serif'],
+            accent: ['Caveat', 'cursive'],
+          }
+        }
+      }
+    }
+    </script>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="shop.css">
+    <style>
+        .auth-container {
+            min-height: calc(100vh - 80px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--clr-cream);
+            padding: 40px 20px;
+        }
+        .auth-box {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+            max-width: 440px;
+            width: 100%;
+            padding: 40px;
+            border: 1px solid rgba(198,165,107,0.15);
+            text-align: center;
+        }
+        .auth-logo {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            color: var(--clr-forest);
+            letter-spacing: 0.15em;
+            margin-bottom: 8px;
+        }
+        .auth-subtitle {
+            font-family: var(--font-body);
+            color: gray;
+            font-size: 0.95rem;
+            margin-bottom: 30px;
+        }
+        .auth-form {
+            text-align: left;
+        }
+        .auth-form .form-group {
+            margin-bottom: 20px;
+        }
+        .auth-form label {
+            display: block;
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            color: var(--clr-forest);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        .auth-form input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 8px;
+            font-family: var(--font-body);
+            transition: all 0.3s ease;
+            background: var(--clr-cream);
+        }
+        .auth-form input:focus {
+            outline: none;
+            border-color: var(--clr-gold);
+            background: white;
+        }
+        .auth-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--clr-forest);
+            color: var(--clr-ivory);
+            font-family: var(--font-body);
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        .auth-btn:hover {
+            background: var(--clr-forest-light);
+        }
+        .auth-msg {
+            color: var(--clr-maroon);
+            font-size: 0.85rem;
+            margin-top: 10px;
+            text-align: center;
+            min-height: 20px;
+        }
+        .auth-toggle {
+            margin-top: 24px;
+            font-size: 0.9rem;
+            color: gray;
+        }
+        .auth-toggle a {
+            color: var(--clr-mustard);
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========== NAVIGATION ========== -->
+    <nav id="navbar" class="navbar py-4 bg-white/90 backdrop-blur-md shadow-sm border-b border-gold/10" style="position: sticky; top: 0;">
+        <div class="nav-container max-w-7xl mx-auto px-6 flex justify-between items-center">
+            <a href="index.html" class="nav-brand font-heading text-2xl tracking-[0.15em] text-forest">mrignaini</a>
+        </div>
+    </nav>
+
+    <!-- ========== AUTHENTICATION ========== -->
+    <main class="auth-container">
+        <div class="auth-box">
+            <div class="auth-logo">mrignaini</div>
+            <div class="auth-subtitle" id="authSubtitle">Welcome back to our heritage</div>
+            
+            <form class="auth-form" id="authForm">
+                <div class="form-group" id="nameGroup" style="display: none;">
+                    <label for="authName">Full Name</label>
+                    <input type="text" id="authName" placeholder="Enter your full name">
+                </div>
+                <div class="form-group">
+                    <label for="authEmail">Email Address</label>
+                    <input type="email" id="authEmail" placeholder="you@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="authPassword">Password</label>
+                    <input type="password" id="authPassword" placeholder="••••••••" required>
+                </div>
+                <div id="authMsg" class="auth-msg"></div>
+                <button type="submit" class="auth-btn" id="authSubmitBtn">Log In</button>
+            </form>
+
+            <div class="auth-toggle">
+                <span id="authToggleText">Don't have an account?</span> 
+                <a onclick="toggleAuthMode()" id="authToggleBtn">Sign up</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="auth.js"></script>
+    <script>
+        let isLoginMode = true;
+
+        function toggleAuthMode() {
+            isLoginMode = !isLoginMode;
+            document.getElementById('nameGroup').style.display = isLoginMode ? 'none' : 'block';
+            document.getElementById('authSubmitBtn').innerText = isLoginMode ? 'Log In' : 'Create Account';
+            document.getElementById('authSubtitle').innerText = isLoginMode ? 'Welcome back to our heritage' : 'Join our vibrant community';
+            document.getElementById('authToggleText').innerText = isLoginMode ? 'Don\'t have an account?' : 'Already have an account?';
+            document.getElementById('authToggleBtn').innerText = isLoginMode ? 'Sign up' : 'Log in';
+            document.getElementById('authMsg').innerText = '';
+        }
+
+        document.getElementById('authForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('authEmail').value;
+            const password = document.getElementById('authPassword').value;
+            const name = document.getElementById('authName').value;
+            const msgEl = document.getElementById('authMsg');
+            const submitBtn = document.getElementById('authSubmitBtn');
+            
+            msgEl.innerText = '';
+            msgEl.style.color = '#A82039'; // maroon
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'Please wait...';
+
+            try {
+                if (isLoginMode) {
+                    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+                    if (error) throw error;
+                    window.location.href = 'index.html';
+                } else {
+                    const { data, error } = await supabase.auth.signUp({
+                        email, 
+                        password,
+                        options: { data: { full_name: name } }
+                    });
+                    if (error) throw error;
+                    msgEl.style.color = '#2d6a4f'; // green success
+                    msgEl.innerText = 'Account created successfully! Please log in.';
+                    setTimeout(toggleAuthMode, 1500);
+                }
+            } catch (err) {
+                msgEl.innerText = err.message;
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerText = isLoginMode ? 'Log In' : 'Create Account';
+            }
+        });
+
+        // Redirect if already logged in
+        document.addEventListener('DOMContentLoaded', async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) window.location.href = 'index.html';
+        });
+    </script>
+</body>
+</html>

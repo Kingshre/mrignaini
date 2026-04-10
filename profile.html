@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile — Mrignaini</title>
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            forest: { DEFAULT: '#1a4a3a', deep: '#0e2e24', light: '#2d6a4f' },
+            maroon: { DEFAULT: '#A82039', dark: '#5C1A33' },
+            gold: { DEFAULT: '#C6A56B', light: '#EADFCF', dark: '#B8945A' },
+            ivory: '#F5F0E8',
+            cream: '#FDF8F0',
+            mustard: '#B8945A',
+          },
+          fontFamily: {
+            heading: ['Cormorant Garamond', 'serif'],
+            body: ['Outfit', 'sans-serif'],
+            accent: ['Caveat', 'cursive'],
+          }
+        }
+      }
+    }
+    </script>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .profile-container {
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 0 20px;
+            min-height: 50vh;
+        }
+        .profile-header {
+            border-bottom: 1px solid rgba(198,165,107,0.2);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .profile-title {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            color: var(--clr-forest);
+        }
+        .profile-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            border: 1px solid rgba(198,165,107,0.1);
+        }
+        .profile-detail {
+            margin-bottom: 20px;
+        }
+        .profile-label {
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            color: gray;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 4px;
+        }
+        .profile-value {
+            font-family: var(--font-body);
+            font-size: 1.2rem;
+            color: var(--clr-forest);
+            font-weight: 500;
+        }
+        .orders-section {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(198,165,107,0.1);
+        }
+        .orders-empty {
+            text-align: center;
+            padding: 40px;
+            background: var(--clr-cream);
+            border-radius: 8px;
+            color: gray;
+            font-family: var(--font-body);
+        }
+    </style>
+</head>
+<body class="bg-stone-50">
+
+    <!-- ========== NAVIGATION ========== -->
+    <nav id="navbar" class="navbar py-4 bg-white/90 backdrop-blur-md shadow-sm border-b border-gold/10" style="position: sticky; top: 0;">
+        <div class="nav-container max-w-7xl mx-auto px-6 flex justify-between items-center">
+            <a href="index.html" class="nav-brand font-heading text-2xl tracking-[0.15em] text-forest">mrignaini</a>
+            <div class="nav-links flex gap-6">
+                <a href="index.html" class="font-body text-sm text-forest-light hover:text-gold uppercase tracking-wider">Home</a>
+                <a href="category.html?cat=tops" class="font-body text-sm text-forest-light hover:text-gold uppercase tracking-wider">Shop</a>
+            </div>
+            <div class="nav-right flex items-center gap-4">
+                <div class="auth-ui" id="authUiContainer"></div>
+                <a href="cart.html" class="nav-cart" aria-label="Shopping cart">
+                    <svg viewBox="0 0 24 24" width="22" height="22"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="1.5"/><path d="M16 10a4 4 0 01-8 0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ========== PROFILE CONTENT ========== -->
+    <main class="profile-container">
+        <div class="profile-header">
+            <h1 class="profile-title">My Account</h1>
+        </div>
+
+        <div class="profile-content">
+            <div class="profile-detail">
+                <div class="profile-label">Name</div>
+                <div class="profile-value" id="profileName">Loading...</div>
+            </div>
+            <div class="profile-detail">
+                <div class="profile-label">Email Address</div>
+                <div class="profile-value" id="profileEmail">Loading...</div>
+            </div>
+            
+            <div class="orders-section">
+                <h3 class="font-heading text-2xl text-forest mb-4">Order History</h3>
+                <div class="orders-empty">
+                    <p>You haven't placed any orders yet.</p>
+                    <a href="category.html?cat=tops" class="inline-block mt-4 text-mustard border border-mustard px-6 py-2 rounded font-body hover:bg-mustard hover:text-white transition-colors">Start Shopping</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                // Not logged in -> redirect to login
+                window.location.href = 'auth.html';
+                return;
+            }
+            
+            // Populate data
+            const user = session.user;
+            document.getElementById('profileEmail').innerText = user.email;
+            document.getElementById('profileName').innerText = user.user_metadata?.full_name || 'Guest User';
+        });
+    </script>
+</body>
+</html>
