@@ -265,3 +265,150 @@
     color: #2d6a4f;
     font-weight: 500;
 }
+
+/* --- CODES AVAILABLE DROPDOWN --- */
+.codes-available {
+    margin-top: 8px;
+}
+
+.codes-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: #B8945A;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px 0;
+    transition: color 0.3s;
+}
+.codes-toggle:hover { color: #1a4a3a; }
+.codes-toggle svg {
+    transition: transform 0.3s;
+    flex-shrink: 0;
+}
+.codes-toggle.open svg {
+    transform: rotate(90deg);
+}
+
+.codes-list {
+    margin-top: 6px;
+    border: 1px solid rgba(200, 169, 110, 0.2);
+    border-radius: 8px;
+    overflow: hidden;
+    background: #faf8f5;
+}
+
+.code-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    cursor: pointer;
+    transition: background 0.2s;
+    border-bottom: 1px solid rgba(200, 169, 110, 0.12);
+}
+.code-item:last-child { border-bottom: none; }
+.code-item:hover { background: rgba(200, 169, 110, 0.08); }
+
+.code-name {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #1a4a3a;
+    letter-spacing: 0.06em;
+}
+.code-desc {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.7rem;
+    color: #888;
+}
+
+/* --- ONE-TIME COUPON POPUP --- */
+.coupon-popup-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 31, 24, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 9998;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    animation: popupFadeIn 0.4s ease forwards;
+}
+
+@keyframes popupFadeIn {
+    to { opacity: 1; }
+}
+
+.coupon-popup {
+    background: #FDF8F0;
+    border-radius: 16px;
+    padding: 2rem 2.5rem;
+    max-width: 380px;
+    width: 90%;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    border: 1px solid rgba(200, 169, 110, 0.3);
+    transform: translateY(20px) scale(0.95);
+    animation: popupSlideUp 0.4s 0.1s ease forwards;
+}
+
+@keyframes popupSlideUp {
+    to { transform: translateY(0) scale(1); }
+}
+
+.coupon-popup-close {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    color: #999;
+    cursor: pointer;
+    transition: color 0.3s;
+    line-height: 1;
+}
+.coupon-popup-close:hover { color: #A82039; }
+
+.coupon-popup-emoji {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+.coupon-popup h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    color: #1a4a3a;
+    margin-bottom: 0.5rem;
+}
+.coupon-popup p {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+.coupon-popup-code {
+    display: inline-block;
+    background: rgba(26, 74, 58, 0.08);
+    border: 2px dashed rgba(26, 74, 58, 0.3);
+    border-radius: 8px;
+    padding: 10px 24px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1a4a3a;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.75rem;
+}
+.coupon-popup-hint {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.7rem;
+    color: #999;
+}

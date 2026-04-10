@@ -103,7 +103,7 @@ const Cart = {
         });
     },
 
-    // Show a mini notification
+    // Show a mini notification with Checkout / Explore options
     showNotification(message) {
         // Remove existing
         const existing = document.querySelector('.cart-notification');
@@ -114,7 +114,10 @@ const Cart = {
         notif.innerHTML = `
             <svg viewBox="0 0 24 24" width="18" height="18"><path d="M20 6L9 17l-5-5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             <span>${message}</span>
-            <a href="cart.html">View Cart →</a>
+            <div class="cart-notif-actions">
+                <a href="cart.html" class="cart-notif-checkout">Checkout →</a>
+                <a href="category.html?cat=all" class="cart-notif-explore">Continue shopping</a>
+            </div>
         `;
         document.body.appendChild(notif);
 
@@ -123,11 +126,11 @@ const Cart = {
             notif.classList.add('show');
         });
 
-        // Remove after 3s
+        // Remove after 5s (longer to give time to click)
         setTimeout(() => {
             notif.classList.remove('show');
             setTimeout(() => notif.remove(), 400);
-        }, 3000);
+        }, 5000);
     }
 };
 

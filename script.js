@@ -505,4 +505,38 @@ document.addEventListener('DOMContentLoaded', () => {
             : 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
     });
 
+    // ---- ONE-TIME COUPON POPUP ----
+    // Show ₹200 off welcome popup only once per session
+    if (!sessionStorage.getItem('mrignaini_popup_shown')) {
+        sessionStorage.setItem('mrignaini_popup_shown', '1');
+        
+        setTimeout(() => {
+            const overlay = document.createElement('div');
+            overlay.className = 'coupon-popup-overlay';
+            overlay.innerHTML = `
+                <div class="coupon-popup">
+                    <button class="coupon-popup-close" aria-label="Close">&times;</button>
+                    <div class="coupon-popup-emoji">🎁</div>
+                    <h3>Welcome to Mrignaini!</h3>
+                    <p>Enter this code at checkout for <strong>₹200 off</strong> your first order</p>
+                    <div class="coupon-popup-code">MRIG200</div>
+                    <div class="coupon-popup-hint">Use at checkout • Min order ₹999</div>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+
+            // Close handlers
+            overlay.querySelector('.coupon-popup-close').addEventListener('click', () => {
+                overlay.style.opacity = '0';
+                setTimeout(() => overlay.remove(), 300);
+            });
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    overlay.style.opacity = '0';
+                    setTimeout(() => overlay.remove(), 300);
+                }
+            });
+        }, 3000); // Show after 3 seconds
+    }
+
 });

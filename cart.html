@@ -23,8 +23,6 @@
                 <span class="ann-sep">✦</span>
                 <span class="ann-item">Use code <span class="ann-code" data-code="MRIG1000">MRIG1000</span> for <strong>₹1000 off</strong> above ₹7999</span>
                 <span class="ann-sep">✦</span>
-                <span class="ann-item">Free shipping above ₹1999 — Use <span class="ann-code" data-code="FREESHIP">FREESHIP</span></span>
-                <span class="ann-sep">✦</span>
                 <span class="ann-item">✋ Handcrafted in Jaipur</span>
                 <span class="ann-sep">✦</span>
                 <span class="ann-item">🎨 Block printed with love</span>
@@ -32,8 +30,6 @@
                 <span class="ann-item">Use code <span class="ann-code" data-code="MRIG500">MRIG500</span> for <strong>₹500 off</strong> above ₹3999</span>
                 <span class="ann-sep">✦</span>
                 <span class="ann-item">Use code <span class="ann-code" data-code="MRIG1000">MRIG1000</span> for <strong>₹1000 off</strong> above ₹7999</span>
-                <span class="ann-sep">✦</span>
-                <span class="ann-item">Free shipping above ₹1999 — Use <span class="ann-code" data-code="FREESHIP">FREESHIP</span></span>
                 <span class="ann-sep">✦</span>
                 <span class="ann-item">✋ Handcrafted in Jaipur</span>
                 <span class="ann-sep">✦</span>
@@ -54,7 +50,7 @@
                     <a href="#" class="nav-link nav-link-dropdown">Shop <svg viewBox="0 0 12 8" width="10" height="8"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
                     <div class="dropdown-menu">
                         <a href="category.html?cat=tops" class="dropdown-item">Tops</a>
-                        <a href="category.html?cat=dresses" class="dropdown-item">Dresses</a>
+                        <a href="category.html?cat=kurtis" class="dropdown-item">Kurtis</a>
                         <a href="category.html?cat=sets" class="dropdown-item">Sets</a>
                         <a href="category.html?cat=layers" class="dropdown-item">Layers</a>
                     </div>
@@ -137,6 +133,22 @@
                                     <input type="text" class="coupon-input" id="cartCouponInput" placeholder="Enter code">
                                     <button class="coupon-apply-btn" id="cartCouponApply">Apply</button>
                                 </div>
+                                <div class="codes-available" id="codesAvailable">
+                                    <button class="codes-toggle" id="codesToggle">
+                                        <svg viewBox="0 0 24 24" width="12" height="12"><path d="M9 18l6-6-6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                        Codes available
+                                    </button>
+                                    <div class="codes-list" id="codesList" style="display:none">
+                                        <div class="code-item" data-code="MRIG500">
+                                            <span class="code-name">MRIG500</span>
+                                            <span class="code-desc">₹500 off above ₹3,999</span>
+                                        </div>
+                                        <div class="code-item" data-code="MRIG1000">
+                                            <span class="code-name">MRIG1000</span>
+                                            <span class="code-desc">₹1,000 off above ₹7,999</span>
+                                        </div>
+                                    </div>
+                                </div>
                                 <p class="coupon-message" id="cartCouponMsg"></p>
                                 <div class="coupon-applied" id="cartCouponApplied">
                                     <span class="coupon-applied-text">✓ <span class="coupon-applied-code" id="cartAppliedCode"></span> applied</span>
@@ -164,7 +176,7 @@
             <div class="footer-divider"></div>
             <div class="footer-links">
                 <a href="category.html?cat=tops">Tops</a>
-                <a href="category.html?cat=dresses">Dresses</a>
+                <a href="category.html?cat=kurtis">Kurtis</a>
                 <a href="category.html?cat=sets">Sets</a>
                 <a href="category.html?cat=layers">Layers</a>
                 <a href="index.html#story">Our Story</a>
@@ -246,24 +258,17 @@
             let totalShipping = 0;
             Cart.getItems().forEach(item => {
                 const product = getProductById(item.productId);
-                if (product) totalShipping += (product.shipping || 99) * item.qty;
+                if (product) totalShipping += 99 * item.qty;
             });
 
             let couponDiscount = 0;
             const couponRow = document.getElementById('couponDiscountRow');
 
             if (appliedCoupon) {
-                if (appliedCoupon.type === 'freeship') {
-                    totalShipping = 0;
-                    couponRow.style.display = 'flex';
-                    document.getElementById('appliedCouponName').textContent = 'FREESHIP';
-                    document.getElementById('couponDiscountAmt').textContent = 'Free Shipping';
-                } else {
-                    couponDiscount = appliedCoupon.discount;
-                    couponRow.style.display = 'flex';
-                    document.getElementById('appliedCouponName').textContent = appliedCoupon.code;
-                    document.getElementById('couponDiscountAmt').textContent = `-${formatPrice(couponDiscount)}`;
-                }
+                couponDiscount = appliedCoupon.discount;
+                couponRow.style.display = 'flex';
+                document.getElementById('appliedCouponName').textContent = appliedCoupon.code;
+                document.getElementById('couponDiscountAmt').textContent = `-${formatPrice(couponDiscount)}`;
             } else {
                 couponRow.style.display = 'none';
             }
@@ -306,6 +311,25 @@
             document.getElementById('cartCouponApply').style.display = '';
             document.getElementById('cartCouponMsg').className = 'coupon-message';
             updateCartSummary();
+        });
+
+        // Codes available toggle
+        document.getElementById('codesToggle').addEventListener('click', () => {
+            const list = document.getElementById('codesList');
+            const toggle = document.getElementById('codesToggle');
+            const isOpen = list.style.display !== 'none';
+            list.style.display = isOpen ? 'none' : 'block';
+            toggle.classList.toggle('open', !isOpen);
+        });
+
+        // Click code to fill input
+        document.querySelectorAll('.code-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const code = item.dataset.code;
+                document.getElementById('cartCouponInput').value = code;
+                document.getElementById('codesList').style.display = 'none';
+                document.getElementById('codesToggle').classList.remove('open');
+            });
         });
 
         function changeQty(productId, size, delta) {

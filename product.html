@@ -895,8 +895,6 @@
                 <span class="ann-sep">✦</span>
                 <span class="ann-item">Use code <span class="ann-code" data-code="MRIG1000">MRIG1000</span> for <strong>₹1000 off</strong> above ₹7999</span>
                 <span class="ann-sep">✦</span>
-                <span class="ann-item">Free shipping above ₹1999 — Use <span class="ann-code" data-code="FREESHIP">FREESHIP</span></span>
-                <span class="ann-sep">✦</span>
                 <span class="ann-item">✋ Handcrafted in Jaipur</span>
                 <span class="ann-sep">✦</span>
                 <span class="ann-item">🎨 Block printed with love</span>
@@ -904,8 +902,6 @@
                 <span class="ann-item">Use code <span class="ann-code" data-code="MRIG500">MRIG500</span> for <strong>₹500 off</strong> above ₹3999</span>
                 <span class="ann-sep">✦</span>
                 <span class="ann-item">Use code <span class="ann-code" data-code="MRIG1000">MRIG1000</span> for <strong>₹1000 off</strong> above ₹7999</span>
-                <span class="ann-sep">✦</span>
-                <span class="ann-item">Free shipping above ₹1999 — Use <span class="ann-code" data-code="FREESHIP">FREESHIP</span></span>
                 <span class="ann-sep">✦</span>
                 <span class="ann-item">✋ Handcrafted in Jaipur</span>
                 <span class="ann-sep">✦</span>
@@ -926,9 +922,10 @@
                     <a href="#" class="nav-link nav-link-dropdown">Shop <svg viewBox="0 0 12 8" width="10" height="8"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
                     <div class="dropdown-menu">
                         <a href="category.html?cat=tops" class="dropdown-item">Tops</a>
-                        <a href="category.html?cat=dresses" class="dropdown-item">Dresses</a>
+                        <a href="category.html?cat=kurtis" class="dropdown-item">Kurtis</a>
                         <a href="category.html?cat=sets" class="dropdown-item">Sets</a>
                         <a href="category.html?cat=layers" class="dropdown-item">Layers</a>
+                        <a href="category.html?cat=all" class="dropdown-item">All Products</a>
                     </div>
                 </div>
                 <a href="index.html#story" class="nav-link">Our Story</a>
@@ -990,10 +987,7 @@
                     <svg viewBox="0 0 24 24" width="14" height="14"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                     <span>Offers available at checkout — check codes above</span>
                 </div>
-                <div class="shipping-info" id="shippingInfo">
-                    <svg viewBox="0 0 24 24" width="16" height="16"><path d="M5 18h14M3 12h18M7 6h10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                    <span>Shipping: ₹99</span>
-                </div>
+
                 <p class="product-desc" id="productDesc"></p>
 
                 <!-- Color Selector (shown for products with variants) -->
@@ -1075,10 +1069,8 @@
                         <div class="acc-body">
                             <ul>
                                 <li>Shipping charge: ₹99</li>
-                                <li>Standard delivery: 5-7 business days</li>
-                                <li>Express delivery: 2-3 business days (₹149)</li>
-                                <li>Easy 7-day returns for unused items</li>
                                 <li>Exchange available within 15 days</li>
+                                <li>Wash & Care: Treat your handcrafted piece to a gentle hand wash in cold water. Dry in the shade to preserve the artisanal vibrancy of the hand-blocked prints.</li>
                             </ul>
                         </div>
                     </div>
@@ -1125,7 +1117,7 @@
             <div class="footer-divider"></div>
             <div class="footer-links">
                 <a href="category.html?cat=tops">Tops</a>
-                <a href="category.html?cat=dresses">Dresses</a>
+                <a href="category.html?cat=kurtis">Kurtis</a>
                 <a href="category.html?cat=sets">Sets</a>
                 <a href="category.html?cat=layers">Layers</a>
                 <a href="index.html#story">Our Story</a>
@@ -1169,11 +1161,6 @@
             document.getElementById('productTitle').textContent = product.name;
             document.getElementById('priceSale').textContent = formatPrice(product.price);
             document.getElementById('productDesc').innerHTML = product.description.replace(/\n/g, '<br>');
-
-            // Shipping
-            if (product.shipping) {
-                document.getElementById('shippingInfo').querySelector('span').textContent = `Shipping: ₹${product.shipping}`;
-            }
 
             // --- IMAGE GALLERY ---
             let images = product.images || [product.image];

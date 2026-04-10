@@ -23,8 +23,6 @@
                 <span class="ann-sep">✦</span>
                 <span class="ann-item">Use code <span class="ann-code" data-code="MRIG1000">MRIG1000</span> for <strong>₹1000 off</strong> above ₹7999</span>
                 <span class="ann-sep">✦</span>
-                <span class="ann-item">Free shipping above ₹1999 — Use <span class="ann-code" data-code="FREESHIP">FREESHIP</span></span>
-                <span class="ann-sep">✦</span>
                 <span class="ann-item">✋ Handcrafted in Jaipur</span>
                 <span class="ann-sep">✦</span>
                 <span class="ann-item">🎨 Block printed with love</span>
@@ -32,8 +30,6 @@
                 <span class="ann-item">Use code <span class="ann-code" data-code="MRIG500">MRIG500</span> for <strong>₹500 off</strong> above ₹3999</span>
                 <span class="ann-sep">✦</span>
                 <span class="ann-item">Use code <span class="ann-code" data-code="MRIG1000">MRIG1000</span> for <strong>₹1000 off</strong> above ₹7999</span>
-                <span class="ann-sep">✦</span>
-                <span class="ann-item">Free shipping above ₹1999 — Use <span class="ann-code" data-code="FREESHIP">FREESHIP</span></span>
                 <span class="ann-sep">✦</span>
                 <span class="ann-item">✋ Handcrafted in Jaipur</span>
                 <span class="ann-sep">✦</span>
@@ -54,9 +50,10 @@
                     <a href="#" class="nav-link nav-link-dropdown active-link">Shop <svg viewBox="0 0 12 8" width="10" height="8"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
                     <div class="dropdown-menu">
                         <a href="category.html?cat=tops" class="dropdown-item">Tops</a>
-                        <a href="category.html?cat=dresses" class="dropdown-item">Dresses</a>
+                        <a href="category.html?cat=kurtis" class="dropdown-item">Kurtis</a>
                         <a href="category.html?cat=sets" class="dropdown-item">Sets</a>
                         <a href="category.html?cat=layers" class="dropdown-item">Layers</a>
+                        <a href="category.html?cat=all" class="dropdown-item">All Products</a>
                     </div>
                 </div>
                 <a href="index.html#story" class="nav-link">Our Story</a>
@@ -97,8 +94,9 @@
     <div class="category-tabs">
         <div class="section-container">
             <div class="tabs-inner">
+                <a href="category.html?cat=all" class="tab" data-cat="all">All</a>
                 <a href="category.html?cat=tops" class="tab" data-cat="tops">Tops</a>
-                <a href="category.html?cat=dresses" class="tab" data-cat="dresses">Dresses</a>
+                <a href="category.html?cat=kurtis" class="tab" data-cat="kurtis">Kurtis</a>
                 <a href="category.html?cat=sets" class="tab" data-cat="sets">Sets</a>
                 <a href="category.html?cat=layers" class="tab" data-cat="layers">Layers</a>
             </div>
@@ -122,7 +120,7 @@
             <div class="footer-divider"></div>
             <div class="footer-links">
                 <a href="category.html?cat=tops">Tops</a>
-                <a href="category.html?cat=dresses">Dresses</a>
+                <a href="category.html?cat=kurtis">Kurtis</a>
                 <a href="category.html?cat=sets">Sets</a>
                 <a href="category.html?cat=layers">Layers</a>
                 <a href="index.html#story">Our Story</a>
@@ -138,15 +136,26 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
-            const cat = params.get('cat') || 'tops';
-            const category = CATEGORIES[cat];
-            const products = getProductsByCategory(cat);
+            const cat = params.get('cat') || 'all';
+            let products;
+            let pageTitle, pageDesc;
 
-            // Update page content
-            document.title = `${category.fullName} — Mrignaini`;
-            document.getElementById('categoryTitle').textContent = category.fullName;
-            document.getElementById('categoryDesc').textContent = category.description;
-            document.getElementById('breadcrumbCat').textContent = category.name;
+            if (cat === 'all') {
+                products = getAllProducts();
+                pageTitle = 'All Products';
+                pageDesc = 'Explore our complete collection of handcrafted block-printed ethnic wear.';
+                document.title = 'All Products — Mrignaini';
+                document.getElementById('categoryTitle').textContent = pageTitle;
+                document.getElementById('categoryDesc').textContent = pageDesc;
+                document.getElementById('breadcrumbCat').textContent = 'All Products';
+            } else {
+                const category = CATEGORIES[cat];
+                products = getProductsByCategory(cat);
+                document.title = `${category.fullName} — Mrignaini`;
+                document.getElementById('categoryTitle').textContent = category.fullName;
+                document.getElementById('categoryDesc').textContent = category.description;
+                document.getElementById('breadcrumbCat').textContent = category.name;
+            }
 
             // Highlight active tab
             document.querySelectorAll('.tab').forEach(tab => {

@@ -4,6 +4,12 @@
    ====================================== */
 
 const COUPONS = {
+    'MRIG200': {
+        discount: 200,
+        type: 'flat',
+        minOrder: 999,
+        description: '₹200 off on orders above ₹999'
+    },
     'MRIG500': {
         discount: 500,
         type: 'flat',
@@ -15,12 +21,6 @@ const COUPONS = {
         type: 'flat',
         minOrder: 7999,
         description: '₹1,000 off on orders above ₹7,999'
-    },
-    'FREESHIP': {
-        discount: 0,
-        type: 'freeship',
-        minOrder: 1999,
-        description: 'Free shipping on orders above ₹1,999'
     }
 };
 
