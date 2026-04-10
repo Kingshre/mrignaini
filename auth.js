@@ -20,10 +20,11 @@ function updateAuthUI() {
         authUiContainer.innerHTML = `
             <div class="user-dropdown">
                 <button class="user-btn" aria-label="User Profile" onclick="toggleUserMenu()">
-                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
                         <circle cx="12" cy="7" r="4"/>
                     </svg>
+                    <span class="btn-label hide-mobile">Account</span>
                 </button>
                 <div class="user-menu" id="userMenu">
                     <div class="user-menu-header">
@@ -37,10 +38,11 @@ function updateAuthUI() {
     } else {
         authUiContainer.innerHTML = `
             <a href="auth.html" class="user-btn" aria-label="Login">
-                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                      <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
                      <circle cx="12" cy="7" r="4"/>
                 </svg>
+                <span class="btn-label hide-mobile">Sign In</span>
             </a>
         `;
     }

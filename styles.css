@@ -773,12 +773,25 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .user-btn {
     display: flex;
     align-items: center;
-    color: inherit;
+    gap: 6px;
+    color: var(--clr-ivory);
     transition: color 0.3s ease;
     background: transparent;
     border: none;
     cursor: pointer;
     padding: 0;
+}
+
+.btn-label {
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+@media (max-width: 768px) {
+    .hide-mobile { display: none; }
 }
 
 .user-btn:hover {
@@ -787,17 +800,17 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 
 .user-menu {
     position: absolute;
-    top: calc(100% + 15px);
+    top: calc(100% + 20px);
     right: -10px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-    min-width: 200px;
+    background: var(--clr-cream);
+    border-radius: 12px;
+    box-shadow: 0 16px 40px rgba(10,31,24,0.15);
+    min-width: 220px;
     opacity: 0;
     visibility: hidden;
     transform: translateY(10px);
-    transition: all 0.3s ease;
-    border: 1px solid rgba(200,169,110,0.2);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    border: 1px solid rgba(198,165,107,0.3);
     overflow: hidden;
     z-index: 1000;
 }
