@@ -135,17 +135,20 @@
     <script src="auth.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (!session) {
-                // Not logged in -> redirect to login
-                window.location.href = 'auth.html';
-                return;
+            if (typeof supabaseClient !== 'undefined') {
+                try {
+                    const { data: { session } } = await supabaseClient.auth.getSession();
+                    if (!session) {
+                        window.location.href = 'auth.html';
+                        return;
+                    }
+                    const user = session.user;
+                    document.getElementById('profileEmail').innerText = user.email;
+                    document.getElementById('profileName').innerText = user.user_metadata?.full_name || 'Guest User';
+                } catch (e) {
+                    console.error('Session error', e);
+                }
             }
-            
-            // Populate data
-            const user = session.user;
-            document.getElementById('profileEmail').innerText = user.email;
-            document.getElementById('profileName').innerText = user.user_metadata?.full_name || 'Guest User';
         });
     </script>
 </body>

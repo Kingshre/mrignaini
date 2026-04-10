@@ -197,11 +197,11 @@
 
             try {
                 if (isLoginMode) {
-                    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+                    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
                     if (error) throw error;
                     window.location.href = 'index.html';
                 } else {
-                    const { data, error } = await supabase.auth.signUp({
+                    const { data, error } = await supabaseClient.auth.signUp({
                         email, 
                         password,
                         options: { data: { full_name: name } }
@@ -221,8 +221,14 @@
 
         // Redirect if already logged in
         document.addEventListener('DOMContentLoaded', async () => {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session) window.location.href = 'index.html';
+            if (typeof supabaseClient !== 'undefined') {
+                try {
+                    const { data: { session } } = await supabaseClient.auth.getSession();
+                    if (session) window.location.href = 'index.html';
+                } catch (e) {
+                    // ignore
+                }
+            }
         });
     </script>
 </body>

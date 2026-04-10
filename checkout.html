@@ -726,13 +726,17 @@
     <script src="auth.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
-            if (typeof supabase !== 'undefined') {
-                const { data: { session } } = await supabase.auth.getSession();
-                if (session && session.user) {
-                    const emailInput = document.getElementById('checkEmail');
-                    const nameInput = document.getElementById('checkName');
-                    if (emailInput && !emailInput.value) emailInput.value = session.user.email || '';
-                    if (nameInput && !nameInput.value) nameInput.value = session.user.user_metadata?.full_name || '';
+            if (typeof supabaseClient !== 'undefined') {
+                try {
+                    const { data: { session } } = await supabaseClient.auth.getSession();
+                    if (session && session.user) {
+                        const emailInput = document.getElementById('checkEmail');
+                        const nameInput = document.getElementById('checkName');
+                        if (emailInput && !emailInput.value) emailInput.value = session.user.email || '';
+                        if (nameInput && !nameInput.value) nameInput.value = session.user.user_metadata?.full_name || '';
+                    }
+                } catch (e) {
+                    console.error('Auth check failed silently:', e);
                 }
             }
 

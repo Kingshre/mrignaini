@@ -1,13 +1,13 @@
 const SUPABASE_URL = 'https://ltdqrujonwgnfivhhfya.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0ZHFydWpvbndnbmZpdmhoZnlhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3NTA2MzUsImV4cCI6MjA5MTMyNjYzNX0.Di4IQ4zFpQbIIIIser_vEWtNJZX_XIg7OnYzXZSKk_s';
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // Auth state
 let currentUser = null;
 
 async function checkAuth() {
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { session } } = await supabaseClient.auth.getSession();
     currentUser = session?.user || null;
     updateAuthUI();
 }
@@ -62,7 +62,7 @@ document.addEventListener('click', (e) => {
 });
 
 async function logout() {
-    await supabase.auth.signOut();
+    await supabaseClient.auth.signOut();
     currentUser = null;
     updateAuthUI();
     if (window.location.pathname.includes('profile.html') || window.location.pathname.includes('auth.html')) {
@@ -71,7 +71,7 @@ async function logout() {
 }
 
 // Setup listeners
-supabase.auth.onAuthStateChange((event, session) => {
+supabaseClient.auth.onAuthStateChange((event, session) => {
     currentUser = session?.user || null;
     updateAuthUI();
 });
