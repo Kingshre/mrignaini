@@ -1,5 +1,6 @@
 /* ======================================
-   MRIGNAINI — PRODUCT CATALOG
+   ====================================== */
+
 const ICONS = {
     cotton: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M11 21c-4.478 0-8.118-3.64-8.118-8.118 0-4.478 3.64-8.118 8.118-8.118M13 3c4.478 0 8.118 3.64 8.118 8.118 0 4.478-3.64 8.118-8.118 8.118M12 11a2 2 0 100-4 2 2 0 000 4z"/></svg>',
     print: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg>',

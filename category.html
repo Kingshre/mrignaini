@@ -164,21 +164,34 @@
 
             // Render products
             const grid = document.getElementById('productGrid');
-            grid.innerHTML = products.map((p, i) => `
-                <a href="product.html?id=${p.id}" class="product-card anim-reveal" data-delay="${i * 0.1}" style="animation-delay: ${i * 0.1}s">
-                    <div class="product-card-image">
-                        <img src="${p.image}" alt="${p.name}" loading="lazy">
-                        <span class="product-card-tag">${p.tag}</span>
-                        <div class="product-card-quick">Quick View →</div>
-                    </div>
-                    <div class="product-card-info">
-                        <h3 class="product-card-name">${p.name}</h3>
-                        <div class="product-card-price">
-                            <span class="price-current">${formatPrice(p.price)}</span>
+            if (products && products.length > 0) {
+                grid.style.display = ''; // Reset display to default grid
+                grid.innerHTML = products.map((p, i) => `
+                    <a href="product.html?id=${p.id}" class="product-card anim-reveal" data-delay="${i * 0.1}" style="animation-delay: ${i * 0.1}s">
+                        <div class="product-card-image">
+                            <img src="${p.image}" alt="${p.name}" loading="lazy">
+                            <span class="product-card-tag">${p.tag ? p.tag : ''}</span>
+                            <div class="product-card-quick">Quick View →</div>
                         </div>
+                        <div class="product-card-info">
+                            <h3 class="product-card-name">${p.name}</h3>
+                            <div class="product-card-price">
+                                <span class="price-current">${formatPrice(p.price)}</span>
+                            </div>
+                        </div>
+                    </a>
+                `).join('');
+            } else {
+                grid.style.display = 'block'; // Override grid for centered message
+                grid.innerHTML = `
+                    <div class="empty-state" style="text-align: center; padding: 4rem 1rem; color: #555;">
+                        <svg viewBox="0 0 24 24" width="48" height="48" style="margin: 0 auto 1rem; color: #ccc;" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                        <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; color: #1a4a3a; margin-bottom: 0.5rem;">No products found</h3>
+                        <p style="font-family: 'Outfit', sans-serif; font-size: 0.95rem;">We're working on adding new pieces to this collection. Check back soon!</p>
+                        <a href="category.html?cat=all" class="btn btn-primary" style="margin-top: 1.5rem; display: inline-flex; padding: 12px 24px; border-radius: 8px; text-decoration: none; background: #1a4a3a; color: #FDF8F0;">View All Products</a>
                     </div>
-                </a>
-            `).join('');
+                `;
+            }
 
             // Animate cards in
             setTimeout(() => {
