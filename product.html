@@ -658,6 +658,94 @@
             .trust-row { grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
         }
 
+        /* --- COLOR SELECTOR --- */
+        .color-section {
+            margin-bottom: 1.5rem;
+        }
+        .color-label {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #1a4a3a;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.75rem;
+        }
+        .color-label .color-name {
+            font-weight: 400;
+            color: #666;
+            text-transform: none;
+            letter-spacing: 0;
+            margin-left: 0.25rem;
+        }
+        .color-pills {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .color-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px 6px 6px;
+            border: 2px solid #d4ccc0;
+            border-radius: 24px;
+            background: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: #555;
+        }
+        .color-pill:hover {
+            border-color: #A82039;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(168, 32, 57, 0.1);
+        }
+        .color-pill.selected {
+            border-color: #1a4a3a;
+            background: rgba(26, 74, 58, 0.04);
+            color: #1a4a3a;
+            font-weight: 600;
+            box-shadow: 0 4px 16px rgba(26, 74, 58, 0.12);
+        }
+        .color-swatch {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid rgba(0,0,0,0.08);
+            position: relative;
+            flex-shrink: 0;
+            transition: transform 0.25s;
+        }
+        .color-pill.selected .color-swatch {
+            transform: scale(1.1);
+            box-shadow: 0 0 0 3px rgba(26, 74, 58, 0.2);
+        }
+        .color-pill.selected .color-swatch::after {
+            content: '✓';
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        /* Gallery crossfade animation */
+        .gallery-main img.fade-out {
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+        .gallery-main img.fade-in {
+            opacity: 1;
+            transition: opacity 0.35s ease;
+        }
+
         /* --- SPECIAL NOTE --- */
         .special-note {
             margin-top: 1.25rem;
@@ -682,6 +770,63 @@
             color: #1a4a3a;
             font-weight: 600;
         }
+
+        /* --- CARE NOTE --- */
+        .care-note {
+            margin-top: 1.25rem;
+            padding: 16px 18px;
+            background: linear-gradient(135deg, rgba(46, 64, 87, 0.08), rgba(74, 124, 155, 0.06));
+            border: 1px solid rgba(46, 64, 87, 0.18);
+            border-left: 4px solid #2E4057;
+            border-radius: 10px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.82rem;
+            color: #444;
+            line-height: 1.6;
+            display: none;
+        }
+        .care-note.show { display: block; }
+        .care-note-header {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+            color: #2E4057;
+            margin-bottom: 6px;
+            font-size: 0.85rem;
+        }
+        .care-note-header svg {
+            flex-shrink: 0;
+        }
+
+        /* --- SIZE NOTE --- */
+        .size-note {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.8rem;
+            color: #2d6a4f;
+            background: rgba(45, 106, 79, 0.08);
+            border: 1px solid rgba(45, 106, 79, 0.15);
+            border-radius: 8px;
+            padding: 8px 14px;
+            margin-top: 0.5rem;
+            display: none;
+        }
+        .size-note.show { display: block; }
+        .size-note strong { color: #1a4a3a; }
+
+        /* --- DETAIL SECTIONS (for sets) --- */
+        .detail-section-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #1a4a3a;
+            margin-top: 0.75rem;
+            margin-bottom: 0.25rem;
+            padding-bottom: 4px;
+            border-bottom: 1px solid rgba(200, 169, 110, 0.2);
+            letter-spacing: 0.03em;
+        }
+        .detail-section-title:first-child { margin-top: 0; }
 
         /* --- ENTRANCE ANIMATIONS --- */
         .fade-up {
@@ -708,6 +853,8 @@
                     <a href="#" class="nav-link nav-link-dropdown">Shop <svg viewBox="0 0 12 8" width="10" height="8"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
                     <div class="dropdown-menu">
                         <a href="category.html?cat=tops" class="dropdown-item">Tops</a>
+                        <a href="category.html?cat=dresses" class="dropdown-item">Dresses</a>
+                        <a href="category.html?cat=sets" class="dropdown-item">Sets</a>
                         <a href="category.html?cat=layers" class="dropdown-item">Layers</a>
                     </div>
                 </div>
@@ -773,6 +920,12 @@
                 </div>
                 <p class="product-desc" id="productDesc"></p>
 
+                <!-- Color Selector (shown for products with variants) -->
+                <div class="color-section" id="colorSection" style="display: none">
+                    <div class="color-label">Colour: <span class="color-name" id="selectedColorName"></span></div>
+                    <div class="color-pills" id="colorPills"></div>
+                </div>
+
                 <!-- Size Selector -->
                 <div class="size-section">
                     <div class="size-header">
@@ -784,6 +937,7 @@
                     </div>
                     <div class="size-pills" id="sizePills"></div>
                     <p class="size-error" id="sizeError">Please select a size</p>
+                    <div class="size-note" id="sizeNote"></div>
                 </div>
 
                 <!-- Quantity -->
@@ -809,6 +963,15 @@
                 <div class="special-note" id="specialNote">
                     <span class="special-note-icon">✦</span>
                     <strong>Note:</strong> <span id="specialNoteText"></span>
+                </div>
+
+                <!-- Care Note -->
+                <div class="care-note" id="careNote">
+                    <div class="care-note-header">
+                        <svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 9v4M12 17h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                        <span>Care Instructions</span>
+                    </div>
+                    <span id="careNoteText"></span>
                 </div>
 
                 <!-- Details Accordion -->
@@ -880,6 +1043,8 @@
             <div class="footer-divider"></div>
             <div class="footer-links">
                 <a href="category.html?cat=tops">Tops</a>
+                <a href="category.html?cat=dresses">Dresses</a>
+                <a href="category.html?cat=sets">Sets</a>
                 <a href="category.html?cat=layers">Layers</a>
                 <a href="index.html#story">Our Story</a>
                 <a href="index.html#craft">The Craft</a>
@@ -920,7 +1085,7 @@
             document.getElementById('priceOriginal').textContent = formatPrice(product.originalPrice);
             const discount = Math.round((1 - product.price / product.originalPrice) * 100);
             document.getElementById('priceDiscount').textContent = `${discount}% off`;
-            document.getElementById('productDesc').textContent = product.description;
+            document.getElementById('productDesc').innerHTML = product.description.replace(/\n/g, '<br>');
 
             // Shipping
             if (product.shipping) {
@@ -928,10 +1093,12 @@
             }
 
             // --- IMAGE GALLERY ---
-            const images = product.images || [product.image];
+            let images = product.images || [product.image];
             let currentIndex = 0;
             const mainImage = document.getElementById('mainImage');
             const counter = document.getElementById('galleryCounter');
+            const thumbContainer = document.getElementById('thumbnails');
+            const dotsContainer = document.getElementById('lightboxDots');
 
             function showImage(index) {
                 currentIndex = index;
@@ -948,17 +1115,44 @@
                 });
             }
 
-            // Create thumbnails
-            const thumbContainer = document.getElementById('thumbnails');
-            thumbContainer.innerHTML = images.map((img, i) => `
-                <div class="gallery-thumb ${i === 0 ? 'active' : ''}" data-index="${i}">
-                    <img src="${img}" alt="${product.name} thumbnail ${i + 1}" loading="lazy">
-                </div>
-            `).join('');
+            function buildThumbnails() {
+                thumbContainer.innerHTML = images.map((img, i) => `
+                    <div class="gallery-thumb ${i === 0 ? 'active' : ''}" data-index="${i}">
+                        <img src="${img}" alt="${product.name} thumbnail ${i + 1}" loading="lazy">
+                    </div>
+                `).join('');
+                thumbContainer.querySelectorAll('.gallery-thumb').forEach(thumb => {
+                    thumb.addEventListener('click', () => showImage(parseInt(thumb.dataset.index)));
+                });
+            }
 
-            thumbContainer.querySelectorAll('.gallery-thumb').forEach(thumb => {
-                thumb.addEventListener('click', () => showImage(parseInt(thumb.dataset.index)));
-            });
+            function buildLightboxDots() {
+                dotsContainer.innerHTML = images.map((_, i) => `
+                    <button class="lightbox-dot ${i === 0 ? 'active' : ''}" data-index="${i}" aria-label="Image ${i + 1}"></button>
+                `).join('');
+                dotsContainer.querySelectorAll('.lightbox-dot').forEach(dot => {
+                    dot.addEventListener('click', () => {
+                        showImage(parseInt(dot.dataset.index));
+                        lightboxImg.src = images[currentIndex];
+                    });
+                });
+            }
+
+            function updateGallery(newImages) {
+                // Crossfade animation
+                mainImage.classList.add('fade-out');
+                setTimeout(() => {
+                    images = newImages;
+                    buildThumbnails();
+                    buildLightboxDots();
+                    showImage(0);
+                    mainImage.classList.remove('fade-out');
+                    mainImage.classList.add('fade-in');
+                    setTimeout(() => mainImage.classList.remove('fade-in'), 350);
+                }, 250);
+            }
+
+            buildThumbnails();
 
             // Nav arrows
             document.getElementById('prevBtn').addEventListener('click', (e) => {
@@ -972,6 +1166,50 @@
 
             showImage(0);
 
+            // --- COLOR VARIANTS ---
+            let selectedColor = product.selectedColor || null;
+            if (product.colorVariants && Object.keys(product.colorVariants).length > 0) {
+                const colorSection = document.getElementById('colorSection');
+                const colorPills = document.getElementById('colorPills');
+                const colorNameSpan = document.getElementById('selectedColorName');
+                colorSection.style.display = 'block';
+
+                // Build color pills
+                const colorNames = Object.keys(product.colorVariants);
+                colorPills.innerHTML = colorNames.map(name => {
+                    const variant = product.colorVariants[name];
+                    const isSelected = name === selectedColor;
+                    return `
+                        <button class="color-pill ${isSelected ? 'selected' : ''}" data-color="${name}">
+                            <span class="color-swatch" style="background: ${variant.hex}"></span>
+                            <span>${name}</span>
+                        </button>
+                    `;
+                }).join('');
+
+                colorNameSpan.textContent = selectedColor || colorNames[0];
+
+                // Color pill click handler
+                colorPills.querySelectorAll('.color-pill').forEach(pill => {
+                    pill.addEventListener('click', () => {
+                        const colorName = pill.dataset.color;
+                        if (colorName === selectedColor) return;
+                        selectedColor = colorName;
+                        colorNameSpan.textContent = colorName;
+
+                        // Update selected state
+                        colorPills.querySelectorAll('.color-pill').forEach(p => p.classList.remove('selected'));
+                        pill.classList.add('selected');
+
+                        // Update gallery images
+                        const variant = product.colorVariants[colorName];
+                        if (variant && variant.images) {
+                            updateGallery(variant.images);
+                        }
+                    });
+                });
+            }
+
             // Click to open lightbox
             const galleryMain = document.getElementById('galleryMain');
             galleryMain.addEventListener('click', () => {
@@ -981,19 +1219,8 @@
             // --- LIGHTBOX ---
             const lightbox = document.getElementById('lightbox');
             const lightboxImg = document.getElementById('lightboxImg');
-            const dotsContainer = document.getElementById('lightboxDots');
 
-            // Create lightbox dots
-            dotsContainer.innerHTML = images.map((_, i) => `
-                <button class="lightbox-dot ${i === 0 ? 'active' : ''}" data-index="${i}" aria-label="Image ${i + 1}"></button>
-            `).join('');
-
-            dotsContainer.querySelectorAll('.lightbox-dot').forEach(dot => {
-                dot.addEventListener('click', () => {
-                    showImage(parseInt(dot.dataset.index));
-                    lightboxImg.src = images[currentIndex];
-                });
-            });
+            buildLightboxDots();
 
             function openLightbox(index) {
                 showImage(index);
@@ -1042,6 +1269,18 @@
                 <button class="size-pill" data-size="${s}">${s}</button>
             `).join('');
 
+            // Custom size label
+            if (product.sizeLabel) {
+                document.querySelector('.size-label').textContent = product.sizeLabel;
+            }
+
+            // Size note (e.g., "Skirt is Free Size")
+            if (product.sizeNote) {
+                const sizeNoteEl = document.getElementById('sizeNote');
+                sizeNoteEl.innerHTML = `<strong>ℹ</strong> ${product.sizeNote}`;
+                sizeNoteEl.classList.add('show');
+            }
+
             let selectedSize = null;
 
             // Auto-select if Free Size
@@ -1077,7 +1316,9 @@
                     document.getElementById('sizeError').classList.add('show');
                     return;
                 }
-                Cart.add(product.id, selectedSize, qty);
+                // Include color in cart if applicable
+                const cartId = selectedColor ? `${product.id}-${selectedColor.toLowerCase().replace(/\s+/g, '-')}` : product.id;
+                Cart.add(cartId, selectedSize, qty);
                 const btn = document.getElementById('addToCartBtn');
                 btn.innerHTML = '<span>✓ Added to Cart!</span>';
                 btn.classList.add('added');
@@ -1088,7 +1329,21 @@
             });
 
             // --- PRODUCT DETAILS ---
-            document.getElementById('detailsList').innerHTML = product.details.map(d => `<li>${d}</li>`).join('');
+            if (product.detailSections && product.detailSections.length) {
+                // Multi-section details (e.g., sets with Top + Skirt)
+                let detailsHTML = '';
+                product.detailSections.forEach(section => {
+                    detailsHTML += `<div class="detail-section-title">${section.title}</div>`;
+                    detailsHTML += '<ul>' + section.items.map(d => `<li>${d}</li>`).join('') + '</ul>';
+                });
+                if (product.details && product.details.length) {
+                    detailsHTML += '<div class="detail-section-title" style="margin-top:1rem">General</div>';
+                    detailsHTML += '<ul>' + product.details.map(d => `<li>${d}</li>`).join('') + '</ul>';
+                }
+                document.getElementById('detailsBody').innerHTML = detailsHTML;
+            } else {
+                document.getElementById('detailsList').innerHTML = product.details.map(d => `<li>${d}</li>`).join('');
+            }
 
             // --- TRUST BADGES (dynamic) ---
             const trustRow = document.getElementById('trustRow');
@@ -1107,6 +1362,12 @@
             if (product.specialNote) {
                 document.getElementById('specialNoteText').textContent = product.specialNote;
                 document.getElementById('specialNote').classList.add('show');
+            }
+
+            // --- CARE NOTE ---
+            if (product.careNote) {
+                document.getElementById('careNoteText').textContent = product.careNote;
+                document.getElementById('careNote').classList.add('show');
             }
 
             // --- ACCORDION ---
