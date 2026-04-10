@@ -130,9 +130,36 @@
 <body>
 
     <!-- ========== NAVIGATION ========== -->
-    <nav id="navbar" class="navbar py-4 bg-white/90 backdrop-blur-md shadow-sm border-b border-gold/10" style="position: sticky; top: 0;">
-        <div class="nav-container max-w-7xl mx-auto px-6 flex justify-between items-center">
-            <a href="index.html" class="nav-brand font-heading text-2xl tracking-[0.15em] text-forest">mrignaini</a>
+    <nav id="navbar" class="navbar scrolled">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">
+                <span class="brand-name">mrignaini</span>
+            </a>
+            <div class="nav-links" id="navLinks">
+                <div class="nav-dropdown">
+                    <a href="category.html?cat=tops" class="nav-link nav-link-dropdown">Shop <svg viewBox="0 0 12 8" width="10" height="8"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
+                    <div class="dropdown-menu">
+                        <a href="category.html?cat=tops" class="dropdown-item">Tops</a>
+                        <a href="category.html?cat=dresses" class="dropdown-item">Dresses</a>
+                        <a href="category.html?cat=sets" class="dropdown-item">Sets</a>
+                        <a href="category.html?cat=layers" class="dropdown-item">Layers</a>
+                    </div>
+                </div>
+                <a href="index.html#story" class="nav-link">Our Story</a>
+                <a href="index.html#craft" class="nav-link">The Craft</a>
+            </div>
+            <div class="nav-right">
+                <div class="auth-ui" id="authUiContainer"></div>
+                <a href="cart.html" class="nav-cart" aria-label="Shopping cart">
+                    <svg viewBox="0 0 24 24" width="22" height="22"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="1.5"/><path d="M16 10a4 4 0 01-8 0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span class="cart-badge">0</span>
+                </a>
+                <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                </button>
+            </div>
         </div>
     </nav>
 

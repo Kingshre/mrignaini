@@ -447,6 +447,24 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .nav-link:hover::after { width: 100%; }
 .nav-link:hover { color: var(--clr-mustard); }
 
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.nav-cart {
+    position: relative;
+    color: var(--clr-ivory);
+    transition: color 0.3s;
+    display: flex;
+    align-items: center;
+}
+
+.nav-cart:hover {
+    color: var(--clr-mustard);
+}
+
 /* Cart badge */
 .cart-badge {
     background: var(--clr-deep-red);
@@ -755,7 +773,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .user-btn {
     display: flex;
     align-items: center;
-    color: var(--clr-forest-light);
+    color: inherit;
     transition: color 0.3s ease;
     background: transparent;
     border: none;
@@ -781,6 +799,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
     transition: all 0.3s ease;
     border: 1px solid rgba(200,169,110,0.2);
     overflow: hidden;
+    z-index: 1000;
 }
 
 .user-menu.active {
