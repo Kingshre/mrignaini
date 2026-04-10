@@ -325,7 +325,14 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
     pointer-events: none;
 }
 
-.preloader-inner { text-align: center; }
+.preloader-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    text-align: center;
+}
 
 .preloader-logo {
     animation: preloaderSpin 3s linear infinite;
@@ -354,7 +361,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
     width: 120px;
     height: 2px;
     background: rgba(200,169,110,0.2);
-    margin: 1.5rem auto 0;
+    margin-top: 1.5rem;
     border-radius: 2px;
     overflow: hidden;
 }
