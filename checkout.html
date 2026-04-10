@@ -3,14 +3,482 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Mrignaini — Secure checkout.">
-    <title>Mrignaini</title>
+    <meta name="description" content="Mrignaini — Secure checkout. Complete your order for handcrafted block-printed ethnic wear.">
+    <title>Checkout — Mrignaini</title>
     <link rel="icon" type="image/png" href="assets/logo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="shop.css">
+    <style>
+        /* ========== CHECKOUT PAGE STYLES ========== */
+        .checkout-page {
+            padding: 120px 0 60px;
+            min-height: 100vh;
+            background: #faf8f5;
+        }
+        .page-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            font-weight: 500;
+            color: #1a4a3a;
+            margin-bottom: 2rem;
+        }
+
+        /* --- CHECKOUT GRID --- */
+        .checkout-grid {
+            display: grid;
+            grid-template-columns: 1fr 420px;
+            gap: 2rem;
+            align-items: start;
+        }
+        @media (max-width: 900px) {
+            .checkout-grid {
+                grid-template-columns: 1fr;
+            }
+            .checkout-summary {
+                order: -1;
+            }
+        }
+
+        /* --- CARDS --- */
+        .checkout-card {
+            background: #fff;
+            border: 1px solid rgba(200, 169, 110, 0.15);
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 12px rgba(26, 74, 58, 0.04);
+        }
+        .checkout-card-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+        .checkout-step {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1a4a3a, #2d6a4f);
+            color: #FDF8F0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        .checkout-card-header h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: #1a4a3a;
+            margin: 0;
+        }
+
+        /* --- FORM --- */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .form-row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+        }
+        @media (max-width: 600px) {
+            .form-row, .form-row-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+        .form-group {
+            position: relative;
+            margin-bottom: 16px;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 14px 16px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            color: #333;
+            border: 1.5px solid #d4ccc0;
+            border-radius: 10px;
+            background: #faf8f5;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            outline: none;
+        }
+        .form-group input:focus, .form-group select:focus {
+            border-color: #1a4a3a;
+            box-shadow: 0 0 0 3px rgba(26, 74, 58, 0.08);
+        }
+        .form-group input.error {
+            border-color: #A82039;
+            box-shadow: 0 0 0 3px rgba(168, 32, 57, 0.08);
+        }
+        .form-group label {
+            position: absolute;
+            left: 16px;
+            top: -8px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 500;
+            color: #888;
+            background: linear-gradient(180deg, #fff 60%, #faf8f5 40%);
+            padding: 0 6px;
+            letter-spacing: 0.03em;
+        }
+        .field-error {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.72rem;
+            color: #A82039;
+            margin-top: 4px;
+            display: none;
+        }
+        .field-error.show { display: block; }
+
+        /* --- PAYMENT OPTIONS --- */
+        .payment-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .payment-option {
+            cursor: pointer;
+            display: block;
+        }
+        .payment-option input { display: none; }
+        .payment-option-inner {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px 18px;
+            border: 1.5px solid #d4ccc0;
+            border-radius: 12px;
+            transition: all 0.3s;
+            background: #faf8f5;
+        }
+        .payment-option.selected .payment-option-inner {
+            border-color: #1a4a3a;
+            background: rgba(26, 74, 58, 0.03);
+            box-shadow: 0 2px 12px rgba(26, 74, 58, 0.08);
+        }
+        .payment-radio {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid #ccc;
+            position: relative;
+            flex-shrink: 0;
+            transition: border-color 0.3s;
+        }
+        .payment-option.selected .payment-radio {
+            border-color: #1a4a3a;
+        }
+        .payment-option.selected .payment-radio::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #1a4a3a;
+        }
+        .payment-info {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+        .payment-name {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #333;
+        }
+        .payment-desc {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.75rem;
+            color: #888;
+            margin-top: 2px;
+        }
+        .payment-icon {
+            font-size: 1.4rem;
+            flex-shrink: 0;
+        }
+
+        /* --- ORDER SUMMARY SIDEBAR --- */
+        .checkout-summary .summary-card {
+            background: #fff;
+            border: 1px solid rgba(200, 169, 110, 0.15);
+            border-radius: 16px;
+            padding: 28px;
+            box-shadow: 0 2px 12px rgba(26, 74, 58, 0.04);
+            position: sticky;
+            top: 100px;
+        }
+        .summary-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            font-weight: 500;
+            color: #1a4a3a;
+            margin-bottom: 1.25rem;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(200, 169, 110, 0.15);
+        }
+
+        /* Checkout Items */
+        .checkout-items {
+            margin-bottom: 1rem;
+        }
+        .checkout-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(200, 169, 110, 0.1);
+        }
+        .checkout-item:last-child { border-bottom: none; }
+        .checkout-item-img {
+            width: 64px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 1px solid rgba(200, 169, 110, 0.15);
+            flex-shrink: 0;
+        }
+        .checkout-item-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .checkout-item-name {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: #333;
+            line-height: 1.3;
+        }
+        .checkout-item-meta {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.72rem;
+            color: #888;
+        }
+        .checkout-item-price {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: #1a4a3a;
+            white-space: nowrap;
+        }
+
+        /* Summary Rows */
+        .summary-divider {
+            height: 1px;
+            background: rgba(200, 169, 110, 0.15);
+            margin: 12px 0;
+        }
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.88rem;
+            color: #555;
+            padding: 6px 0;
+        }
+        .summary-row.summary-total {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1a4a3a;
+            padding: 10px 0;
+        }
+        .summary-savings {
+            color: #2d6a4f;
+            font-weight: 500;
+        }
+
+        /* Place Order Button */
+        .place-order-btn {
+            width: 100%;
+            padding: 16px 24px;
+            background: linear-gradient(135deg, #A82039 0%, #8B2252 100%);
+            color: #FDF8F0;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 6px 24px rgba(168, 32, 57, 0.3);
+            margin-top: 1rem;
+        }
+        .place-order-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #C72C4D 0%, #A82039 100%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+        .place-order-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 32px rgba(168, 32, 57, 0.4);
+        }
+        .place-order-btn:hover::before { opacity: 1; }
+        .place-order-btn span, .place-order-btn svg { position: relative; z-index: 1; }
+
+        .checkout-secure {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.72rem;
+            color: #999;
+            text-align: center;
+            margin-top: 12px;
+        }
+
+        /* --- CONFIRMATION MODAL --- */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(6px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+            padding: 1rem;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        .confirm-modal {
+            background: #fff;
+            border-radius: 20px;
+            padding: 48px 40px;
+            max-width: 440px;
+            width: 100%;
+            text-align: center;
+            transform: translateY(20px) scale(0.95);
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .modal-overlay.active .confirm-modal {
+            transform: translateY(0) scale(1);
+        }
+        .confirm-icon svg {
+            display: block;
+            margin: 0 auto 20px;
+        }
+        .confirm-icon .confirm-circle {
+            stroke-dasharray: 227;
+            stroke-dashoffset: 227;
+            animation: drawCircle 0.6s 0.2s ease forwards;
+        }
+        .confirm-icon .confirm-check {
+            stroke-dasharray: 60;
+            stroke-dashoffset: 60;
+            animation: drawCheck 0.4s 0.7s ease forwards;
+        }
+        @keyframes drawCircle { to { stroke-dashoffset: 0; } }
+        @keyframes drawCheck { to { stroke-dashoffset: 0; } }
+        .confirm-modal .modal-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            font-weight: 500;
+            color: #1a4a3a;
+            margin-bottom: 12px;
+        }
+        .confirm-text {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+        .confirm-order-id {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #1a4a3a;
+            background: rgba(26, 74, 58, 0.06);
+            padding: 10px 20px;
+            border-radius: 8px;
+            display: inline-block;
+            margin-bottom: 16px;
+        }
+        .confirm-subtext {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.78rem;
+            color: #999;
+            margin-bottom: 24px;
+        }
+        .confirm-modal .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #1a4a3a, #2d6a4f);
+            color: #FDF8F0;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .confirm-modal .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(26, 74, 58, 0.3);
+        }
+
+        /* --- EMPTY STATE --- */
+        .checkout-empty {
+            text-align: center;
+            padding: 80px 20px;
+        }
+        .checkout-empty h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            color: #1a4a3a;
+            margin-bottom: 12px;
+        }
+        .checkout-empty p {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            color: #888;
+            margin-bottom: 24px;
+        }
+        .checkout-empty .btn {
+            display: inline-flex;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #1a4a3a, #2d6a4f);
+            color: #FDF8F0;
+            border-radius: 10px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-decoration: none;
+        }
+    </style>
 </head>
 <body>
 
@@ -24,9 +492,10 @@
                 <div class="nav-dropdown">
                     <a href="#" class="nav-link nav-link-dropdown">Shop <svg viewBox="0 0 12 8" width="10" height="8"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
                     <div class="dropdown-menu">
-                        <a href="category.html?cat=sets" class="dropdown-item">Sets</a>
                         <a href="category.html?cat=tops" class="dropdown-item">Tops</a>
-                        <a href="category.html?cat=kurtis" class="dropdown-item">Kurtis</a>
+                        <a href="category.html?cat=dresses" class="dropdown-item">Dresses</a>
+                        <a href="category.html?cat=sets" class="dropdown-item">Sets</a>
+                        <a href="category.html?cat=layers" class="dropdown-item">Layers</a>
                     </div>
                 </div>
                 <a href="index.html#story" class="nav-link">Our Story</a>
@@ -61,55 +530,84 @@
 
             <h1 class="page-title">Checkout</h1>
 
-            <div class="checkout-grid">
+            <!-- Empty state (hidden by default) -->
+            <div class="checkout-empty" id="checkoutEmpty" style="display:none;">
+                <h2>Nothing to checkout</h2>
+                <p>Your cart is empty. Browse our collections and find something you love.</p>
+                <a href="category.html?cat=tops" class="btn">Start Shopping</a>
+            </div>
+
+            <div class="checkout-grid" id="checkoutGrid" style="display:none;">
                 <!-- Left: Form -->
                 <div class="checkout-form-section">
-                    <!-- Shipping -->
+                    <!-- Contact Details -->
                     <div class="checkout-card">
                         <div class="checkout-card-header">
                             <span class="checkout-step">1</span>
-                            <h2>Shipping Details</h2>
+                            <h2>Contact Details</h2>
                         </div>
-                        <form id="checkoutForm">
+                        <form id="checkoutForm" novalidate>
                             <div class="form-row">
                                 <div class="form-group">
                                     <input type="text" id="checkName" placeholder="Full Name" required>
-                                    <label for="checkName">Full Name</label>
+                                    <label for="checkName">Full Name *</label>
+                                    <p class="field-error" id="nameError">Please enter your full name</p>
                                 </div>
                                 <div class="form-group">
                                     <input type="tel" id="checkPhone" placeholder="Phone Number" required>
-                                    <label for="checkPhone">Phone Number</label>
+                                    <label for="checkPhone">Phone Number *</label>
+                                    <p class="field-error" id="phoneError">Please enter a valid 10-digit phone number</p>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <input type="email" id="checkEmail" placeholder="Email Address" required>
+                                <input type="email" id="checkEmail" placeholder="Email Address (optional)">
                                 <label for="checkEmail">Email Address</label>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" id="checkAddress" placeholder="Street Address" required>
-                                <label for="checkAddress">Street Address</label>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <input type="text" id="checkCity" placeholder="City" required>
-                                    <label for="checkCity">City</label>
-                                </div>
-                                <div class="form-group">
-                                    <input type="text" id="checkState" placeholder="State" required>
-                                    <label for="checkState">State</label>
-                                </div>
-                                <div class="form-group">
-                                    <input type="text" id="checkPincode" placeholder="Pincode" required>
-                                    <label for="checkPincode">Pincode</label>
-                                </div>
                             </div>
                         </form>
                     </div>
 
-                    <!-- Payment -->
+                    <!-- Shipping Address -->
                     <div class="checkout-card">
                         <div class="checkout-card-header">
                             <span class="checkout-step">2</span>
+                            <h2>Shipping Address</h2>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="checkAddress1" placeholder="Address Line 1" required>
+                            <label for="checkAddress1">Address Line 1 *</label>
+                            <p class="field-error" id="addr1Error">Please enter your address</p>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="checkAddress2" placeholder="Address Line 2 (optional)">
+                            <label for="checkAddress2">Address Line 2</label>
+                        </div>
+                        <div class="form-row-3">
+                            <div class="form-group">
+                                <input type="text" id="checkCity" placeholder="City" required>
+                                <label for="checkCity">City *</label>
+                                <p class="field-error" id="cityError">Required</p>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" id="checkState" placeholder="State" required>
+                                <label for="checkState">State *</label>
+                                <p class="field-error" id="stateError">Required</p>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" id="checkPincode" placeholder="Pincode" required>
+                                <label for="checkPincode">Pincode *</label>
+                                <p class="field-error" id="pincodeError">Enter valid 6-digit pincode</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="checkCountry" placeholder="Country" value="India" readonly>
+                            <label for="checkCountry">Country</label>
+                        </div>
+                    </div>
+
+                    <!-- Payment Method -->
+                    <div class="checkout-card">
+                        <div class="checkout-card-header">
+                            <span class="checkout-step">3</span>
                             <h2>Payment Method</h2>
                         </div>
                         <div class="payment-options">
@@ -140,7 +638,7 @@
                                 <div class="payment-option-inner">
                                     <div class="payment-radio"></div>
                                     <div class="payment-info">
-                                        <span class="payment-name">Credit / Debit Card</span>
+                                        <span class="payment-name">Debit / Credit Card</span>
                                         <span class="payment-desc">Visa, Mastercard, RuPay</span>
                                     </div>
                                     <span class="payment-icon">💳</span>
@@ -150,7 +648,7 @@
                     </div>
                 </div>
 
-                <!-- Right: Order summary -->
+                <!-- Right: Order Summary -->
                 <div class="checkout-summary">
                     <div class="summary-card">
                         <h3 class="summary-title">Order Summary</h3>
@@ -164,7 +662,7 @@
                         </div>
                         <div class="summary-row">
                             <span>Shipping</span>
-                            <span id="checkShipping">Free</span>
+                            <span id="checkShipping">₹99</span>
                         </div>
                         <div class="summary-row">
                             <span>You Save</span>
@@ -175,7 +673,7 @@
                             <span>Total</span>
                             <span id="checkTotal">₹0</span>
                         </div>
-                        <button class="btn btn-primary btn-full" id="placeOrderBtn" type="button">
+                        <button class="place-order-btn" id="placeOrderBtn" type="button">
                             <span>Place Order</span>
                             <svg viewBox="0 0 24 24" width="18" height="18"><path d="M20 6L9 17l-5-5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </button>
@@ -188,18 +686,18 @@
 
     <!-- ========== ORDER CONFIRMATION MODAL ========== -->
     <div class="modal-overlay" id="confirmModal">
-        <div class="modal confirm-modal">
+        <div class="confirm-modal">
             <div class="confirm-icon">
                 <svg viewBox="0 0 80 80" width="80" height="80">
-                    <circle cx="40" cy="40" r="36" fill="none" stroke="var(--clr-emerald)" stroke-width="3" class="confirm-circle"/>
-                    <path d="M24 40 L35 52 L56 28" fill="none" stroke="var(--clr-emerald)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" class="confirm-check"/>
+                    <circle cx="40" cy="40" r="36" fill="none" stroke="#2d6a4f" stroke-width="3" class="confirm-circle"/>
+                    <path d="M24 40 L35 52 L56 28" fill="none" stroke="#2d6a4f" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" class="confirm-check"/>
                 </svg>
             </div>
             <h2 class="modal-title">Order Placed Successfully!</h2>
             <p class="confirm-text">Thank you for your order! Your handcrafted Mrignaini pieces will be lovingly prepared and shipped to you.</p>
             <div class="confirm-order-id">Order #MRG<span id="confirmOrderId"></span></div>
-            <p class="confirm-subtext">You will receive a confirmation email with tracking details shortly.</p>
-            <a href="index.html" class="btn btn-primary">Back to Home</a>
+            <p class="confirm-subtext">You will receive a confirmation message with tracking details shortly.</p>
+            <a href="index.html" class="btn">Back to Home</a>
         </div>
     </div>
 
@@ -210,12 +708,14 @@
             <p class="footer-tagline">Handblock Printed Ethnic Wear — Made with love in Jaipur</p>
             <div class="footer-divider"></div>
             <div class="footer-links">
-                <a href="category.html?cat=sets">Sets</a>
                 <a href="category.html?cat=tops">Tops</a>
-                <a href="category.html?cat=kurtis">Kurtis</a>
+                <a href="category.html?cat=dresses">Dresses</a>
+                <a href="category.html?cat=sets">Sets</a>
+                <a href="category.html?cat=layers">Layers</a>
+                <a href="index.html#story">Our Story</a>
                 <a href="index.html#contact">Contact</a>
             </div>
-            <p class="footer-copy">&copy; 2026 Mrignaini. All rights reserved.</p>
+            <p class="footer-copy">&copy; 2026 Mrignaini. All rights reserved. Crafted with ❤ and tradition.</p>
         </div>
     </footer>
 
@@ -223,38 +723,72 @@
     <script src="cart.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const items = Cart.getItems();
-            if (items.length === 0) {
-                window.location.href = 'cart.html';
+            const params = new URLSearchParams(window.location.search);
+            const isBuyNow = params.get('mode') === 'buynow';
+            let checkoutItems = [];
+
+            if (isBuyNow) {
+                // Buy Now mode — single item from sessionStorage
+                const buyNowData = sessionStorage.getItem('mrignaini_buynow');
+                if (!buyNowData) {
+                    document.getElementById('checkoutEmpty').style.display = 'block';
+                    return;
+                }
+                const item = JSON.parse(buyNowData);
+                checkoutItems = [item];
+            } else {
+                // Cart mode — all cart items
+                checkoutItems = Cart.getItems();
+            }
+
+            if (checkoutItems.length === 0) {
+                document.getElementById('checkoutEmpty').style.display = 'block';
                 return;
             }
 
-            // Render checkout items
-            const checkoutItems = document.getElementById('checkoutItems');
-            checkoutItems.innerHTML = items.map(item => {
+            document.getElementById('checkoutGrid').style.display = 'grid';
+
+            // Render checkout items & calculate totals
+            const checkoutItemsEl = document.getElementById('checkoutItems');
+            let subtotal = 0;
+            let originalTotal = 0;
+            let totalShipping = 0;
+
+            checkoutItemsEl.innerHTML = checkoutItems.map(item => {
                 const product = getProductById(item.productId);
                 if (!product) return '';
+
+                const itemTotal = product.price * item.qty;
+                const itemOriginal = product.originalPrice * item.qty;
+                const itemShipping = product.shipping || 99;
+                subtotal += itemTotal;
+                originalTotal += itemOriginal;
+                totalShipping += itemShipping;
+
+                // Build meta info
+                let meta = `Size: ${item.size}`;
+                if (item.color) meta += ` • ${item.color}`;
+                meta += ` × ${item.qty}`;
+
                 return `
                     <div class="checkout-item">
                         <img src="${product.image}" alt="${product.name}" class="checkout-item-img">
                         <div class="checkout-item-info">
                             <span class="checkout-item-name">${product.name}</span>
-                            <span class="checkout-item-meta">Size: ${item.size} × ${item.qty}</span>
+                            <span class="checkout-item-meta">${meta}</span>
                         </div>
-                        <span class="checkout-item-price">${formatPrice(product.price * item.qty)}</span>
+                        <span class="checkout-item-price">${formatPrice(itemTotal)}</span>
                     </div>
                 `;
             }).join('');
 
-            // Summary
-            const total = Cart.getTotal();
-            const originalTotal = Cart.getOriginalTotal();
-            const savings = originalTotal - total;
-            const shippingCost = total >= 1999 ? 0 : 149;
-            document.getElementById('checkSubtotal').textContent = formatPrice(total);
-            document.getElementById('checkShipping').textContent = shippingCost === 0 ? 'Free' : formatPrice(shippingCost);
+            const savings = originalTotal - subtotal;
+            const grandTotal = subtotal + totalShipping;
+
+            document.getElementById('checkSubtotal').textContent = formatPrice(subtotal);
+            document.getElementById('checkShipping').textContent = formatPrice(totalShipping);
             document.getElementById('checkSavings').textContent = `-${formatPrice(savings)}`;
-            document.getElementById('checkTotal').textContent = formatPrice(total + shippingCost);
+            document.getElementById('checkTotal').textContent = formatPrice(grandTotal);
 
             // Payment option selection
             document.querySelectorAll('.payment-option').forEach(opt => {
@@ -264,11 +798,50 @@
                 });
             });
 
-            // Place order
+            // --- FORM VALIDATION ---
+            function validateForm() {
+                let valid = true;
+
+                const validations = [
+                    { id: 'checkName', errorId: 'nameError', test: v => v.trim().length >= 2 },
+                    { id: 'checkPhone', errorId: 'phoneError', test: v => /^[6-9]\d{9}$/.test(v.trim()) },
+                    { id: 'checkAddress1', errorId: 'addr1Error', test: v => v.trim().length >= 5 },
+                    { id: 'checkCity', errorId: 'cityError', test: v => v.trim().length >= 2 },
+                    { id: 'checkState', errorId: 'stateError', test: v => v.trim().length >= 2 },
+                    { id: 'checkPincode', errorId: 'pincodeError', test: v => /^\d{6}$/.test(v.trim()) }
+                ];
+
+                validations.forEach(({ id, errorId, test }) => {
+                    const input = document.getElementById(id);
+                    const error = document.getElementById(errorId);
+                    if (!test(input.value)) {
+                        input.classList.add('error');
+                        error.classList.add('show');
+                        valid = false;
+                    } else {
+                        input.classList.remove('error');
+                        error.classList.remove('show');
+                    }
+                });
+
+                return valid;
+            }
+
+            // Clear errors on input
+            document.querySelectorAll('.checkout-card input').forEach(input => {
+                input.addEventListener('input', () => {
+                    input.classList.remove('error');
+                    const errorEl = input.parentElement.querySelector('.field-error');
+                    if (errorEl) errorEl.classList.remove('show');
+                });
+            });
+
+            // --- PLACE ORDER ---
             document.getElementById('placeOrderBtn').addEventListener('click', () => {
-                const form = document.getElementById('checkoutForm');
-                if (!form.checkValidity()) {
-                    form.reportValidity();
+                if (!validateForm()) {
+                    // Scroll to first error
+                    const firstError = document.querySelector('.form-group input.error');
+                    if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     return;
                 }
 
@@ -276,11 +849,17 @@
                 const orderId = Math.floor(100000 + Math.random() * 900000);
                 document.getElementById('confirmOrderId').textContent = orderId;
 
-                // Show confirmation
+                // Show confirmation modal
                 document.getElementById('confirmModal').classList.add('active');
 
-                // Clear cart
-                Cart.clear();
+                // Clean up
+                if (isBuyNow) {
+                    // Only clear the temporary Buy Now session data
+                    sessionStorage.removeItem('mrignaini_buynow');
+                } else {
+                    // Clear the persistent cart
+                    Cart.clear();
+                }
             });
 
             // Mobile nav

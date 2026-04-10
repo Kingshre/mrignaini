@@ -356,16 +356,21 @@
             line-height: 40px;
         }
 
-        /* --- ADD TO CART BUTTON --- */
+        /* --- ACTION BUTTONS --- */
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 0;
+        }
         .add-to-cart {
-            width: 100%;
+            flex: 1;
             padding: 16px 24px;
-            background: linear-gradient(135deg, #1a4a3a 0%, #2d6a4f 100%);
-            color: #FDF8F0;
-            border: none;
+            background: transparent;
+            color: #1a4a3a;
+            border: 2px solid #1a4a3a;
             border-radius: 12px;
             font-family: 'Outfit', sans-serif;
-            font-size: 0.95rem;
+            font-size: 0.92rem;
             font-weight: 500;
             letter-spacing: 0.06em;
             cursor: pointer;
@@ -376,26 +381,65 @@
             transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             position: relative;
             overflow: hidden;
+        }
+        .add-to-cart:hover {
+            background: #1a4a3a;
+            color: #FDF8F0;
+            transform: translateY(-2px);
             box-shadow: 0 6px 24px rgba(26, 74, 58, 0.25);
         }
-        .add-to-cart::before {
+        .add-to-cart span, .add-to-cart svg { position: relative; z-index: 1; }
+        .add-to-cart.added {
+            background: #2d6a4f;
+            color: #FDF8F0;
+            border-color: #2d6a4f;
+        }
+
+        .buy-now-btn {
+            flex: 1.3;
+            padding: 16px 24px;
+            background: linear-gradient(135deg, #A82039 0%, #8B2252 100%);
+            color: #FDF8F0;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 6px 24px rgba(168, 32, 57, 0.3);
+        }
+        .buy-now-btn::before {
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(135deg, #A82039 0%, #8B2252 100%);
+            background: linear-gradient(135deg, #C72C4D 0%, #A82039 100%);
             opacity: 0;
             transition: opacity 0.4s;
         }
-        .add-to-cart:hover {
+        .buy-now-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 32px rgba(26, 74, 58, 0.35);
+            box-shadow: 0 10px 32px rgba(168, 32, 57, 0.4);
         }
-        .add-to-cart:hover::before { opacity: 1; }
-        .add-to-cart span, .add-to-cart svg { position: relative; z-index: 1; }
-        .add-to-cart.added {
-            background: linear-gradient(135deg, #2d6a4f, #1a4a3a);
+        .buy-now-btn:hover::before { opacity: 1; }
+        .buy-now-btn span, .buy-now-btn svg { position: relative; z-index: 1; }
+
+        @media (max-width: 480px) {
+            .action-buttons {
+                flex-direction: column;
+            }
+            .buy-now-btn, .add-to-cart {
+                flex: unset;
+                width: 100%;
+            }
         }
-        .add-to-cart.added::before { opacity: 0; }
 
         /* --- DETAILS ACCORDION --- */
         .details-accordion {
@@ -950,11 +994,17 @@
                     </div>
                 </div>
 
-                <!-- Add to Cart -->
-                <button class="add-to-cart" id="addToCartBtn">
-                    <svg viewBox="0 0 24 24" width="20" height="20"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="1.5"/><path d="M16 10a4 4 0 01-8 0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    <span>Add to Cart</span>
-                </button>
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="add-to-cart" id="addToCartBtn">
+                        <svg viewBox="0 0 24 24" width="20" height="20"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="1.5"/><path d="M16 10a4 4 0 01-8 0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <span>Add to Cart</span>
+                    </button>
+                    <button class="buy-now-btn" id="buyNowBtn">
+                        <svg viewBox="0 0 24 24" width="20" height="20"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <span>Buy Now</span>
+                    </button>
+                </div>
 
                 <!-- Trust Badges (dynamic) -->
                 <div class="trust-row" id="trustRow"></div>
@@ -1326,6 +1376,24 @@
                     btn.innerHTML = `<svg viewBox="0 0 24 24" width="20" height="20"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="1.5"/><path d="M16 10a4 4 0 01-8 0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Add to Cart</span>`;
                     btn.classList.remove('added');
                 }, 2000);
+            });
+
+            // --- BUY NOW ---
+            document.getElementById('buyNowBtn').addEventListener('click', () => {
+                if (!selectedSize) {
+                    document.getElementById('sizeError').classList.add('show');
+                    return;
+                }
+                const cartId = selectedColor ? `${product.id}-${selectedColor.toLowerCase().replace(/\s+/g, '-')}` : product.id;
+                // Store Buy Now data in sessionStorage (temporary, not added to persistent cart)
+                const buyNowData = {
+                    productId: cartId,
+                    size: selectedSize,
+                    qty: qty,
+                    color: selectedColor || null
+                };
+                sessionStorage.setItem('mrignaini_buynow', JSON.stringify(buyNowData));
+                window.location.href = 'checkout.html?mode=buynow';
             });
 
             // --- PRODUCT DETAILS ---
