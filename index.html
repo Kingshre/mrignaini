@@ -565,28 +565,19 @@
         </svg>
     </div>
 
-    <!-- ========== VIDEO SHOWCASE ========== -->
-    <section id="video-showcase" class="video-showcase relative py-24 md:py-32 overflow-hidden">
-        <div class="video-showcase-texture"></div>
-        <svg class="section-motif motif-bird" viewBox="0 0 100 80" width="80" height="64"><path d="M20 50 Q30 20, 50 25 Q70 30, 80 20" fill="none" stroke="#C8A96E" stroke-width="1.2" opacity="0.12"/><path d="M50 25 Q55 40, 45 55" fill="none" stroke="#C8A96E" stroke-width="1" opacity="0.1"/><circle cx="75" cy="22" r="2" fill="#C8A96E" opacity="0.15"/><path d="M80 20 L90 15 L85 22" fill="none" stroke="#C8A96E" stroke-width="0.8" opacity="0.12"/></svg>
-        <div class="video-showcase-inner max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-12 lg:gap-16 items-center relative z-[2]">
-            <div class="video-showcase-content anim-reveal">
-                <span class="section-tag font-accent text-lg font-semibold tracking-wider text-maroon">Watch the Magic</span>
-                <h2 class="section-title font-heading text-4xl md:text-5xl font-normal text-forest mt-3 leading-tight">Witness the Art<br>of <span class="accent-text font-accent font-semibold text-maroon">Block Printing</span></h2>
-                <p class="video-showcase-text text-base md:text-lg text-gray-500 leading-relaxed mt-6">Every stamp, every press, every colour tells a story of dedication passed down through generations.</p>
-            </div>
-            <div class="video-showcase-player anim-reveal" data-delay="0.2">
-                <div class="video-frame relative rounded-2xl overflow-hidden aspect-video bg-forest-deep">
-                    <video id="showcaseVideo" class="showcase-video w-full h-full object-cover" muted loop playsinline poster="assets/images/artisan.png">
-                        <!-- High quality 1080p video of weaving/fabric -->
-                        <source src="https://cdn.coverr.co/videos/coverr-weaving-fabric-on-a-loom-5807/1080p.mp4" type="video/mp4">
+    <!-- ========== BRAND VIDEO SECTION ========== -->
+    <section id="brand-video" class="relative py-24 md:py-32 overflow-hidden bg-transparent">
+        <div class="max-w-6xl mx-auto px-6 relative z-[2]">
+            <div class="anim-reveal">
+                <div class="relative rounded-[20px] overflow-hidden aspect-video bg-[#0e2e24] shadow-[0_20px_60px_rgba(0,0,0,0.15)] group">
+                    <video id="brandVideo" class="w-full h-full object-cover" playsinline preload="metadata">
+                        <source src="assets/videos/mrignaini-video2.mp4" type="video/mp4">
                     </video>
-                    <button class="video-play-btn absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-mustard hover:text-ivory hover:scale-110 transition-all duration-400 z-10" id="videoPlayBtn" aria-label="Play video">
-                        <svg viewBox="0 0 64 64" width="64" height="64">
-                            <circle cx="32" cy="32" r="30" fill="none" stroke="currentColor" stroke-width="2"/>
-                            <polygon points="26,20 48,32 26,44" fill="currentColor"/>
-                        </svg>
+                    <button class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-white rounded-full flex items-center justify-center text-[#1f4d3a] hover:scale-105 transition-all duration-300 shadow-xl z-10" id="brandVideoPlayBtn" aria-label="Play brand video">
+                        <svg viewBox="0 0 24 24" width="32" height="32" class="ml-1 fill-current"><path d="M8 5v14l11-7z"/></svg>
                     </button>
+                    <!-- Fallback dark overlay gradient over video for contrast before playing -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none transition-opacity duration-500" id="brandVideoOverlay" style="opacity: 1;"></div>
                 </div>
             </div>
         </div>
@@ -651,47 +642,26 @@
                 </div>
             </div>
             <div class="gallery-grid grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 relative z-[2]" style="grid-auto-rows: 300px">
-                <div class="gallery-item gallery-item-tall group anim-reveal relative rounded-2xl overflow-hidden cursor-pointer hover:shadow-2xl hover:ring-2 hover:ring-mustard transition-all duration-500" data-delay="0.05">
-                    <img src="assets/images/gallery1.png" alt="Mrignaini Heritage Saree" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110">
-                    <div class="gallery-item-overlay absolute inset-0 bg-gradient-to-t from-forest-deep/90 via-transparent to-transparent flex items-end p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-400">
-                        <span>Emerald Heritage</span>
-                    </div>
+                <div class="gallery-item gallery-item-tall group anim-reveal relative rounded-2xl overflow-hidden cursor-pointer hover:shadow-2xl hover:shadow-[0_20px_40px_rgba(0,0,0,0.2)] transition-all duration-500" data-delay="0.05">
+                    <img src="assets/images/gallery1.png" alt="Mrignaini Heritage Saree" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105">
                 </div>
-                <div class="gallery-item group anim-reveal relative rounded-2xl overflow-hidden cursor-pointer hover:shadow-2xl hover:ring-2 hover:ring-mustard transition-all duration-500" data-delay="0.15">
-                    <img src="assets/images/gallery2.png" alt="Block Print Craftsmanship Detail" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110">
-                    <div class="gallery-item-overlay absolute inset-0 bg-gradient-to-t from-forest-deep/90 via-transparent to-transparent flex items-end p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-400">
-                        <span>Block Print Detail</span>
-                    </div>
+                <div class="gallery-item group anim-reveal relative rounded-2xl overflow-hidden cursor-pointer hover:shadow-2xl hover:shadow-[0_20px_40px_rgba(0,0,0,0.2)] transition-all duration-500" data-delay="0.15">
+                    <img src="assets/images/gallery2.png" alt="Block Print Craftsmanship Detail" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105">
                 </div>
-                <div class="gallery-item group anim-reveal relative rounded-2xl overflow-hidden cursor-pointer hover:shadow-2xl hover:ring-2 hover:ring-mustard transition-all duration-500" data-delay="0.25">
-                    <img src="assets/images/gallery3.jpg" alt="Rich Textile Patterns" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110">
-                    <div class="gallery-item-overlay absolute inset-0 bg-gradient-to-t from-forest-deep/90 via-transparent to-transparent flex items-end p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-400">
-                        <span>The Tools of Art</span>
-                    </div>
+                <div class="gallery-item group anim-reveal relative rounded-2xl overflow-hidden cursor-pointer hover:shadow-2xl hover:shadow-[0_20px_40px_rgba(0,0,0,0.2)] transition-all duration-500" data-delay="0.25">
+                    <img src="assets/images/gallery3.jpg" alt="Rich Textile Patterns" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105">
                 </div>
-                <div class="gallery-item gallery-item-wide group anim-reveal relative rounded-2xl overflow-hidden cursor-pointer hover:shadow-2xl hover:ring-2 hover:ring-mustard transition-all duration-500" data-delay="0.1">
-                    <img src="assets/images/gallery4.jpg" alt="Artisan Process and Master Crafters" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110">
-                    <div class="gallery-item-overlay absolute inset-0 bg-gradient-to-t from-forest-deep/90 via-transparent to-transparent flex items-end p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-400">
-                        <span>Master Artisan</span>
-                    </div>
+                <div class="gallery-item gallery-item-wide group anim-reveal relative rounded-2xl overflow-hidden cursor-pointer hover:shadow-2xl hover:shadow-[0_20px_40px_rgba(0,0,0,0.2)] transition-all duration-500" data-delay="0.1">
+                    <img src="assets/images/gallery4.jpg" alt="Artisan Process and Master Crafters" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105">
                 </div>
-                <div class="gallery-item group anim-reveal relative rounded-2xl overflow-hidden cursor-pointer hover:shadow-2xl hover:ring-2 hover:ring-mustard transition-all duration-500" data-delay="0.2">
-                    <img src="assets/images/gallery5.jpg" alt="Exclusive Jaipur Dye Elements" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110">
-                    <div class="gallery-item-overlay absolute inset-0 bg-gradient-to-t from-forest-deep/90 via-transparent to-transparent flex items-end p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-400">
-                        <span>Rose Garden</span>
-                    </div>
+                <div class="gallery-item group anim-reveal relative rounded-2xl overflow-hidden cursor-pointer hover:shadow-2xl hover:shadow-[0_20px_40px_rgba(0,0,0,0.2)] transition-all duration-500" data-delay="0.2">
+                    <img src="assets/images/gallery5.jpg" alt="Exclusive Jaipur Dye Elements" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105">
                 </div>
-                <div class="gallery-item group anim-reveal relative rounded-2xl overflow-hidden cursor-pointer hover:shadow-2xl hover:ring-2 hover:ring-mustard transition-all duration-500" data-delay="0.3">
-                    <img src="assets/images/gallery6.jpg" alt="Fabric Flow and Silhouette Detail" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110">
-                    <div class="gallery-item-overlay absolute inset-0 bg-gradient-to-t from-forest-deep/90 via-transparent to-transparent flex items-end p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-400">
-                        <span>Ivory Bloom</span>
-                    </div>
+                <div class="gallery-item group anim-reveal relative rounded-2xl overflow-hidden cursor-pointer hover:shadow-2xl hover:shadow-[0_20px_40px_rgba(0,0,0,0.2)] transition-all duration-500" data-delay="0.3">
+                    <img src="assets/images/gallery6.jpg" alt="Fabric Flow and Silhouette Detail" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105">
                 </div>
-                <div class="gallery-item group anim-reveal relative rounded-2xl overflow-hidden cursor-pointer hover:shadow-2xl hover:ring-2 hover:ring-mustard transition-all duration-500" data-delay="0.4">
-                    <img src="assets/images/gallery7.jpg" alt="Timeless Craft Collection Feature" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110">
-                    <div class="gallery-item-overlay absolute inset-0 bg-gradient-to-t from-forest-deep/90 via-transparent to-transparent flex items-end p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-400">
-                        <span>Heritage Threads</span>
-                    </div>
+                <div class="gallery-item group anim-reveal relative rounded-2xl overflow-hidden cursor-pointer hover:shadow-2xl hover:shadow-[0_20px_40px_rgba(0,0,0,0.2)] transition-all duration-500" data-delay="0.4">
+                    <img src="assets/images/gallery7.jpg" alt="Timeless Craft Collection Feature" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105">
                 </div>
             </div>
         </div>

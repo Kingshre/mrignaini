@@ -225,43 +225,30 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     animateCounters();
 
-    // ---- VIDEO SHOWCASE PLAY/PAUSE ----
-    const showcaseVideo = document.getElementById('showcaseVideo');
-    const videoPlayBtn = document.getElementById('videoPlayBtn');
+    // ---- BRAND VIDEO PLAY/PAUSE ----
+    const brandVideo = document.getElementById('brandVideo');
+    const brandVideoPlayBtn = document.getElementById('brandVideoPlayBtn');
+    const brandVideoOverlay = document.getElementById('brandVideoOverlay');
 
-    if (showcaseVideo && videoPlayBtn) {
-        videoPlayBtn.addEventListener('click', () => {
-            if (showcaseVideo.paused) {
-                showcaseVideo.play();
-                showcaseVideo.muted = false;
-                videoPlayBtn.classList.add('hidden');
-            } else {
-                showcaseVideo.pause();
-                showcaseVideo.muted = true;
-                videoPlayBtn.classList.remove('hidden');
+    if (brandVideo && brandVideoPlayBtn) {
+        brandVideoPlayBtn.addEventListener('click', () => {
+            if (brandVideo.paused) {
+                brandVideo.play();
+                brandVideo.muted = false; // as requested: play with sound
+                brandVideoPlayBtn.style.opacity = '0';
+                brandVideoPlayBtn.style.pointerEvents = 'none';
+                if(brandVideoOverlay) brandVideoOverlay.style.opacity = '0';
             }
         });
 
-        showcaseVideo.addEventListener('click', () => {
-            if (!showcaseVideo.paused) {
-                showcaseVideo.pause();
-                showcaseVideo.muted = true;
-                videoPlayBtn.classList.remove('hidden');
+        brandVideo.addEventListener('click', () => {
+            if (!brandVideo.paused) {
+                brandVideo.pause();
+                brandVideoPlayBtn.style.opacity = '1';
+                brandVideoPlayBtn.style.pointerEvents = 'auto';
+                if(brandVideoOverlay) brandVideoOverlay.style.opacity = '1';
             }
         });
-
-        const videoObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    showcaseVideo.play();
-                } else {
-                    showcaseVideo.pause();
-                    showcaseVideo.muted = true;
-                    videoPlayBtn.classList.remove('hidden');
-                }
-            });
-        }, { threshold: 0.3 });
-        videoObserver.observe(showcaseVideo);
     }
 
     // ---- HERO VIDEO PARALLAX ----
