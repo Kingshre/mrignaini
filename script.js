@@ -503,7 +503,12 @@ document.addEventListener('DOMContentLoaded', () => {
             overlay.innerHTML = `
                 <div class="coupon-popup">
                     <button class="coupon-popup-close" aria-label="Close">&times;</button>
-                    <div class="coupon-popup-emoji">🎁</div>
+                    <div class="coupon-popup-emoji text-[#B8945A] mb-3 flex justify-center">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+                            <rect x="3" y="8" width="18" height="12" rx="2" ry="2"/>
+                            <path d="M12 8v12"/><path d="M16 8V6a2 2 0 00-2-2h-1a2 2 0 00-2 2v2"/><path d="M8 8V6a2 2 0 012-2h1a2 2 0 012 2v2"/>
+                        </svg>
+                    </div>
                     <h3>Welcome to Mrignaini!</h3>
                     <p>Use this code at checkout for <strong>₹200 off</strong></p>
                     <div class="coupon-popup-code">MRIG200</div>
