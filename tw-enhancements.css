@@ -96,7 +96,7 @@
     opacity: 0;
     transform: translateY(60px) rotateX(40deg) scale(0.8);
     animation: charReveal 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-    background: linear-gradient(135deg, #F5F0E8 10%, #D4A017 45%, #E8942A 65%, #A82039 100%);
+    background: linear-gradient(135deg, #FFFFFF 0%, #F5E9DA 45%, #E6D0BA 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
