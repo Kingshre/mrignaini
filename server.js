@@ -9,11 +9,25 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Production-ready CORS setup
-const allowedOrigins = process.env.FRONTEND_URL 
-    ? [process.env.FRONTEND_URL, 'http://localhost:3000'] 
-    : '*';
+const allowedOrigins = [
+    'https://www.shopmrignaini.com',
+    'https://shopmrignaini.com',
+    'http://localhost:3000'
+];
 
-app.use(cors({ origin: allowedOrigins }));
+if (process.env.FRONTEND_URL) {
+    allowedOrigins.push(process.env.FRONTEND_URL);
+}
+
+const corsOptions = {
+    origin: allowedOrigins,
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+app.use(cors(corsOptions));
+// Handle preflight requests properly
+app.options('*', cors(corsOptions));
 app.use(bodyParser.json());
 // Serve static frontend files if hosted together
 app.use(express.static(__dirname));
