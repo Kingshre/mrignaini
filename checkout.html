@@ -861,18 +861,15 @@
                     const amountInPaise = Math.round(grandTotal * 100);
 
                     // --- BACKEND CONFIGURATION ---
-                    // If your frontend and backend are hosted on separate platforms (e.g., Vercel + Render),
-                    // replace the empty string below with your live backend URL (e.g. 'https://your-api.onrender.com')
-                    const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-                        ? 'http://localhost:3000' 
-                        : ''; 
+                    const API_BASE_URL = 'https://mrignaini-backend.onrender.com'; 
 
                     // 1. Get Matching Public Key ID
                     const keyRes = await fetch(`${API_BASE_URL}/get-razorpay-key`);
                     const keyData = await keyRes.json();
                     
                     if (!keyData.key) {
-                        alert("Payment system configuration missing.");
+                        console.error('Failed to load Razorpay key from backend:', keyData);
+                        alert("Payment system configuration missing. Please try again later.");
                         btn.innerHTML = originalText;
                         btn.disabled = false;
                         return;
@@ -888,7 +885,8 @@
                     const createData = await createRes.json();
                     
                     if (!createData.success) {
-                        alert("Failed to initialize payment order.");
+                        console.error('Backend returned an error on /create-order:', createData);
+                        alert(createData.message || "Failed to initialize payment order.");
                         btn.innerHTML = originalText;
                         btn.disabled = false;
                         return;
@@ -932,12 +930,14 @@
                                         Cart.clear();
                                     }
                                 } else {
-                                    alert("Payment verification failed! Please contact support.");
+                                    console.error('Backend verification failed on /verify-payment:', verifyData);
+                                    alert(verifyData.message || "Payment verification failed! Please contact support.");
                                     btn.innerHTML = originalText;
                                     btn.disabled = false;
                                 }
                             } catch (e) {
-                                alert("Verification error.");
+                                console.error('Network or parsing error during /verify-payment:', e);
+                                alert("Verification network error. Please contact support.");
                                 btn.innerHTML = originalText;
                                 btn.disabled = false;
                             }
