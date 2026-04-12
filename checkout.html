@@ -841,7 +841,7 @@
             });
 
             // --- PLACE ORDER ---
-            document.getElementById('placeOrderBtn').addEventListener('click', () => {
+            document.getElementById('placeOrderBtn').addEventListener('click', async () => {
                 if (!validateForm()) {
                     // Scroll to first error
                     const firstError = document.querySelector('.form-group input.error');
@@ -849,47 +849,133 @@
                     return;
                 }
 
-                const name = document.getElementById('checkName').value;
-                const email = document.getElementById('checkEmail').value;
-                const phone = document.getElementById('checkPhone').value;
-                const amountInPaise = Math.round(grandTotal * 100);
+                const btn = document.getElementById('placeOrderBtn');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = `<span>Processing...</span>`;
+                btn.disabled = true;
 
-                var options = {
-                    "key": "rzp_live_SciSvxPaJjga2E", // Paste your Razorpay Key ID here
-                    "amount": amountInPaise, 
-                    "currency": "INR",
-                    "name": "Mrignaini",
-                    "description": "Order Payment",
-                    "image": "assets/images/logo.png",
-                    "handler": function (response){
-                        // Generate order ID
-                        const orderId = Math.floor(100000 + Math.random() * 900000);
-                        document.getElementById('confirmOrderId').textContent = orderId;
+                try {
+                    const name = document.getElementById('checkName').value;
+                    const email = document.getElementById('checkEmail').value;
+                    const phone = document.getElementById('checkPhone').value;
+                    const amountInPaise = Math.round(grandTotal * 100);
 
-                        // Show confirmation modal
-                        document.getElementById('confirmModal').classList.add('active');
+                    // --- BACKEND CONFIGURATION ---
+                    // If your frontend and backend are hosted on separate platforms (e.g., Vercel + Render),
+                    // replace the empty string below with your live backend URL (e.g. 'https://your-api.onrender.com')
+                    const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+                        ? 'http://localhost:3000' 
+                        : ''; 
 
-                        // Clean up
-                        if (isBuyNow) {
-                            sessionStorage.removeItem('mrignaini_buynow');
-                        } else {
-                            Cart.clear();
-                        }
-                    },
-                    "prefill": {
-                        "name": name,
-                        "email": email,
-                        "contact": phone
-                    },
-                    "theme": {
-                        "color": "#1a4a3a"
+                    // 1. Get Matching Public Key ID
+                    const keyRes = await fetch(`${API_BASE_URL}/get-razorpay-key`);
+                    const keyData = await keyRes.json();
+                    
+                    if (!keyData.key) {
+                        alert("Payment system configuration missing.");
+                        btn.innerHTML = originalText;
+                        btn.disabled = false;
+                        return;
                     }
-                };
-                var rzp1 = new window.Razorpay(options);
-                rzp1.on('payment.failed', function (response){
-                    alert("Payment failed. Please try again.");
-                });
-                rzp1.open();
+
+                    // 2. Create Order on Backend
+                    const createRes = await fetch(`${API_BASE_URL}/create-order`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ amount: amountInPaise, currency: 'INR' })
+                    });
+                    
+                    const createData = await createRes.json();
+                    
+                    if (!createData.success) {
+                        alert("Failed to initialize payment order.");
+                        btn.innerHTML = originalText;
+                        btn.disabled = false;
+                        return;
+                    }
+
+                    // 3. Open Razorpay Checkout with the Order ID
+                    var options = {
+                        "key": keyData.key, // Dynamically loaded to match backend mode
+                        "amount": amountInPaise, 
+                        "currency": "INR",
+                        "name": "Mrignaini",
+                        "description": "Order Payment",
+                        "image": "assets/images/logo.png",
+                        "order_id": createData.order.id, // ID securely generated on server
+                        "handler": async function (response){
+                            // 3. Verify Payment on Backend
+                            try {
+                                const verifyRes = await fetch(`${API_BASE_URL}/verify-payment`, {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({
+                                        razorpay_order_id: response.razorpay_order_id,
+                                        razorpay_payment_id: response.razorpay_payment_id,
+                                        razorpay_signature: response.razorpay_signature
+                                    })
+                                });
+                                
+                                const verifyData = await verifyRes.json();
+                                
+                                if (verifyData.success) {
+                                    // Generate internal ID for UI mapping
+                                    const internalId = Math.floor(100000 + Math.random() * 900000);
+                                    document.getElementById('confirmOrderId').textContent = internalId;
+
+                                    // Show success modal
+                                    document.getElementById('confirmModal').classList.add('active');
+
+                                    if (isBuyNow) {
+                                        sessionStorage.removeItem('mrignaini_buynow');
+                                    } else {
+                                        Cart.clear();
+                                    }
+                                } else {
+                                    alert("Payment verification failed! Please contact support.");
+                                    btn.innerHTML = originalText;
+                                    btn.disabled = false;
+                                }
+                            } catch (e) {
+                                alert("Verification error.");
+                                btn.innerHTML = originalText;
+                                btn.disabled = false;
+                            }
+                        },
+                        "prefill": {
+                            "name": name,
+                            "email": email,
+                            "contact": phone
+                        },
+                        "theme": {
+                            "color": "#1a4a3a"
+                        }
+                    };
+                    
+                    var rzp1 = new window.Razorpay(options);
+                    
+                    rzp1.on('payment.failed', function (response){
+                        alert("Payment failed. Please try again.");
+                        btn.innerHTML = originalText;
+                        btn.disabled = false;
+                    });
+                    
+                    rzp1.open();
+
+                    // Optional fallback reset (Razorpay JS has a known bug missing the modal closed event sometimes)
+                    setTimeout(() => {
+                        if(!document.getElementById('confirmModal').classList.contains('active')) {
+                            btn.innerHTML = originalText;
+                            btn.disabled = false;
+                        }
+                    }, 5000);
+
+                } catch (error) {
+                    console.error(error);
+                    alert("Error reaching server for checkout.");
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }
             });
 
             // Mobile nav
