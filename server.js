@@ -4,6 +4,18 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
+const nodemailer = require('nodemailer');
+
+// Configure NodeMailer transporter (fallback to console logging for now if missing env vars)
+const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST || 'smtp.gmail.com',
+    port: process.env.SMTP_PORT || 587,
+    secure: false,
+    auth: {
+        user: process.env.SMTP_USER || 'test@example.com',
+        pass: process.env.SMTP_PASS || 'testpass'
+    }
+});
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -81,7 +93,7 @@ app.post('/create-order', async (req, res) => {
 // Endpoint to verify payment signature securely
 app.post('/verify-payment', (req, res) => {
     try {
-        const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+        const { razorpay_order_id, razorpay_payment_id, razorpay_signature, orderDetails } = req.body;
 
         const body = razorpay_order_id + "|" + razorpay_payment_id;
 
@@ -92,8 +104,79 @@ app.post('/verify-payment', (req, res) => {
 
         if (expectedSignature === razorpay_signature) {
             // Securely verified!
-            // In a real application, update the order status in DB here
-            res.status(200).json({ success: true, message: 'Payment verified successfully' });
+            
+            // 1. Generate Order Number
+            const orderNumber = 'MRG' + Math.floor(100000 + Math.random() * 900000);
+            
+            // 2. Prepare Email content if orderDetails exists
+            if (orderDetails) {
+                const { name, email, phone, address, items, total } = orderDetails;
+                
+                let itemsListHtml = '';
+                if (items && Array.isArray(items)) {
+                    itemsListHtml = items.map(i => `<li>${i.qty}x Product ID ${i.productId} (Size: ${i.size})</li>`).join('');
+                }
+                
+                const customerMailOptions = {
+                    from: '"Mrignaini Store" <no-reply@mrignaini.com>',
+                    to: email || process.env.STORE_OWNER_EMAIL || 'customer@example.com',
+                    subject: `Order Confirmation - ${orderNumber}`,
+                    html: `
+                        <div style="font-family: sans-serif; color: #333;">
+                            <h2 style="color: #1a4a3a;">Thank you for your order!</h2>
+                            <p>Hi ${name},</p>
+                            <p>We've received your order <strong>${orderNumber}</strong> securely and are getting it ready for shipment.</p>
+                            
+                            <h3>Order Summary:</h3>
+                            <ul>${itemsListHtml}</ul>
+                            <p><strong>Amount Paid:</strong> ₹${total}</p>
+                            
+                            <h3>Shipping Address:</h3>
+                            <p>${address}</p>
+                            <p>Phone: ${phone}</p>
+                            
+                            <p>Thank you for shopping with Mrignaini.</p>
+                        </div>
+                    `
+                };
+
+                const adminMailOptions = {
+                    from: '"Mrignaini System" <no-reply@mrignaini.com>',
+                    to: process.env.STORE_OWNER_EMAIL || 'admin@mrignaini.com',
+                    subject: `New Order Received - ${orderNumber}`,
+                    html: `
+                        <div style="font-family: sans-serif; color: #333;">
+                            <h2 style="color: #1a4a3a;">New Order Received!</h2>
+                            <p><strong>Order Number:</strong> ${orderNumber}</p>
+                            <p><strong>Customer:</strong> ${name} (${email}, ${phone})</p>
+                            <p><strong>Amount Paid:</strong> ₹${total}</p>
+                            
+                            <h3>Items Ordered:</h3>
+                            <ul>${itemsListHtml}</ul>
+                            
+                            <h3>Shipping Address:</h3>
+                            <p>${address}</p>
+                        </div>
+                    `
+                };
+
+                // Send emails in background
+                if (process.env.SMTP_USER) {
+                    transporter.sendMail(customerMailOptions).catch(err => console.error('Failed to send customer email:', err));
+                    transporter.sendMail(adminMailOptions).catch(err => console.error('Failed to send admin email:', err));
+                } else {
+                    console.log('--- MOCK EMAIL DELIVERY ---');
+                    console.log('Customer Email Body:\\n', customerMailOptions.html);
+                    console.log('Admin Email Body:\\n', adminMailOptions.html);
+                    console.log('Please configure SMTP_USER in .env to send real emails.');
+                }
+            }
+
+            res.status(200).json({ 
+                success: true, 
+                message: 'Payment verified successfully',
+                orderNumber: orderNumber
+            });
         } else {
             res.status(400).json({ success: false, message: 'Invalid payment signature' });
         }

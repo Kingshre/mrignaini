@@ -858,6 +858,12 @@
                     const name = document.getElementById('checkName').value;
                     const email = document.getElementById('checkEmail').value;
                     const phone = document.getElementById('checkPhone').value;
+                    const checkAddr = document.getElementById('checkAddress1').value;
+                    const checkAddr2 = document.getElementById('checkAddress2').value;
+                    const city = document.getElementById('checkCity').value;
+                    const state = document.getElementById('checkState').value;
+                    const pin = document.getElementById('checkPincode').value;
+                    const fullAddress = `${checkAddr}${checkAddr2 ? ', ' + checkAddr2 : ''}, ${city}, ${state} - ${pin}`;
                     const amountInPaise = Math.round(grandTotal * 100);
 
                     // --- BACKEND CONFIGURATION ---
@@ -910,16 +916,23 @@
                                     body: JSON.stringify({
                                         razorpay_order_id: response.razorpay_order_id,
                                         razorpay_payment_id: response.razorpay_payment_id,
-                                        razorpay_signature: response.razorpay_signature
+                                        razorpay_signature: response.razorpay_signature,
+                                        orderDetails: {
+                                            name: name,
+                                            email: email,
+                                            phone: phone,
+                                            address: fullAddress,
+                                            items: checkoutItems,
+                                            total: grandTotal
+                                        }
                                     })
                                 });
                                 
                                 const verifyData = await verifyRes.json();
                                 
                                 if (verifyData.success) {
-                                    // Generate internal ID for UI mapping
-                                    const internalId = Math.floor(100000 + Math.random() * 900000);
-                                    document.getElementById('confirmOrderId').textContent = internalId;
+                                    // Set order ID from backend
+                                    document.getElementById('confirmOrderId').textContent = verifyData.orderNumber || response.razorpay_payment_id.slice(-6);
 
                                     // Show success modal
                                     document.getElementById('confirmModal').classList.add('active');

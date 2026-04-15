@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Orders Dashboard</title>
+    <!-- Google Fonts for a clean look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --surface-color: #ffffff;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --primary-color: #0f172a;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+        }
+
+        .admin-header {
+            background-color: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .card {
+            background-color: var(--surface-color);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .table-controls {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        button.btn-refresh {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+
+        button.btn-refresh:hover {
+            background-color: #1e293b;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            white-space: nowrap;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            font-weight: 500;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        td {
+            font-size: 0.875rem;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .badge-status {
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status-paid {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-pending {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .address-col, .items-col {
+            max-width: 200px;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+
+        .loading-state, .error-state, .empty-state {
+            padding: 3rem;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .config-banner {
+            background-color: #fee2e2;
+            color: #991b1b;
+            padding: 1rem;
+            text-align: center;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="admin-header">
+        <h1>Orders Dashboard</h1>
+        <div>Admin Viewer</div>
+    </header>
+
+    <div class="container">
+        <!-- Configuration Banner (shown if URL is missing) -->
+        <div id="configBanner" class="config-banner" style="display: none;">
+            ⚠️ Please enter your Supabase URL and Anon Key in the admin-orders.html script!
+        </div>
+
+        <div class="card">
+            <div class="table-controls">
+                <div>
+                    <h2 style="margin:0; font-size: 1.125rem; font-weight: 500;">Recent Orders</h2>
+                </div>
+                <button class="btn-refresh" onclick="fetchOrders()">Refresh Orders</button>
+            </div>
+
+            <div class="table-responsive">
+                <table id="ordersTable">
+                    <thead>
+                        <tr>
+                            <th>Order No.</th>
+                            <th>Date/Time</th>
+                            <th>Customer</th>
+                            <th>Contact</th>
+                            <th class="address-col">Address</th>
+                            <th class="items-col">Items</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersBody">
+                        <!-- Orders will go here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="loading" class="loading-state">
+                Loading orders...
+            </div>
+            
+            <div id="errorState" class="error-state" style="display: none;">
+                An error occurred while fetching orders.
+            </div>
+
+            <div id="emptyState" class="empty-state" style="display: none;">
+                No orders found.
+            </div>
+        </div>
+    </div>
+
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // ---------------------------------------------------------------------
+        // TODO: REPLACE WITH YOUR SUPABASE DETAILS
+        // ---------------------------------------------------------------------
+        const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+        
+        let supabaseClient;
+        
+        if (SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
+            supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        } else {
+            document.getElementById('configBanner').style.display = 'block';
+        }
+
+        async function fetchOrders() {
+            const tableBody = document.getElementById('ordersBody');
+            const loading = document.getElementById('loading');
+            const errorState = document.getElementById('errorState');
+            const emptyState = document.getElementById('emptyState');
+
+            // Reset UI
+            tableBody.innerHTML = '';
+            loading.style.display = 'block';
+            errorState.style.display = 'none';
+            emptyState.style.display = 'none';
+
+            if (!supabaseClient) {
+                loading.style.display = 'none';
+                return;
+            }
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from('orders')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) {
+                    throw error;
+                }
+
+                loading.style.display = 'none';
+
+                if (!data || data.length === 0) {
+                    emptyState.style.display = 'block';
+                    return;
+                }
+
+                data.forEach(order => {
+                    const tr = document.createElement('tr');
+                    
+                    // Format date
+                    const dateObj = new Date(order.created_at);
+                    const formattedDate = dateObj.toLocaleString();
+
+                    // Format address
+                    let addr = order.address_line_1 || '';
+                    if (order.address_line_2) addr += ', ' + order.address_line_2;
+                    if (order.city) addr += ', ' + order.city;
+                    if (order.state) addr += ', ' + order.state;
+                    if (order.pincode) addr += ' - ' + order.pincode;
+
+                    // Format items
+                    let itemsHtml = '';
+                    try {
+                        const items = typeof order.items_json === 'string' ? JSON.parse(order.items_json) : order.items_json;
+                        if (items && Array.isArray(items)) {
+                            itemsHtml = items.map(i => `${i.name} (x${i.quantity || 1})`).join('<br>');
+                        } else {
+                            itemsHtml = 'N/A';
+                        }
+                    } catch (e) {
+                        itemsHtml = order.items_json || 'Invalid format';
+                    }
+
+                    // Payment status style
+                    const statusClass = (order.payment_status && order.payment_status.toLowerCase() === 'paid') 
+                        ? 'status-paid' 
+                        : 'status-pending';
+
+                    tr.innerHTML = `
+                        <td><strong>${order.order_number || 'N/A'}</strong></td>
+                        <td>${formattedDate}</td>
+                        <td>${order.customer_name || 'N/A'}</td>
+                        <td>
+                            ${order.email || ''}<br>
+                            <span style="color: #64748b; font-size: 0.75rem;">${order.phone || ''}</span>
+                        </td>
+                        <td class="address-col">${addr}</td>
+                        <td class="items-col">${itemsHtml}</td>
+                        <td><strong>₹${(order.total || 0).toLocaleString()}</strong></td>
+                        <td><span class="badge-status ${statusClass}">${order.payment_status || 'Pending'}</span></td>
+                    `;
+                    tableBody.appendChild(tr);
+                });
+
+            } catch (err) {
+                console.error('Error fetching orders:', err);
+                loading.style.display = 'none';
+                errorState.style.display = 'block';
+                errorState.textContent = 'Error fetching orders: ' + err.message;
+            }
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', fetchOrders);
+    </script>
+</body>
+</html>
