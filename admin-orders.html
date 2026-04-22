@@ -1,321 +1,707 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Orders Dashboard</title>
-    <!-- Google Fonts for a clean look -->
+    <title>Admin — Orders Dashboard | Mrignaini</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         :root {
-            --bg-color: #f8fafc;
-            --surface-color: #ffffff;
-            --text-primary: #0f172a;
-            --text-secondary: #64748b;
-            --border-color: #e2e8f0;
-            --primary-color: #0f172a;
-            --success-color: #10b981;
-            --warning-color: #f59e0b;
+            --bg: #f4f6f8;
+            --surface: #ffffff;
+            --text-primary: #111827;
+            --text-secondary: #6b7280;
+            --text-muted: #9ca3af;
+            --border: #e5e7eb;
+            --border-light: #f3f4f6;
+            --accent: #1a4a3a;
+            --accent-light: #d1fae5;
+            --accent-text: #065f46;
+            --danger-bg: #fef2f2;
+            --danger-text: #991b1b;
+            --radius: 10px;
         }
 
         body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
             color: var(--text-primary);
+            min-height: 100vh;
         }
 
+        /* ── Header ── */
         .admin-header {
-            background-color: var(--surface-color);
-            border-bottom: 1px solid var(--border-color);
-            padding: 1rem 2rem;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 0 2rem;
+            height: 60px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         .admin-header h1 {
-            margin: 0;
-            font-size: 1.5rem;
+            font-size: 1.1rem;
             font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
+        .admin-header h1 .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+            display: inline-block;
+        }
+
+        .header-meta {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* ── Container ── */
         .container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.5rem;
         }
 
+        /* ── Stats Row ── */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.4rem;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* ── Config Banner ── */
+        .config-banner {
+            background: var(--danger-bg);
+            color: var(--danger-text);
+            padding: 0.9rem 1.25rem;
+            border-radius: var(--radius);
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+
+        /* ── Card ── */
         .card {
-            background-color: var(--surface-color);
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            border: 1px solid var(--border-color);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
             overflow: hidden;
         }
 
-        .table-controls {
-            padding: 1rem;
-            border-bottom: 1px solid var(--border-color);
+        .card-header {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        button.btn-refresh {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.875rem;
+        .card-header h2 {
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0.45rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--surface);
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.8rem;
             font-weight: 500;
-            transition: background-color 0.2s;
+            cursor: pointer;
+            transition: all 0.15s;
         }
 
-        button.btn-refresh:hover {
-            background-color: #1e293b;
+        .btn:hover {
+            background: var(--border-light);
         }
 
-        .table-responsive {
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+        }
+
+        .btn-primary:hover {
+            background: #153d2f;
+        }
+
+        /* ── Table ── */
+        .table-wrap {
             overflow-x: auto;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            text-align: left;
+            font-size: 0.82rem;
         }
 
-        th, td {
-            padding: 1rem;
-            border-bottom: 1px solid var(--border-color);
-            white-space: nowrap;
+        thead {
+            background: #f9fafb;
         }
 
         th {
-            background-color: #f1f5f9;
-            font-weight: 500;
-            font-size: 0.875rem;
-            color: var(--text-secondary);
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
         }
 
         td {
-            font-size: 0.875rem;
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid var(--border-light);
+            vertical-align: top;
         }
 
         tr:last-child td {
             border-bottom: none;
         }
 
-        .badge-status {
-            padding: 0.25rem 0.5rem;
-            border-radius: 9999px;
-            font-size: 0.75rem;
+        tr:hover td {
+            background: #fafbfc;
+        }
+
+        .col-order {
+            font-weight: 600;
+            color: var(--accent);
+            white-space: nowrap;
+        }
+
+        .col-date {
+            white-space: nowrap;
+            color: var(--text-secondary);
+            font-size: 0.78rem;
+        }
+
+        .col-name {
             font-weight: 500;
         }
 
-        .status-paid {
-            background-color: #d1fae5;
-            color: #065f46;
-        }
-
-        .status-pending {
-            background-color: #fef3c7;
-            color: #92400e;
-        }
-
-        .address-col, .items-col {
-            max-width: 200px;
-            white-space: normal;
-            word-wrap: break-word;
-        }
-
-        .loading-state, .error-state, .empty-state {
-            padding: 3rem;
-            text-align: center;
+        .col-contact {
+            font-size: 0.78rem;
             color: var(--text-secondary);
         }
 
-        .config-banner {
-            background-color: #fee2e2;
-            color: #991b1b;
-            padding: 1rem;
+        .col-address {
+            max-width: 220px;
+            white-space: normal;
+            line-height: 1.45;
+            color: var(--text-secondary);
+            font-size: 0.78rem;
+        }
+
+        .col-items {
+            max-width: 250px;
+            white-space: normal;
+            line-height: 1.5;
+        }
+
+        .col-items .item-line {
+            margin-bottom: 2px;
+        }
+
+        .col-total {
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .col-payment {
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            word-break: break-all;
+            max-width: 160px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.2rem 0.55rem;
+            border-radius: 999px;
+            font-size: 0.68rem;
+            font-weight: 600;
+            background: var(--accent-light);
+            color: var(--accent-text);
+        }
+
+        /* ── States ── */
+        .state-msg {
+            padding: 3rem 2rem;
             text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .state-msg.hidden {
+            display: none;
+        }
+
+        .spinner {
+            width: 28px;
+            height: 28px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            margin: 0 auto 0.75rem;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ── Order Detail Drawer ── */
+        .drawer-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(3px);
+            z-index: 200;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s;
+        }
+
+        .drawer-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .drawer {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: min(480px, 92vw);
+            height: 100%;
+            background: var(--surface);
+            box-shadow: -4px 0 24px rgba(0, 0, 0, 0.08);
+            z-index: 201;
+            transform: translateX(100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .drawer.active {
+            transform: translateX(0);
+        }
+
+        .drawer-header {
+            padding: 1.25rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .drawer-header h3 {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .drawer-close {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            transition: background 0.15s;
+        }
+
+        .drawer-close:hover {
+            background: var(--border-light);
+        }
+
+        .drawer-body {
+            padding: 1.25rem;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .detail-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-section h4 {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 0.6rem;
+            padding-bottom: 0.4rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.35rem 0;
+            font-size: 0.83rem;
+        }
+
+        .detail-row .label {
+            color: var(--text-secondary);
+        }
+
+        .detail-row .value {
             font-weight: 500;
-            margin-bottom: 1rem;
-            border-radius: 4px;
+            text-align: right;
+            max-width: 60%;
+            word-break: break-all;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .admin-header {
+                padding: 0 1rem;
+            }
+
+            .stats-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
     </style>
 </head>
+
 <body>
 
     <header class="admin-header">
-        <h1>Orders Dashboard</h1>
-        <div>Admin Viewer</div>
+        <h1><span class="dot"></span> Orders Dashboard</h1>
+        <span class="header-meta" id="lastUpdated"></span>
     </header>
 
     <div class="container">
-        <!-- Configuration Banner (shown if URL is missing) -->
-        <div id="configBanner" class="config-banner" style="display: none;">
-            ⚠️ Please enter your Supabase URL and Anon Key in the admin-orders.html script!
+        <!-- Config Banner -->
+        <div class="config-banner" id="configBanner">
+            ⚠️ Supabase credentials not configured. Set SUPABASE_URL and SUPABASE_ANON_KEY in this file.
         </div>
 
+        <!-- Stats -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-label">Total Orders</div>
+                <div class="stat-value" id="statTotal">–</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Today</div>
+                <div class="stat-value" id="statToday">–</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Revenue</div>
+                <div class="stat-value" id="statRevenue">–</div>
+            </div>
+        </div>
+
+        <!-- Orders Table -->
         <div class="card">
-            <div class="table-controls">
-                <div>
-                    <h2 style="margin:0; font-size: 1.125rem; font-weight: 500;">Recent Orders</h2>
-                </div>
-                <button class="btn-refresh" onclick="fetchOrders()">Refresh Orders</button>
+            <div class="card-header">
+                <h2>All Orders</h2>
+                <button class="btn btn-primary" onclick="fetchOrders()">
+                    <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"
+                        stroke-linecap="round">
+                        <path d="M1 8a7 7 0 0113.1-3.5M15 8a7 7 0 01-13.1 3.5" />
+                        <path d="M14 1v3.5h-3.5M2 15v-3.5h3.5" />
+                    </svg>
+                    Refresh
+                </button>
             </div>
 
-            <div class="table-responsive">
-                <table id="ordersTable">
+            <div class="table-wrap">
+                <table>
                     <thead>
                         <tr>
-                            <th>Order No.</th>
-                            <th>Date/Time</th>
+                            <th>Order</th>
+                            <th>Date</th>
                             <th>Customer</th>
                             <th>Contact</th>
-                            <th class="address-col">Address</th>
-                            <th class="items-col">Items</th>
+                            <th>Address</th>
+                            <th>Items</th>
                             <th>Total</th>
-                            <th>Status</th>
+                            <th>Payment ID</th>
+                            <th></th>
                         </tr>
                     </thead>
-                    <tbody id="ordersBody">
-                        <!-- Orders will go here -->
-                    </tbody>
+                    <tbody id="ordersBody"></tbody>
                 </table>
             </div>
 
-            <div id="loading" class="loading-state">
-                Loading orders...
+            <div class="state-msg" id="loadingState">
+                <div class="spinner"></div>
+                Loading orders…
             </div>
-            
-            <div id="errorState" class="error-state" style="display: none;">
-                An error occurred while fetching orders.
-            </div>
-
-            <div id="emptyState" class="empty-state" style="display: none;">
-                No orders found.
-            </div>
+            <div class="state-msg hidden" id="errorState">Failed to load orders.</div>
+            <div class="state-msg hidden" id="emptyState">No orders yet.</div>
         </div>
+    </div>
+
+    <!-- Order Detail Drawer -->
+    <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+    <div class="drawer" id="drawer">
+        <div class="drawer-header">
+            <h3 id="drawerTitle">Order Details</h3>
+            <button class="drawer-close" onclick="closeDrawer()">
+                <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round">
+                    <path d="M4 4l8 8M12 4l-8 8" />
+                </svg>
+            </button>
+        </div>
+        <div class="drawer-body" id="drawerBody"></div>
     </div>
 
     <!-- Supabase JS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // ---------------------------------------------------------------------
-        // TODO: REPLACE WITH YOUR SUPABASE DETAILS
-        // ---------------------------------------------------------------------
-        const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
-        
-        let supabaseClient;
-        
-        if (SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
-            supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // ─────────────────────────────────────────
+        // ⬇ REPLACE WITH YOUR SUPABASE CREDENTIALS
+        // ─────────────────────────────────────────
+        const SUPABASE_URL = 'https://ltdqrujonwgnfivhhfya.supabase.co';
+        const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0ZHFydWpvbndnbmZpdmhoZnlhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3NTA2MzUsImV4cCI6MjA5MTMyNjYzNX0.Di4IQ4zFpQbIIIIser_vEWtNJZX_XIg7OnYzXZSKk_s';
+
+        let sb = null;
+
+        if (SUPABASE_URL && !SUPABASE_URL.includes('YOUR_')) {
+            sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
         } else {
             document.getElementById('configBanner').style.display = 'block';
         }
 
+        // ── Cached orders for drawer ──
+        let ordersCache = [];
+
+        // ── Fetch & Render ──
         async function fetchOrders() {
-            const tableBody = document.getElementById('ordersBody');
-            const loading = document.getElementById('loading');
-            const errorState = document.getElementById('errorState');
-            const emptyState = document.getElementById('emptyState');
+            const tbody = document.getElementById('ordersBody');
+            const loading = document.getElementById('loadingState');
+            const error = document.getElementById('errorState');
+            const empty = document.getElementById('emptyState');
 
-            // Reset UI
-            tableBody.innerHTML = '';
-            loading.style.display = 'block';
-            errorState.style.display = 'none';
-            emptyState.style.display = 'none';
+            tbody.innerHTML = '';
+            loading.classList.remove('hidden');
+            error.classList.add('hidden');
+            empty.classList.add('hidden');
 
-            if (!supabaseClient) {
-                loading.style.display = 'none';
-                return;
-            }
+            if (!sb) { loading.classList.add('hidden'); return; }
 
             try {
-                const { data, error } = await supabaseClient
+                const { data, error: err } = await sb
                     .from('orders')
                     .select('*')
                     .order('created_at', { ascending: false });
 
-                if (error) {
-                    throw error;
-                }
-
-                loading.style.display = 'none';
+                if (err) throw err;
+                loading.classList.add('hidden');
 
                 if (!data || data.length === 0) {
-                    emptyState.style.display = 'block';
+                    empty.classList.remove('hidden');
+                    updateStats([]);
                     return;
                 }
 
-                data.forEach(order => {
-                    const tr = document.createElement('tr');
-                    
-                    // Format date
-                    const dateObj = new Date(order.created_at);
-                    const formattedDate = dateObj.toLocaleString();
+                ordersCache = data;
+                updateStats(data);
+                renderTable(data);
+                document.getElementById('lastUpdated').textContent = 'Updated ' + new Date().toLocaleTimeString();
 
-                    // Format address
-                    let addr = order.address_line_1 || '';
-                    if (order.address_line_2) addr += ', ' + order.address_line_2;
-                    if (order.city) addr += ', ' + order.city;
-                    if (order.state) addr += ', ' + order.state;
-                    if (order.pincode) addr += ' - ' + order.pincode;
-
-                    // Format items
-                    let itemsHtml = '';
-                    try {
-                        const items = typeof order.items_json === 'string' ? JSON.parse(order.items_json) : order.items_json;
-                        if (items && Array.isArray(items)) {
-                            itemsHtml = items.map(i => `${i.name} (x${i.quantity || 1})`).join('<br>');
-                        } else {
-                            itemsHtml = 'N/A';
-                        }
-                    } catch (e) {
-                        itemsHtml = order.items_json || 'Invalid format';
-                    }
-
-                    // Payment status style
-                    const statusClass = (order.payment_status && order.payment_status.toLowerCase() === 'paid') 
-                        ? 'status-paid' 
-                        : 'status-pending';
-
-                    tr.innerHTML = `
-                        <td><strong>${order.order_number || 'N/A'}</strong></td>
-                        <td>${formattedDate}</td>
-                        <td>${order.customer_name || 'N/A'}</td>
-                        <td>
-                            ${order.email || ''}<br>
-                            <span style="color: #64748b; font-size: 0.75rem;">${order.phone || ''}</span>
-                        </td>
-                        <td class="address-col">${addr}</td>
-                        <td class="items-col">${itemsHtml}</td>
-                        <td><strong>₹${(order.total || 0).toLocaleString()}</strong></td>
-                        <td><span class="badge-status ${statusClass}">${order.payment_status || 'Pending'}</span></td>
-                    `;
-                    tableBody.appendChild(tr);
-                });
-
-            } catch (err) {
-                console.error('Error fetching orders:', err);
-                loading.style.display = 'none';
-                errorState.style.display = 'block';
-                errorState.textContent = 'Error fetching orders: ' + err.message;
+            } catch (e) {
+                console.error('Fetch error:', e);
+                loading.classList.add('hidden');
+                error.classList.remove('hidden');
+                error.textContent = 'Error: ' + e.message;
             }
         }
 
-        // Initialize on load
+        function renderTable(orders) {
+            const tbody = document.getElementById('ordersBody');
+            tbody.innerHTML = orders.map((o, idx) => {
+                const date = new Date(o.created_at);
+                const dateStr = date.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: '2-digit' });
+                const timeStr = date.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+
+                // Build address string
+                let addr = o.address || '';
+                if (o.city) addr += (addr ? ', ' : '') + o.city;
+                if (o.state) addr += ', ' + o.state;
+                if (o.pincode) addr += ' – ' + o.pincode;
+
+                // Format items
+                let itemsHtml = '';
+                try {
+                    const items = typeof o.items === 'string' ? JSON.parse(o.items) : o.items;
+                    if (Array.isArray(items) && items.length) {
+                        itemsHtml = items.map(i => {
+                            const name = i.name || i.productId || 'Item';
+                            const size = i.size ? ` (${i.size})` : '';
+                            return `<div class="item-line">${i.qty || 1}× ${name}${size}</div>`;
+                        }).join('');
+                    } else {
+                        itemsHtml = '<span style="color:var(--text-muted)">—</span>';
+                    }
+                } catch { itemsHtml = '<span style="color:var(--text-muted)">—</span>'; }
+
+                return `<tr onclick="openDrawer(${idx})" style="cursor:pointer">
+                    <td class="col-order">${o.order_number || '—'}</td>
+                    <td class="col-date">${dateStr}<br>${timeStr}</td>
+                    <td class="col-name">${o.customer_name || '—'}</td>
+                    <td class="col-contact">${o.phone || ''}<br>${o.email || ''}</td>
+                    <td class="col-address">${addr || '—'}</td>
+                    <td class="col-items">${itemsHtml}</td>
+                    <td class="col-total">₹${Number(o.total || 0).toLocaleString('en-IN')}</td>
+                    <td class="col-payment">${o.payment_id || '—'}</td>
+                    <td><button class="btn" onclick="event.stopPropagation(); openDrawer(${idx})">View</button></td>
+                </tr>`;
+            }).join('');
+        }
+
+        function updateStats(orders) {
+            document.getElementById('statTotal').textContent = orders.length;
+
+            const todayStart = new Date(); todayStart.setHours(0, 0, 0, 0);
+            const todayCount = orders.filter(o => new Date(o.created_at) >= todayStart).length;
+            document.getElementById('statToday').textContent = todayCount;
+
+            const revenue = orders.reduce((sum, o) => sum + Number(o.total || 0), 0);
+            document.getElementById('statRevenue').textContent = '₹' + revenue.toLocaleString('en-IN');
+        }
+
+        // ── Drawer ──
+        function openDrawer(idx) {
+            const o = ordersCache[idx];
+            if (!o) return;
+
+            document.getElementById('drawerTitle').textContent = o.order_number || 'Order Details';
+
+            const date = new Date(o.created_at);
+
+            // Format items for drawer
+            let itemsHtml = '';
+            try {
+                const items = typeof o.items === 'string' ? JSON.parse(o.items) : o.items;
+                if (Array.isArray(items) && items.length) {
+                    itemsHtml = items.map(i => {
+                        const name = i.name || i.productId || 'Item';
+                        const size = i.size ? `Size: ${i.size}` : '';
+                        const color = i.color ? `Color: ${i.color}` : '';
+                        const meta = [size, color].filter(Boolean).join(' · ');
+                        return `<div class="detail-row"><span class="label">${i.qty || 1}× ${name}</span><span class="value">${meta}</span></div>`;
+                    }).join('');
+                } else {
+                    itemsHtml = '<div class="detail-row"><span class="label">No items data</span></div>';
+                }
+            } catch { itemsHtml = '<div class="detail-row"><span class="label">Invalid items data</span></div>'; }
+
+            document.getElementById('drawerBody').innerHTML = `
+                <div class="detail-section">
+                    <h4>Order Info</h4>
+                    <div class="detail-row"><span class="label">Order Number</span><span class="value">${o.order_number || '—'}</span></div>
+                    <div class="detail-row"><span class="label">Date</span><span class="value">${date.toLocaleString('en-IN')}</span></div>
+                    <div class="detail-row"><span class="label">Total</span><span class="value" style="font-weight:700;color:var(--accent)">₹${Number(o.total || 0).toLocaleString('en-IN')}</span></div>
+                </div>
+                <div class="detail-section">
+                    <h4>Customer</h4>
+                    <div class="detail-row"><span class="label">Name</span><span class="value">${o.customer_name || '—'}</span></div>
+                    <div class="detail-row"><span class="label">Phone</span><span class="value">${o.phone || '—'}</span></div>
+                    <div class="detail-row"><span class="label">Email</span><span class="value">${o.email || '—'}</span></div>
+                </div>
+                <div class="detail-section">
+                    <h4>Shipping Address</h4>
+                    <div class="detail-row"><span class="label">Address</span><span class="value">${o.address || '—'}</span></div>
+                    <div class="detail-row"><span class="label">City</span><span class="value">${o.city || '—'}</span></div>
+                    <div class="detail-row"><span class="label">State</span><span class="value">${o.state || '—'}</span></div>
+                    <div class="detail-row"><span class="label">Pincode</span><span class="value">${o.pincode || '—'}</span></div>
+                </div>
+                <div class="detail-section">
+                    <h4>Items</h4>
+                    ${itemsHtml}
+                </div>
+                <div class="detail-section">
+                    <h4>Payment</h4>
+                    <div class="detail-row"><span class="label">Payment ID</span><span class="value" style="font-family:monospace;font-size:0.75rem">${o.payment_id || '—'}</span></div>
+                    <div class="detail-row"><span class="label">Razorpay Order ID</span><span class="value" style="font-family:monospace;font-size:0.75rem">${o.razorpay_order_id || '—'}</span></div>
+                </div>
+            `;
+
+            document.getElementById('drawerOverlay').classList.add('active');
+            document.getElementById('drawer').classList.add('active');
+        }
+
+        function closeDrawer() {
+            document.getElementById('drawerOverlay').classList.remove('active');
+            document.getElementById('drawer').classList.remove('active');
+        }
+
+        // Close drawer on Escape
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+
+        // Init
         document.addEventListener('DOMContentLoaded', fetchOrders);
     </script>
 </body>
+
 </html>
