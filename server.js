@@ -4,6 +4,18 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
+const { createClient } = require('@supabase/supabase-js');
+
+// --- Supabase Server-Side Client ---
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+let supabase = null;
+if (supabaseUrl && supabaseServiceKey && supabaseServiceKey !== 'your_supabase_service_role_key_here') {
+    supabase = createClient(supabaseUrl, supabaseServiceKey);
+    console.log('✅ Supabase server client initialized.');
+} else {
+    console.warn('⚠️  WARNING: SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY missing in .env. Order saving to DB is disabled.');
+}
 const nodemailer = require('nodemailer');
 
 // Configure NodeMailer transporter (fallback to console logging for now if missing env vars)
@@ -39,7 +51,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 // Handle preflight requests properly
-app.options('*', cors(corsOptions));
+app.options(/(.*)/, cors(corsOptions));
 app.use(bodyParser.json());
 // Serve static frontend files if hosted together
 app.use(express.static(__dirname));
@@ -91,7 +103,7 @@ app.post('/create-order', async (req, res) => {
 });
 
 // Endpoint to verify payment signature securely
-app.post('/verify-payment', (req, res) => {
+app.post('/verify-payment', async (req, res) => {
     try {
         const { razorpay_order_id, razorpay_payment_id, razorpay_signature, orderDetails } = req.body;
 
@@ -106,9 +118,42 @@ app.post('/verify-payment', (req, res) => {
             // Securely verified!
             
             // 1. Generate Order Number
-            const orderNumber = 'MRG' + Math.floor(100000 + Math.random() * 900000);
+            const orderNumber = 'MRG' + Date.now();
             
-            // 2. Prepare Email content if orderDetails exists
+            // 2. Save order to Supabase
+            if (supabase && orderDetails) {
+                const { name, email, phone, address, city, state, pincode, items, total } = orderDetails;
+                try {
+                    const { data, error } = await supabase
+                        .from('orders')
+                        .insert({
+                            order_number: orderNumber,
+                            customer_name: name || '',
+                            email: email || '',
+                            phone: phone || '',
+                            address: address || '',
+                            city: city || '',
+                            state: state || '',
+                            pincode: pincode || '',
+                            items: items || [],
+                            total: total || 0,
+                            payment_id: razorpay_payment_id,
+                            razorpay_order_id: razorpay_order_id
+                        });
+
+                    if (error) {
+                        console.error('❌ Supabase insert error:', error.message, error.details);
+                    } else {
+                        console.log(`✅ Order ${orderNumber} saved to Supabase successfully.`);
+                    }
+                } catch (dbErr) {
+                    console.error('❌ Supabase insert exception:', dbErr);
+                }
+            } else if (!supabase) {
+                console.warn('⚠️  Supabase client not initialized — order not saved to DB.');
+            }
+
+            // 3. Prepare Email content if orderDetails exists
             if (orderDetails) {
                 const { name, email, phone, address, items, total } = orderDetails;
                 
