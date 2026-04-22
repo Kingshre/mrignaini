@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Test Product — Mrignaini (Internal)</title>
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="shop.css">
+    <style>
+        .test-banner {
+            background: #fef3c7;
+            border-bottom: 2px solid #f59e0b;
+            padding: 10px 20px;
+            text-align: center;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #92400e;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .test-page {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem 4rem;
+        }
+        .test-card {
+            background: #fff;
+            border: 1px solid rgba(200, 169, 110, 0.2);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+        }
+        .test-img {
+            width: 100%;
+            height: 320px;
+            object-fit: cover;
+        }
+        .test-info {
+            padding: 1.5rem;
+        }
+        .test-tag {
+            display: inline-block;
+            background: #fef3c7;
+            color: #92400e;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 4px 10px;
+            border-radius: 4px;
+            margin-bottom: 0.75rem;
+        }
+        .test-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.6rem;
+            font-weight: 500;
+            color: #1a4a3a;
+            margin-bottom: 0.5rem;
+        }
+        .test-desc {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.85rem;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+        .test-price {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1a4a3a;
+            margin-bottom: 1.25rem;
+        }
+        .test-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .test-btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            text-align: center;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .test-btn-cart {
+            background: #1a4a3a;
+            color: #fff;
+        }
+        .test-btn-cart:hover { background: #153d2f; transform: translateY(-1px); }
+        .test-btn-buy {
+            background: linear-gradient(135deg, #A82039, #8B2252);
+            color: #fff;
+        }
+        .test-btn-buy:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(168,32,57,0.3); }
+        .test-btn.added {
+            background: #10b981 !important;
+        }
+        .test-note {
+            margin-top: 1.25rem;
+            padding: 12px 16px;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 8px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.78rem;
+            color: #166534;
+            line-height: 1.5;
+        }
+        .test-links {
+            margin-top: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .test-links a {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.82rem;
+            color: #1a4a3a;
+            text-decoration: none;
+            padding: 10px 14px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            transition: background 0.15s;
+        }
+        .test-links a:hover { background: #e2e8f0; }
+    </style>
+</head>
+<body>
+    <!-- Test Banner -->
+    <div class="test-banner">
+        ⚠️ INTERNAL TEST PAGE — ₹2 Test Product — Not visible to customers
+    </div>
+
+    <div class="test-page">
+        <div class="test-card">
+            <img src="assets/images/iktaratop1.jpg" alt="Test Product" class="test-img">
+            <div class="test-info">
+                <span class="test-tag">🧪 Test Product</span>
+                <h1 class="test-name">Test Product</h1>
+                <p class="test-desc">
+                    This is a hidden ₹2 test product to verify the end-to-end payment → order save → admin dashboard flow.
+                    <br><br>
+                    <strong>What this tests:</strong> Razorpay payment creation → signature verification → Supabase order insert → admin-orders.html display.
+                </p>
+                <div class="test-price">₹2</div>
+
+                <div class="test-actions">
+                    <button class="test-btn test-btn-cart" id="addToCartBtn">
+                        <svg viewBox="0 0 24 24" width="18" height="18"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="1.5"/><path d="M16 10a4 4 0 01-8 0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        Add to Cart
+                    </button>
+                    <button class="test-btn test-btn-buy" id="buyNowBtn">
+                        Buy Now — ₹2
+                    </button>
+                </div>
+
+                <div class="test-note">
+                    ✅ <strong>Size:</strong> Free Size (auto-selected)<br>
+                    ✅ <strong>After purchase:</strong> Check <a href="admin-orders.html" style="color:#1a4a3a; font-weight:600;">admin-orders.html</a> to verify the order was saved<br>
+                    ✅ <strong>To remove:</strong> Delete this file and the test product entry from products.js
+                </div>
+            </div>
+        </div>
+
+        <div class="test-links">
+            <a href="cart.html">🛒 Go to Cart</a>
+            <a href="checkout.html">💳 Go to Checkout</a>
+            <a href="admin-orders.html">📋 Admin Orders Dashboard</a>
+            <a href="index.html">🏠 Back to Home</a>
+        </div>
+    </div>
+
+    <script src="products.js"></script>
+    <script src="cart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const PRODUCT_ID = 'test-product';
+            const SIZE = 'Free Size';
+
+            // Add to Cart
+            const addBtn = document.getElementById('addToCartBtn');
+            addBtn.addEventListener('click', () => {
+                Cart.add(PRODUCT_ID, SIZE, 1);
+                addBtn.innerHTML = '✓ Added to Cart!';
+                addBtn.classList.add('added');
+                setTimeout(() => {
+                    addBtn.innerHTML = `<svg viewBox="0 0 24 24" width="18" height="18"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="1.5"/><path d="M16 10a4 4 0 01-8 0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Add to Cart`;
+                    addBtn.classList.remove('added');
+                }, 2000);
+            });
+
+            // Buy Now — goes directly to checkout
+            document.getElementById('buyNowBtn').addEventListener('click', () => {
+                const buyNowItem = { productId: PRODUCT_ID, size: SIZE, qty: 1 };
+                sessionStorage.setItem('mrignaini_buynow', JSON.stringify(buyNowItem));
+                window.location.href = 'checkout.html?mode=buynow';
+            });
+        });
+    </script>
+</body>
+</html>

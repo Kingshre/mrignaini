@@ -310,6 +310,22 @@ const PRODUCTS = [
             { icon: ICONS.print, label: 'Sanganeri Print' },
             { icon: ICONS.indigo, label: 'Blue Dyed' }
         ]
+    },
+    // ── HIDDEN TEST PRODUCT (₹2) — Remove after testing ──
+    {
+        id: 'test-product',
+        name: 'Test Product',
+        category: 'test',
+        hidden: true,
+        price: 2,
+        originalPrice: 2,
+        images: ['assets/images/iktaratop1.jpg'],
+        image: 'assets/images/iktaratop1.jpg',
+        sizes: ['Free Size'],
+        tag: 'Test',
+        description: 'This is a hidden test product used to verify the end-to-end payment and order flow. Price: ₹2.',
+        details: ['This is a test product.', 'Do not ship.'],
+        trustBadges: []
     }
 ];
 
@@ -364,11 +380,11 @@ function getProductById(id) {
 function getProductsByCategory(category) {
     // Support legacy 'dresses' category redirect to 'kurtis'
     if (category === 'dresses') category = 'kurtis';
-    return PRODUCTS.filter(p => p.category === category);
+    return PRODUCTS.filter(p => p.category === category && !p.hidden);
 }
 
 function getAllProducts() {
-    return PRODUCTS;
+    return PRODUCTS.filter(p => !p.hidden);
 }
 
 function formatPrice(price) {

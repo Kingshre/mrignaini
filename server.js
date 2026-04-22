@@ -83,6 +83,7 @@ app.get('/get-razorpay-key', (req, res) => {
 app.post('/create-order', async (req, res) => {
     try {
         const { amount, currency, receipt } = req.body;
+        console.log(`\n📦 [CREATE-ORDER] Received request — Amount: ${amount} paise, Currency: ${currency || 'INR'}`);
 
         const options = {
             amount: amount, // amount in the smallest currency unit (e.g., paise)
@@ -91,12 +92,13 @@ app.post('/create-order', async (req, res) => {
         };
 
         const order = await razorpay.orders.create(options);
+        console.log(`✅ [CREATE-ORDER] Razorpay order created: ${order.id} (₹${amount / 100})`);
         res.status(200).json({
             success: true,
             order
         });
     } catch (error) {
-        console.error('\n❌ Error creating Razorpay order. Check your keys!');
+        console.error('\n❌ [CREATE-ORDER] Error creating Razorpay order. Check your keys!');
         console.error('Details:', error.error ? error.error.description || error.error : error);
         res.status(500).json({ success: false, message: 'Internal Server Error: ' + (error.error ? error.error.description : '') });
     }
@@ -106,6 +108,10 @@ app.post('/create-order', async (req, res) => {
 app.post('/verify-payment', async (req, res) => {
     try {
         const { razorpay_order_id, razorpay_payment_id, razorpay_signature, orderDetails } = req.body;
+        console.log(`\n🔐 [VERIFY-PAYMENT] Received verification request`);
+        console.log(`   ├─ razorpay_order_id: ${razorpay_order_id}`);
+        console.log(`   ├─ razorpay_payment_id: ${razorpay_payment_id}`);
+        console.log(`   └─ orderDetails present: ${!!orderDetails}`);
 
         const body = razorpay_order_id + "|" + razorpay_payment_id;
 
@@ -116,13 +122,17 @@ app.post('/verify-payment', async (req, res) => {
 
         if (expectedSignature === razorpay_signature) {
             // Securely verified!
+            console.log(`✅ [VERIFY-PAYMENT] Signature verified successfully!`);
             
             // 1. Generate Order Number
             const orderNumber = 'MRG' + Date.now();
+            console.log(`   ├─ Order Number: ${orderNumber}`);
             
             // 2. Save order to Supabase
             if (supabase && orderDetails) {
                 const { name, email, phone, address, city, state, pincode, items, total } = orderDetails;
+                console.log(`   ├─ Saving to Supabase...`);
+                console.log(`   │  Customer: ${name}, Phone: ${phone}, Total: ₹${total}`);
                 try {
                     const { data, error } = await supabase
                         .from('orders')
@@ -142,15 +152,17 @@ app.post('/verify-payment', async (req, res) => {
                         });
 
                     if (error) {
-                        console.error('❌ Supabase insert error:', error.message, error.details);
+                        console.error('   └─ ❌ Supabase insert error:', error.message, error.details);
                     } else {
-                        console.log(`✅ Order ${orderNumber} saved to Supabase successfully.`);
+                        console.log(`   └─ ✅ Order ${orderNumber} saved to Supabase successfully!`);
                     }
                 } catch (dbErr) {
-                    console.error('❌ Supabase insert exception:', dbErr);
+                    console.error('   └─ ❌ Supabase insert exception:', dbErr);
                 }
             } else if (!supabase) {
-                console.warn('⚠️  Supabase client not initialized — order not saved to DB.');
+                console.warn('   └─ ⚠️  Supabase client not initialized — order NOT saved to DB.');
+            } else if (!orderDetails) {
+                console.warn('   └─ ⚠️  No orderDetails in payload — order NOT saved to DB.');
             }
 
             // 3. Prepare Email content if orderDetails exists
@@ -223,10 +235,11 @@ app.post('/verify-payment', async (req, res) => {
                 orderNumber: orderNumber
             });
         } else {
+            console.warn(`❌ [VERIFY-PAYMENT] Signature mismatch! Payment rejected.`);
             res.status(400).json({ success: false, message: 'Invalid payment signature' });
         }
     } catch (error) {
-        console.error('Error verifying payment:', error);
+        console.error('❌ [VERIFY-PAYMENT] Unexpected error:', error);
         res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
 });
