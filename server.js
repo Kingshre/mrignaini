@@ -123,11 +123,11 @@ app.post('/verify-payment', async (req, res) => {
         if (expectedSignature === razorpay_signature) {
             // Securely verified!
             console.log(`✅ [VERIFY-PAYMENT] Signature verified successfully!`);
-            
+
             // 1. Generate Order Number
             const orderNumber = 'MRG' + Date.now();
             console.log(`   ├─ Order Number: ${orderNumber}`);
-            
+
             // 2. Save order to Supabase
             if (supabase && orderDetails) {
                 const { name, email, phone, address, city, state, pincode, items, total } = orderDetails;
@@ -149,6 +149,7 @@ app.post('/verify-payment', async (req, res) => {
                             total: total || 0,
                             payment_id: razorpay_payment_id,
                             razorpay_order_id: razorpay_order_id
+                            created_at: new Date().toISOString()
                         });
 
                     if (error) {
@@ -168,12 +169,12 @@ app.post('/verify-payment', async (req, res) => {
             // 3. Prepare Email content if orderDetails exists
             if (orderDetails) {
                 const { name, email, phone, address, items, total } = orderDetails;
-                
+
                 let itemsListHtml = '';
                 if (items && Array.isArray(items)) {
                     itemsListHtml = items.map(i => `<li>${i.qty}x Product ID ${i.productId} (Size: ${i.size})</li>`).join('');
                 }
-                
+
                 const customerMailOptions = {
                     from: '"Mrignaini Store" <no-reply@mrignaini.com>',
                     to: email || process.env.STORE_OWNER_EMAIL || 'customer@example.com',
@@ -229,8 +230,8 @@ app.post('/verify-payment', async (req, res) => {
                 }
             }
 
-            res.status(200).json({ 
-                success: true, 
+            res.status(200).json({
+                success: true,
                 message: 'Payment verified successfully',
                 orderNumber: orderNumber
             });
