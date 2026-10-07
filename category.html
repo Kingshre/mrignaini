@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Mrignaini — Shop handblock printed ethnic wear. Browse our curated collections of sets, tops, and kurtis.">
+    <meta name="description" content="Mrignaini — Shop handblock printed ethnic wear. Browse our curated collections of tops, layers, and sets.">
     <title>Mrignaini</title>
     <link rel="icon" type="image/png" href="assets/images/logo.png">
     <link rel="apple-touch-icon" href="assets/images/logo.png">
@@ -51,7 +51,6 @@
                     <a href="#" class="nav-link nav-link-dropdown active-link">Shop <svg viewBox="0 0 12 8" width="10" height="8"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
                     <div class="dropdown-menu">
                         <a href="category.html?cat=tops" class="dropdown-item">Tops</a>
-                        <a href="category.html?cat=kurtis" class="dropdown-item">Kurtis</a>
                         <a href="category.html?cat=sets" class="dropdown-item">Sets</a>
                         <a href="category.html?cat=layers" class="dropdown-item">Layers</a>
                         <a href="category.html?cat=all" class="dropdown-item">All Products</a>
@@ -84,7 +83,7 @@
             <nav class="breadcrumb" aria-label="Breadcrumb">
                 <a href="index.html">Home</a>
                 <span class="breadcrumb-sep">›</span>
-                <a href="#" class="breadcrumb-current" id="breadcrumbCat">Shop</a>
+                <a href="category.html?cat=all" class="breadcrumb-current" id="breadcrumbCat">Shop</a>
             </nav>
             <h1 class="category-hero-title" id="categoryTitle">Collections</h1>
             <p class="category-hero-desc" id="categoryDesc">Handcrafted with love, printed with heritage.</p>
@@ -97,7 +96,6 @@
             <div class="tabs-inner">
                 <a href="category.html?cat=all" class="tab" data-cat="all">All</a>
                 <a href="category.html?cat=tops" class="tab" data-cat="tops">Tops</a>
-                <a href="category.html?cat=kurtis" class="tab" data-cat="kurtis">Kurtis</a>
                 <a href="category.html?cat=sets" class="tab" data-cat="sets">Sets</a>
                 <a href="category.html?cat=layers" class="tab" data-cat="layers">Layers</a>
             </div>
@@ -121,7 +119,6 @@
             <div class="footer-divider"></div>
             <div class="footer-links">
                 <a href="category.html?cat=tops">Tops</a>
-                <a href="category.html?cat=kurtis">Kurtis</a>
                 <a href="category.html?cat=sets">Sets</a>
                 <a href="category.html?cat=layers">Layers</a>
                 <a href="index.html#story">Our Story</a>
@@ -132,75 +129,14 @@
         </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
     <script src="products.js"></script>
     <script src="cart.js"></script>
+    <script src="auth.js"></script>
+    <script src="coupons.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const params = new URLSearchParams(window.location.search);
-            const cat = params.get('cat') || 'all';
-            let products;
-            let pageTitle, pageDesc;
-
-            if (cat === 'all') {
-                products = getAllProducts();
-                pageTitle = 'All Products';
-                pageDesc = 'Explore our complete collection of handcrafted block-printed ethnic wear.';
-                document.title = 'All Products — Mrignaini';
-                document.getElementById('categoryTitle').textContent = pageTitle;
-                document.getElementById('categoryDesc').textContent = pageDesc;
-                document.getElementById('breadcrumbCat').textContent = 'All Products';
-            } else {
-                const category = CATEGORIES[cat];
-                products = getProductsByCategory(cat);
-                document.title = `${category.fullName} — Mrignaini`;
-                document.getElementById('categoryTitle').textContent = category.fullName;
-                document.getElementById('categoryDesc').textContent = category.description;
-                document.getElementById('breadcrumbCat').textContent = category.name;
-            }
-
-            // Highlight active tab
-            document.querySelectorAll('.tab').forEach(tab => {
-                if (tab.dataset.cat === cat) tab.classList.add('active');
-            });
-
-            // Render products
-            const grid = document.getElementById('productGrid');
-            if (products && products.length > 0) {
-                grid.style.display = ''; // Reset display to default grid
-                grid.innerHTML = products.map((p, i) => `
-                    <a href="product.html?id=${p.id}" class="product-card anim-reveal" data-delay="${i * 0.1}" style="animation-delay: ${i * 0.1}s">
-                        <div class="product-card-image">
-                            <img src="${p.image}" alt="${p.name}" loading="lazy">
-                            <span class="product-card-tag">${p.tag ? p.tag : ''}</span>
-                            <div class="product-card-quick">Quick View →</div>
-                        </div>
-                        <div class="product-card-info">
-                            <h3 class="product-card-name">${p.name}</h3>
-                            <div class="product-card-price">
-                                <span class="price-current">${formatPrice(p.price)}</span>
-                            </div>
-                        </div>
-                    </a>
-                `).join('');
-            } else {
-                grid.style.display = 'block'; // Override grid for centered message
-                grid.innerHTML = `
-                    <div class="empty-state" style="text-align: center; padding: 4rem 1rem; color: #555;">
-                        <svg viewBox="0 0 24 24" width="48" height="48" style="margin: 0 auto 1rem; color: #ccc;" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
-                        <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; color: #1a4a3a; margin-bottom: 0.5rem;">No products found</h3>
-                        <p style="font-family: 'Outfit', sans-serif; font-size: 0.95rem;">We're working on adding new pieces to this collection. Check back soon!</p>
-                        <a href="category.html?cat=all" class="btn btn-primary" style="margin-top: 1.5rem; display: inline-flex; padding: 12px 24px; border-radius: 8px; text-decoration: none; background: #1a4a3a; color: #FDF8F0;">View All Products</a>
-                    </div>
-                `;
-            }
-
-            // Animate cards in
-            setTimeout(() => {
-                document.querySelectorAll('.anim-reveal').forEach(el => {
-                    el.classList.add('revealed');
-                });
-            }, 100);
-
+        document.addEventListener('DOMContentLoaded', async () => {
             // Mobile nav
             const navToggle = document.getElementById('navToggle');
             const navLinks = document.getElementById('navLinks');
@@ -208,10 +144,58 @@
                 navToggle.classList.toggle('active');
                 navLinks.classList.toggle('open');
             });
+
+            const params = new URLSearchParams(window.location.search);
+            let cat = params.get('cat') || 'all';
+
+            // Old or unknown categories (e.g. ?cat=kurtis) go to the right place
+            if (CATEGORY_ALIASES[cat]) {
+                window.location.replace('category.html?cat=' + CATEGORY_ALIASES[cat]);
+                return;
+            }
+            if (cat !== 'all' && !CATEGORIES[cat]) cat = 'all';
+
+            const category = CATEGORIES[cat];
+            const title = category ? category.fullName : 'All Products';
+            document.title = `${title} — Mrignaini`;
+            document.getElementById('categoryTitle').textContent = title;
+            document.getElementById('categoryDesc').textContent = category
+                ? category.description
+                : 'Explore our complete collection of handcrafted block-printed ethnic wear.';
+            const crumb = document.getElementById('breadcrumbCat');
+            crumb.textContent = category ? category.name : 'All Products';
+            crumb.href = 'category.html?cat=' + cat;
+
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.toggle('active', tab.dataset.cat === cat));
+
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = '<div class="shop-status">Loading products…</div>';
+
+            let products;
+            try {
+                products = cat === 'all' ? await Catalog.all() : await Catalog.byCategory(cat);
+            } catch (e) {
+                console.error('Catalog load failed:', e);
+                grid.innerHTML = '<div class="shop-status">We couldn\u2019t load products right now. Please refresh the page.</div>';
+                return;
+            }
+
+            if (products.length) {
+                // In-stock pieces first, sold-out ones last
+                products.sort((a, b) => Number(b.available) - Number(a.available));
+                grid.innerHTML = products.map(renderProductCard).join('');
+            } else {
+                grid.innerHTML = `
+                    <div class="shop-status">
+                        <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; color: #1a4a3a; margin-bottom: 0.5rem;">No products found</h3>
+                        <p>We're working on adding new pieces to this collection. Check back soon!</p>
+                        <a href="category.html?cat=all" class="btn btn-primary" style="margin-top: 1.5rem; display: inline-flex; padding: 12px 24px; border-radius: 8px; text-decoration: none; background: #1a4a3a; color: #FDF8F0;">View All Products</a>
+                    </div>`;
+            }
+
+            // Animate cards in
+            requestAnimationFrame(() => document.querySelectorAll('.anim-reveal').forEach(el => el.classList.add('revealed')));
         });
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="auth.js"></script>
-    <script src="coupons.js"></script>
 </body>
 </html>

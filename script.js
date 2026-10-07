@@ -174,6 +174,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         revealElements.forEach(el => observer.observe(el));
+        // Exposed so elements added after load can be revealed too
+        window.observeReveal = (els) => els.forEach(el => observer.observe(el));
         initScrollParallax();
     }
 
@@ -358,7 +360,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ---- COLLECTION CARD 3D TILT ----
-    document.querySelectorAll('.collection-card').forEach((card) => {
+    // Exposed so cards rendered later (homepage products) get the same effect
+    window.bindCollectionCardTilt = (cards) => cards.forEach((card) => {
         card.addEventListener('mousemove', (e) => {
             const rect = card.getBoundingClientRect();
             const x = (e.clientX - rect.left) / rect.width;
@@ -378,6 +381,7 @@ document.addEventListener('DOMContentLoaded', () => {
             card.style.transition = 'all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)';
         });
     });
+    window.bindCollectionCardTilt(document.querySelectorAll('.collection-card'));
 
     // ---- PARALLAX FLOATING MOTIFS ----
     const motifs = document.querySelectorAll('.section-motif, .hero-motif, .floating-petal');

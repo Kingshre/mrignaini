@@ -430,6 +430,8 @@
         .badge-shipped { background: #ede9fe; color: #5b21b6; }
         .badge-delivered { background: var(--accent-light); color: var(--accent-text); }
         .badge-cancelled { background: var(--danger-bg); color: var(--danger-text); }
+        .badge-unpaid { background: #f3f4f6; color: #6b7280; margin-top: 4px; }
+        .badge-test { background: #fef3c7; color: #92400e; }
 
         .item-meta {
             color: var(--text-muted);
@@ -600,10 +602,9 @@
     <script>
         // Reads go straight to Supabase with the signed-in admin's session.
         // Row Level Security only returns orders when public.is_admin() is true.
-        let sb = null;
-        if (window.supabase && typeof MRG_CONFIG !== 'undefined' && MRG_CONFIG.SUPABASE_URL && MRG_CONFIG.SUPABASE_ANON_KEY) {
-            sb = window.supabase.createClient(MRG_CONFIG.SUPABASE_URL, MRG_CONFIG.SUPABASE_ANON_KEY);
-        }
+        const sb = typeof getSupabase === 'function' ? getSupabase() : null;
+        const IST = 'Asia/Kolkata';
+        let productNames = new Map();
 
         // ── Cached orders for drawer ──
         let ordersCache = [];
@@ -616,19 +617,18 @@
             return '₹' + Number(n || 0).toLocaleString('en-IN');
         }
 
-        // Orders store productId; older orders may have a colour suffix (e.g. top-basanti-blue).
+        // New orders store the product name; older ones only a productId,
+        // sometimes with a colour suffix (e.g. top-basanti-blue).
         function productName(item) {
             if (item.name) return item.name;
             const id = item.productId || '';
-            if (typeof getProductById === 'function') {
-                let p = getProductById(id);
-                for (let cut = id.lastIndexOf('-'); !p && cut > 0; cut = id.lastIndexOf('-', cut - 1)) {
-                    p = getProductById(id.slice(0, cut));
-                }
-                if (p) return p.name;
+            for (let key = id; key; key = key.includes('-') ? key.slice(0, key.lastIndexOf('-')) : '') {
+                if (productNames.has(key)) return productNames.get(key);
             }
             return id || 'Item';
         }
+
+        const isPaid = o => o.payment_status ? o.payment_status === 'paid' : !!o.payment_id;
 
         function parseItems(o) {
             try {
@@ -710,6 +710,10 @@
             empty.classList.add('hidden');
 
             try {
+                if (!productNames.size) {
+                    const products = await Catalog.load().catch(() => []);
+                    productNames = new Map(products.map(p => [p.id, p.name]));
+                }
                 const { data, error: err } = await sb
                     .from('orders')
                     .select('*')
@@ -739,14 +743,24 @@
             if (!value) return { date: '—', time: '' };
             const d = new Date(value);
             return {
-                date: d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: '2-digit' }),
-                time: d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })
+                date: d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: '2-digit', timeZone: IST }),
+                time: d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', timeZone: IST })
             };
         }
 
         function statusBadge(status) {
             const s = status || 'pending';
             return `<span class="badge badge-${esc(s)}">${esc(s)}</span>`;
+        }
+
+        function paymentBadge(o) {
+            if (isPaid(o)) return '';
+            const s = o.payment_status || 'unpaid';
+            return `<div><span class="badge badge-unpaid">payment ${esc(s)}</span></div>`;
+        }
+
+        function testBadge(o) {
+            return o.is_test ? ' <span class="badge badge-test">test</span>' : '';
         }
 
         function renderTable(orders) {
@@ -767,7 +781,7 @@
                     : '<span style="color:var(--text-muted)">—</span>';
 
                 return `<tr onclick="openDrawer(${idx})" style="cursor:pointer">
-                    <td class="col-order">${esc(o.order_number || '—')}</td>
+                    <td class="col-order">${esc(o.order_number || '—')}${testBadge(o)}</td>
                     <td class="col-date">${esc(date)}<br>${esc(time)}</td>
                     <td class="col-name">${esc(o.customer_name || '—')}</td>
                     <td class="col-contact">${esc(o.phone)}<br>${esc(o.email)}</td>
@@ -775,18 +789,21 @@
                     <td class="col-items">${itemsHtml}</td>
                     <td class="col-total">${formatINR(o.total)}</td>
                     <td class="col-payment">${esc(o.payment_id || '—')}</td>
-                    <td>${statusBadge(o.status)}</td>
+                    <td>${statusBadge(o.status)}${paymentBadge(o)}</td>
                     <td><button class="btn" onclick="event.stopPropagation(); openDrawer(${idx})">View</button></td>
                 </tr>`;
             }).join('');
         }
 
-        function updateStats(orders) {
+        // Stats count real, paid orders only (no test orders, unpaid checkouts, or cancellations in revenue)
+        function updateStats(allOrders) {
+            const orders = allOrders.filter(o => isPaid(o) && !o.is_test);
             const live = orders.filter(o => o.status !== 'cancelled');
             document.getElementById('statTotal').textContent = orders.length;
 
-            const todayStart = new Date(); todayStart.setHours(0, 0, 0, 0);
-            const todayCount = orders.filter(o => o.created_at && new Date(o.created_at) >= todayStart).length;
+            const istDay = d => new Date(d).toLocaleDateString('en-CA', { timeZone: IST });
+            const today = istDay(Date.now());
+            const todayCount = orders.filter(o => o.created_at && istDay(o.created_at) === today).length;
             document.getElementById('statToday').textContent = todayCount;
 
             const revenue = live.reduce((sum, o) => sum + Number(o.total || 0), 0);
@@ -812,9 +829,13 @@
                 <div class="detail-section">
                     <h4>Order Info</h4>
                     ${row('Order Number', o.order_number)}
-                    ${row('Date', o.created_at ? new Date(o.created_at).toLocaleString('en-IN') : '')}
+                    ${row('Date', o.created_at ? new Date(o.created_at).toLocaleString('en-IN', { timeZone: IST }) + ' IST' : '')}
                     <div class="detail-row"><span class="label">Status</span><span class="value">${statusBadge(o.status)}</span></div>
+                    ${o.subtotal != null ? row('Subtotal', formatINR(o.subtotal)) : ''}
+                    ${Number(o.discount) ? row('Coupon ' + (o.coupon_code || ''), '−' + formatINR(o.discount)) : ''}
+                    ${o.shipping != null ? row('Shipping', formatINR(o.shipping)) : ''}
                     ${row('Total', formatINR(o.total), 'font-weight:700;color:var(--accent)')}
+                    ${o.stock_issue ? `<div class="detail-row"><span class="label" style="color:var(--danger-text)">⚠ ${esc(o.stock_issue)}</span></div>` : ''}
                 </div>
                 <div class="detail-section">
                     <h4>Customer</h4>
@@ -835,6 +856,7 @@
                 </div>
                 <div class="detail-section">
                     <h4>Payment</h4>
+                    ${row('Payment status', o.payment_status || (o.payment_id ? 'paid' : 'unpaid'))}
                     ${row('Payment ID', o.payment_id, 'font-family:monospace;font-size:0.75rem')}
                     ${row('Razorpay Order ID', o.razorpay_order_id, 'font-family:monospace;font-size:0.75rem')}
                 </div>

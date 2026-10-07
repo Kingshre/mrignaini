@@ -51,7 +51,6 @@
                     <a href="#" class="nav-link nav-link-dropdown">Shop <svg viewBox="0 0 12 8" width="10" height="8"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
                     <div class="dropdown-menu">
                         <a href="category.html?cat=tops" class="dropdown-item">Tops</a>
-                        <a href="category.html?cat=kurtis" class="dropdown-item">Kurtis</a>
                         <a href="category.html?cat=sets" class="dropdown-item">Sets</a>
                         <a href="category.html?cat=layers" class="dropdown-item">Layers</a>
                     </div>
@@ -94,7 +93,7 @@
                 </div>
                 <h2>Your cart is empty</h2>
                 <p>Looks like you haven't added anything yet. Explore our collections and find something you love.</p>
-                <a href="category.html?cat=tops" class="btn btn-primary">Continue Shopping</a>
+                <a href="category.html?cat=all" class="btn btn-primary">Continue Shopping</a>
             </div>
 
             <!-- Cart with items -->
@@ -140,6 +139,10 @@
                                         Codes available
                                     </button>
                                     <div class="codes-list" id="codesList" style="display:none">
+                                        <div class="code-item" data-code="MRIG200">
+                                            <span class="code-name">MRIG200</span>
+                                            <span class="code-desc">₹200 off above ₹999</span>
+                                        </div>
                                         <div class="code-item" data-code="MRIG500">
                                             <span class="code-name">MRIG500</span>
                                             <span class="code-desc">₹500 off above ₹3,999</span>
@@ -166,7 +169,7 @@
                                 <span>Proceed to Checkout</span>
                                 <svg viewBox="0 0 24 24" width="18" height="18"><path d="M5 12h14M12 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                             </a>
-                            <a href="category.html?cat=tops" class="continue-shopping">← Continue Shopping</a>
+                            <a href="category.html?cat=all" class="continue-shopping">← Continue Shopping</a>
                         </div>
                     </div>
                 </div>
@@ -182,7 +185,6 @@
             <div class="footer-divider"></div>
             <div class="footer-links">
                 <a href="category.html?cat=tops">Tops</a>
-                <a href="category.html?cat=kurtis">Kurtis</a>
                 <a href="category.html?cat=sets">Sets</a>
                 <a href="category.html?cat=layers">Layers</a>
                 <a href="index.html#story">Our Story</a>
@@ -192,22 +194,27 @@
         </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
     <script src="products.js"></script>
     <script src="cart.js"></script>
+    <script src="auth.js"></script>
+    <script src="coupons.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            renderCart();
+        let appliedCoupon = CartCoupon.get();
+        let quoteSeq = 0;
 
-            // Mobile nav
+        document.addEventListener('DOMContentLoaded', () => {
             const navToggle = document.getElementById('navToggle');
             const navLinks = document.getElementById('navLinks');
             navToggle.addEventListener('click', () => {
                 navToggle.classList.toggle('active');
                 navLinks.classList.toggle('open');
             });
+            renderCart();
         });
 
-        function renderCart() {
+        async function renderCart() {
             const items = Cart.getItems();
             const cartEmpty = document.getElementById('cartEmpty');
             const cartContent = document.getElementById('cartContent');
@@ -218,105 +225,175 @@
                 return;
             }
 
+            // Resolve each line against the live catalog; drop lines that no longer exist
+            let lines;
+            try {
+                lines = await Promise.all(items.map(async i => ({ item: i, found: await Catalog.findVariant(i.variantId) })));
+            } catch (e) {
+                console.error('Catalog load failed:', e);
+                cartEmpty.style.display = 'none';
+                cartContent.style.display = 'block';
+                document.getElementById('cartItems').innerHTML = '<p class="shop-status">We couldn’t load your cart right now. Please refresh the page.</p>';
+                return;
+            }
+            const missing = lines.filter(l => !l.found);
+            if (missing.length) {
+                missing.forEach(l => Cart.remove(l.item.variantId));
+                lines = lines.filter(l => l.found);
+                if (!lines.length) return renderCart();
+            }
+
             cartEmpty.style.display = 'none';
             cartContent.style.display = 'block';
 
-            const cartItemsEl = document.getElementById('cartItems');
-            cartItemsEl.innerHTML = items.map(item => {
-                const product = getProductById(item.productId);
-                if (!product) return '';
+            document.getElementById('cartItems').innerHTML = lines.map(({ item, found }) => {
+                const { product, color, variant } = found;
+                const max = Math.min(variant.stock, CART_MAX_QTY);
+                const img = color.images[0] || product.image;
+                const href = `product.html?id=${encodeURIComponent(product.id)}`;
                 return `
-                    <div class="cart-item">
-                        <a href="product.html?id=${product.id}" class="cart-item-image">
-                            <img src="${product.image}" alt="${product.name}">
+                    <div class="cart-item" data-variant="${escapeHtml(variant.id)}">
+                        <a href="${href}" class="cart-item-image">
+                            <img src="${escapeHtml(img)}" alt="${escapeHtml(product.name)}" loading="lazy" onerror="imgFallback(this)">
                         </a>
                         <div class="cart-item-details">
-                            <a href="product.html?id=${product.id}" class="cart-item-name">${product.name}</a>
-                            <span class="cart-item-size">Size: ${item.size}</span>
+                            <a href="${href}" class="cart-item-name">${escapeHtml(product.name)}</a>
+                            <span class="cart-item-size">${escapeHtml(color.name)} · Size ${escapeHtml(variant.size)}</span>
                             <span class="cart-item-price">${formatPrice(product.price)}</span>
+                            <span class="cart-item-warning" data-warning></span>
                             <div class="cart-item-controls">
                                 <div class="qty-control">
-                                    <button class="qty-btn" onclick="changeQty('${product.id}','${item.size}',-1)" aria-label="Decrease">−</button>
+                                    <button class="qty-btn" data-action="dec" aria-label="Decrease quantity">−</button>
                                     <span class="qty-value">${item.qty}</span>
-                                    <button class="qty-btn" onclick="changeQty('${product.id}','${item.size}',1)" aria-label="Increase">+</button>
+                                    <button class="qty-btn" data-action="inc" aria-label="Increase quantity" ${item.qty >= max ? 'disabled' : ''}>+</button>
                                 </div>
-                                <button class="cart-item-remove" onclick="removeItem('${product.id}','${item.size}')">
+                                <button class="cart-item-remove" data-action="remove">
                                     <svg viewBox="0 0 24 24" width="16" height="16"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                                     Remove
                                 </button>
                             </div>
                         </div>
-                        <div class="cart-item-total">
-                            ${formatPrice(product.price * item.qty)}
-                        </div>
-                    </div>
-                `;
+                        <div class="cart-item-total">${formatPrice(product.price * item.qty)}</div>
+                    </div>`;
             }).join('');
+
+            document.querySelectorAll('.cart-item [data-action]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const variantId = btn.closest('.cart-item').dataset.variant;
+                    const line = Cart.getItems().find(i => i.variantId === variantId);
+                    if (!line) return;
+                    if (btn.dataset.action === 'remove') Cart.remove(variantId);
+                    else Cart.updateQty(variantId, line.qty + (btn.dataset.action === 'inc' ? 1 : -1));
+                    renderCart();
+                });
+            });
 
             updateCartSummary();
         }
 
-        let appliedCoupon = null;
+        // Totals always come from the server, which prices from the database
+        async function updateCartSummary() {
+            const seq = ++quoteSeq;
+            const checkoutBtn = document.getElementById('checkoutBtn');
+            let quote;
+            try {
+                quote = await mrgApi('/api/checkout/quote', { items: Cart.getItems(), couponCode: appliedCoupon });
+            } catch (e) {
+                if (seq !== quoteSeq) return;
+                document.getElementById('summaryTotal').textContent = '—';
+                showCouponMsg(e.message, false);
+                return;
+            }
+            if (seq !== quoteSeq) return;   // a newer update is in flight
 
-        function updateCartSummary() {
-            const total = Cart.getTotal();
-            // Calculate shipping per item
-            let totalShipping = 0;
-            Cart.getItems().forEach(item => {
-                const product = getProductById(item.productId);
-                if (product) totalShipping += 99 * item.qty;
+            // Stock problems (e.g. someone bought the last piece)
+            document.querySelectorAll('.cart-item [data-warning]').forEach(w => { w.textContent = ''; });
+            quote.problems.forEach(p => {
+                const row = document.querySelector(`.cart-item[data-variant="${p.variantId}"] [data-warning]`);
+                if (row) row.textContent = p.message;
             });
+            checkoutBtn.classList.toggle('is-disabled', quote.problems.length > 0);
+            checkoutBtn.setAttribute('aria-disabled', quote.problems.length > 0);
 
-            let couponDiscount = 0;
             const couponRow = document.getElementById('couponDiscountRow');
-
-            if (appliedCoupon) {
-                couponDiscount = appliedCoupon.discount;
+            if (quote.coupon && quote.coupon.valid) {
                 couponRow.style.display = 'flex';
-                document.getElementById('appliedCouponName').textContent = appliedCoupon.code;
-                document.getElementById('couponDiscountAmt').textContent = `-${formatPrice(couponDiscount)}`;
+                document.getElementById('appliedCouponName').textContent = quote.coupon.code;
+                document.getElementById('couponDiscountAmt').textContent = `-${formatPrice(quote.discount)}`;
+                showCouponApplied(quote.coupon.code, quote.coupon.message);
             } else {
                 couponRow.style.display = 'none';
+                if (quote.coupon && !quote.coupon.valid) {
+                    // Code no longer qualifies (e.g. cart dropped below the minimum)
+                    clearCoupon(false);
+                    showCouponMsg(quote.coupon.message, false);
+                }
             }
 
-            document.getElementById('summarySubtotal').textContent = formatPrice(total);
-            document.getElementById('summaryShipping').textContent = totalShipping === 0 ? 'Free' : formatPrice(totalShipping);
-            document.getElementById('summaryTotal').textContent = formatPrice(total + totalShipping - couponDiscount);
+            document.getElementById('summarySubtotal').textContent = formatPrice(quote.subtotal);
+            document.getElementById('summaryShipping').textContent = formatPrice(quote.shipping);
+            document.getElementById('summaryTotal').textContent = formatPrice(quote.total);
         }
 
-        // Coupon logic
-        document.getElementById('cartCouponApply').addEventListener('click', () => {
-            const code = document.getElementById('cartCouponInput').value.trim().toUpperCase();
-            const total = Cart.getTotal();
-            const result = validateCoupon(code, total);
+        function showCouponMsg(text, ok) {
             const msg = document.getElementById('cartCouponMsg');
+            msg.textContent = text;
+            msg.className = 'coupon-message show ' + (ok ? 'success' : 'error');
+        }
 
-            if (result.valid) {
-                appliedCoupon = { ...result.coupon, code: code };
-                msg.textContent = result.message;
-                msg.className = 'coupon-message show success';
-                document.getElementById('cartCouponApplied').classList.add('show');
-                document.getElementById('cartAppliedCode').textContent = code;
-                document.getElementById('cartCouponInput').style.display = 'none';
-                document.getElementById('cartCouponApply').style.display = 'none';
-                // Store coupon for checkout
-                sessionStorage.setItem('mrignaini_coupon', JSON.stringify(appliedCoupon));
-                updateCartSummary();
-            } else {
-                msg.textContent = result.message;
-                msg.className = 'coupon-message show error';
+        function showCouponApplied(code, message) {
+            showCouponMsg(message, true);
+            document.getElementById('cartCouponApplied').classList.add('show');
+            document.getElementById('cartAppliedCode').textContent = code;
+            document.getElementById('cartCouponInput').style.display = 'none';
+            document.getElementById('cartCouponApply').style.display = 'none';
+        }
+
+        function clearCoupon(resetMessage = true) {
+            appliedCoupon = '';
+            CartCoupon.clear();
+            document.getElementById('cartCouponApplied').classList.remove('show');
+            document.getElementById('cartCouponInput').style.display = '';
+            document.getElementById('cartCouponApply').style.display = '';
+            if (resetMessage) document.getElementById('cartCouponMsg').className = 'coupon-message';
+        }
+
+        document.getElementById('cartCouponApply').addEventListener('click', async () => {
+            const code = document.getElementById('cartCouponInput').value.trim().toUpperCase();
+            if (!code) return showCouponMsg('Please enter a coupon code.', false);
+            const btn = document.getElementById('cartCouponApply');
+            btn.disabled = true;
+            try {
+                const quote = await mrgApi('/api/checkout/quote', { items: Cart.getItems(), couponCode: code });
+                if (quote.coupon && quote.coupon.valid) {
+                    appliedCoupon = code;
+                    CartCoupon.set(code);
+                    updateCartSummary();
+                } else {
+                    showCouponMsg(quote.coupon ? quote.coupon.message : 'Invalid coupon code.', false);
+                }
+            } catch (e) {
+                showCouponMsg(e.message, false);
+            } finally {
+                btn.disabled = false;
             }
         });
 
+        document.getElementById('cartCouponInput').addEventListener('keydown', e => {
+            if (e.key === 'Enter') document.getElementById('cartCouponApply').click();
+        });
+
         document.getElementById('cartCouponRemove').addEventListener('click', () => {
-            appliedCoupon = null;
-            sessionStorage.removeItem('mrignaini_coupon');
-            document.getElementById('cartCouponApplied').classList.remove('show');
-            document.getElementById('cartCouponInput').style.display = '';
+            clearCoupon();
             document.getElementById('cartCouponInput').value = '';
-            document.getElementById('cartCouponApply').style.display = '';
-            document.getElementById('cartCouponMsg').className = 'coupon-message';
             updateCartSummary();
+        });
+
+        document.getElementById('checkoutBtn').addEventListener('click', e => {
+            if (e.currentTarget.classList.contains('is-disabled')) {
+                e.preventDefault();
+                document.querySelector('.cart-item-warning:not(:empty)')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
         });
 
         // Codes available toggle
@@ -331,36 +408,11 @@
         // Click code to fill input
         document.querySelectorAll('.code-item').forEach(item => {
             item.addEventListener('click', () => {
-                const code = item.dataset.code;
-                document.getElementById('cartCouponInput').value = code;
+                document.getElementById('cartCouponInput').value = item.dataset.code;
                 document.getElementById('codesList').style.display = 'none';
                 document.getElementById('codesToggle').classList.remove('open');
             });
         });
-
-        function changeQty(productId, size, delta) {
-            const items = Cart.getItems();
-            let sizeStr = size === 'undefined' ? undefined : size;
-            const item = items.find(i => i.productId === productId && String(i.size) === String(sizeStr));
-            if (item) {
-                const newQty = item.qty + delta;
-                if (newQty <= 0) {
-                    Cart.remove(productId, sizeStr);
-                } else {
-                    Cart.updateQty(productId, sizeStr, Math.min(newQty, 10));
-                }
-                renderCart();
-            }
-        }
-
-        function removeItem(productId, size) {
-            let sizeStr = size === 'undefined' ? undefined : size;
-            Cart.remove(productId, sizeStr);
-            renderCart();
-        }
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="auth.js"></script>
-    <script src="coupons.js"></script>
 </body>
 </html>
