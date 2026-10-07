@@ -4,500 +4,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin — Orders Dashboard | Mrignaini</title>
+    <title>Admin — Orders | Mrignaini</title>
     <meta name="robots" content="noindex, nofollow">
     <link rel="icon" href="assets/images/logo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        *,
-        *::before,
-        *::after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --bg: #f4f6f8;
-            --surface: #ffffff;
-            --text-primary: #111827;
-            --text-secondary: #6b7280;
-            --text-muted: #9ca3af;
-            --border: #e5e7eb;
-            --border-light: #f3f4f6;
-            --accent: #1a4a3a;
-            --accent-light: #d1fae5;
-            --accent-text: #065f46;
-            --danger-bg: #fef2f2;
-            --danger-text: #991b1b;
-            --radius: 10px;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg);
-            color: var(--text-primary);
-            min-height: 100vh;
-        }
-
-        /* ── Header ── */
-        .admin-header {
-            background: var(--surface);
-            border-bottom: 1px solid var(--border);
-            padding: 0 2rem;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .admin-header h1 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .admin-header h1 .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #10b981;
-            display: inline-block;
-        }
-
-        .header-meta {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-
-        /* ── Container ── */
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 1.5rem;
-        }
-
-        /* ── Stats Row ── */
-        .stats-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .stat-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 1.25rem;
-        }
-
-        .stat-label {
-            font-size: 0.75rem;
-            font-weight: 500;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 0.4rem;
-        }
-
-        .stat-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-
-        /* ── Config Banner ── */
-        .config-banner {
-            background: var(--danger-bg);
-            color: var(--danger-text);
-            padding: 0.9rem 1.25rem;
-            border-radius: var(--radius);
-            font-size: 0.85rem;
-            font-weight: 500;
-            margin-bottom: 1.5rem;
-            display: none;
-        }
-
-        /* ── Card ── */
-        .card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            overflow: hidden;
-        }
-
-        .card-header {
-            padding: 1rem 1.25rem;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .card-header h2 {
-            font-size: 0.95rem;
-            font-weight: 600;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 0.45rem 1rem;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            background: var(--surface);
-            color: var(--text-primary);
-            font-family: inherit;
-            font-size: 0.8rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.15s;
-        }
-
-        .btn:hover {
-            background: var(--border-light);
-        }
-
-        .btn-primary {
-            background: var(--accent);
-            color: #fff;
-            border-color: var(--accent);
-        }
-
-        .btn-primary:hover {
-            background: #153d2f;
-        }
-
-        /* ── Table ── */
-        .table-wrap {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.82rem;
-        }
-
-        thead {
-            background: #f9fafb;
-        }
-
-        th {
-            padding: 0.75rem 1rem;
-            text-align: left;
-            font-weight: 600;
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            border-bottom: 1px solid var(--border);
-            white-space: nowrap;
-        }
-
-        td {
-            padding: 0.85rem 1rem;
-            border-bottom: 1px solid var(--border-light);
-            vertical-align: top;
-        }
-
-        tr:last-child td {
-            border-bottom: none;
-        }
-
-        tr:hover td {
-            background: #fafbfc;
-        }
-
-        .col-order {
-            font-weight: 600;
-            color: var(--accent);
-            white-space: nowrap;
-        }
-
-        .col-date {
-            white-space: nowrap;
-            color: var(--text-secondary);
-            font-size: 0.78rem;
-        }
-
-        .col-name {
-            font-weight: 500;
-        }
-
-        .col-contact {
-            font-size: 0.78rem;
-            color: var(--text-secondary);
-        }
-
-        .col-address {
-            max-width: 220px;
-            white-space: normal;
-            line-height: 1.45;
-            color: var(--text-secondary);
-            font-size: 0.78rem;
-        }
-
-        .col-items {
-            max-width: 250px;
-            white-space: normal;
-            line-height: 1.5;
-        }
-
-        .col-items .item-line {
-            margin-bottom: 2px;
-        }
-
-        .col-total {
-            font-weight: 600;
-            white-space: nowrap;
-        }
-
-        .col-payment {
-            font-family: 'SF Mono', 'Fira Code', monospace;
-            font-size: 0.72rem;
-            color: var(--text-muted);
-            word-break: break-all;
-            max-width: 160px;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 0.2rem 0.55rem;
-            border-radius: 999px;
-            font-size: 0.68rem;
-            font-weight: 600;
-            background: var(--accent-light);
-            color: var(--accent-text);
-        }
-
-        /* ── States ── */
-        .state-msg {
-            padding: 3rem 2rem;
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
-
-        .state-msg.hidden {
-            display: none;
-        }
-
-        .spinner {
-            width: 28px;
-            height: 28px;
-            border: 3px solid var(--border);
-            border-top-color: var(--accent);
-            border-radius: 50%;
-            animation: spin 0.7s linear infinite;
-            margin: 0 auto 0.75rem;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* ── Order Detail Drawer ── */
-        .drawer-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.35);
-            backdrop-filter: blur(3px);
-            z-index: 200;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.25s;
-        }
-
-        .drawer-overlay.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        .drawer {
-            position: fixed;
-            top: 0;
-            right: 0;
-            width: min(480px, 92vw);
-            height: 100%;
-            background: var(--surface);
-            box-shadow: -4px 0 24px rgba(0, 0, 0, 0.08);
-            z-index: 201;
-            transform: translateX(100%);
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .drawer.active {
-            transform: translateX(0);
-        }
-
-        .drawer-header {
-            padding: 1.25rem;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-shrink: 0;
-        }
-
-        .drawer-header h3 {
-            font-size: 1rem;
-            font-weight: 600;
-        }
-
-        .drawer-close {
-            width: 32px;
-            height: 32px;
-            border: none;
-            background: none;
-            cursor: pointer;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-secondary);
-            transition: background 0.15s;
-        }
-
-        .drawer-close:hover {
-            background: var(--border-light);
-        }
-
-        .drawer-body {
-            padding: 1.25rem;
-            overflow-y: auto;
-            flex: 1;
-        }
-
-        .detail-section {
-            margin-bottom: 1.5rem;
-        }
-
-        .detail-section h4 {
-            font-size: 0.7rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-muted);
-            margin-bottom: 0.6rem;
-            padding-bottom: 0.4rem;
-            border-bottom: 1px solid var(--border-light);
-        }
-
-        .detail-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 0.35rem 0;
-            font-size: 0.83rem;
-        }
-
-        .detail-row .label {
-            color: var(--text-secondary);
-        }
-
-        .detail-row .value {
-            font-weight: 500;
-            text-align: right;
-            max-width: 60%;
-            word-break: break-all;
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        [hidden] {
-            display: none !important;
-        }
-
-        .badge-pending { background: #fef3c7; color: #92400e; }
-        .badge-confirmed { background: #dbeafe; color: #1e40af; }
-        .badge-shipped { background: #ede9fe; color: #5b21b6; }
-        .badge-delivered { background: var(--accent-light); color: var(--accent-text); }
-        .badge-cancelled { background: var(--danger-bg); color: var(--danger-text); }
-        .badge-unpaid { background: #f3f4f6; color: #6b7280; margin-top: 4px; }
-        .badge-test { background: #fef3c7; color: #92400e; }
-
-        .item-meta {
-            color: var(--text-muted);
-            font-size: 0.75rem;
-        }
-
-        /* ── Login ── */
-        .login-wrap {
-            min-height: calc(100vh - 60px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1.5rem 1rem;
-        }
-
-        .login-card {
-            width: min(380px, 100%);
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 1.75rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .login-card h2 { font-size: 1.15rem; }
-        .login-sub { font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 0.75rem; }
-        .login-card label { font-size: 0.78rem; font-weight: 500; color: var(--text-secondary); }
-
-        .login-card input {
-            padding: 0.6rem 0.75rem;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            font: inherit;
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .login-card .btn { justify-content: center; padding: 0.65rem; margin-top: 0.25rem; }
-        .login-msg { font-size: 0.8rem; color: var(--danger-text); min-height: 1.2em; }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 1rem;
-            }
-
-            .admin-header {
-                padding: 0 1rem;
-            }
-
-            .stats-row {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="admin.css">
 </head>
 
 <body>
 
     <header class="admin-header">
-        <h1><span class="dot"></span> Orders Dashboard</h1>
+        <div class="left">
+            <h1><span class="dot"></span> Mrignaini Admin</h1>
+            <nav class="admin-tabs" hidden>
+                <a href="admin-orders.html" class="active">Orders</a>
+                <a href="admin-products.html">Products</a>
+            </nav>
+        </div>
         <div class="header-right">
             <span class="header-meta" id="lastUpdated"></span>
             <span class="header-meta" id="adminEmail"></span>
-            <button class="btn" id="signOutBtn" onclick="signOut()" hidden>Sign out</button>
+            <button class="btn" id="signOutBtn" hidden>Sign out</button>
         </div>
     </header>
 
@@ -516,39 +45,51 @@
     </div>
 
     <div class="container" id="dashboardView" hidden>
-        <!-- Config Banner -->
-        <div class="config-banner" id="configBanner">
-            ⚠️ Supabase is not configured. Check SUPABASE_URL and SUPABASE_ANON_KEY in config.js.
-        </div>
-
-        <!-- Stats -->
+        <!-- Stats (paid, non-test orders) -->
         <div class="stats-row">
             <div class="stat-card">
                 <div class="stat-label">Total Orders</div>
                 <div class="stat-value" id="statTotal">–</div>
             </div>
             <div class="stat-card">
-                <div class="stat-label">Today</div>
+                <div class="stat-label">Today (IST)</div>
                 <div class="stat-value" id="statToday">–</div>
             </div>
             <div class="stat-card">
                 <div class="stat-label">Revenue</div>
                 <div class="stat-value" id="statRevenue">–</div>
             </div>
+            <div class="stat-card">
+                <div class="stat-label">To ship</div>
+                <div class="stat-value" id="statToShip">–</div>
+            </div>
         </div>
 
         <!-- Orders Table -->
         <div class="card">
             <div class="card-header">
-                <h2>All Orders</h2>
-                <button class="btn btn-primary" onclick="fetchOrders()">
-                    <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"
-                        stroke-linecap="round">
+                <h2>Orders <span class="header-meta" id="resultCount"></span></h2>
+                <button class="btn btn-primary" id="refreshBtn">
+                    <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
                         <path d="M1 8a7 7 0 0113.1-3.5M15 8a7 7 0 01-13.1 3.5" />
                         <path d="M14 1v3.5h-3.5M2 15v-3.5h3.5" />
                     </svg>
                     Refresh
                 </button>
+            </div>
+
+            <div class="toolbar">
+                <input type="search" id="searchInput" placeholder="Search name, phone, email, order no." aria-label="Search orders">
+                <div class="chips" id="statusChips" role="group" aria-label="Filter by status">
+                    <button class="chip active" data-status="all">All</button>
+                    <button class="chip" data-status="pending">Pending</button>
+                    <button class="chip" data-status="confirmed">Confirmed</button>
+                    <button class="chip" data-status="shipped">Shipped</button>
+                    <button class="chip" data-status="delivered">Delivered</button>
+                    <button class="chip" data-status="cancelled">Cancelled</button>
+                </div>
+                <label class="toggle-label"><input type="checkbox" id="showUnpaid"> Show unpaid checkouts</label>
+                <label class="toggle-label"><input type="checkbox" id="showTest"> Show test orders</label>
             </div>
 
             <div class="table-wrap">
@@ -576,18 +117,17 @@
                 Loading orders…
             </div>
             <div class="state-msg hidden" id="errorState">Failed to load orders.</div>
-            <div class="state-msg hidden" id="emptyState">No orders yet.</div>
+            <div class="state-msg hidden" id="emptyState">No orders match.</div>
         </div>
     </div>
 
     <!-- Order Detail Drawer -->
-    <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
-    <div class="drawer" id="drawer">
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+    <div class="drawer" id="drawer" role="dialog" aria-labelledby="drawerTitle">
         <div class="drawer-header">
             <h3 id="drawerTitle">Order Details</h3>
-            <button class="drawer-close" onclick="closeDrawer()">
-                <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round">
+            <button class="drawer-close" id="drawerClose" aria-label="Close">
+                <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
                     <path d="M4 4l8 8M12 4l-8 8" />
                 </svg>
             </button>
@@ -595,27 +135,17 @@
         <div class="drawer-body" id="drawerBody"></div>
     </div>
 
-    <!-- Supabase JS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="config.js"></script>
     <script src="products.js"></script>
+    <script src="admin.js"></script>
     <script>
-        // Reads go straight to Supabase with the signed-in admin's session.
-        // Row Level Security only returns orders when public.is_admin() is true.
-        const sb = typeof getSupabase === 'function' ? getSupabase() : null;
-        const IST = 'Asia/Kolkata';
+        const STATUSES = ['pending', 'confirmed', 'shipped', 'delivered', 'cancelled'];
+        let orders = [];
         let productNames = new Map();
+        const filters = { status: 'all', q: '', unpaid: false, test: false };
 
-        // ── Cached orders for drawer ──
-        let ordersCache = [];
-
-        function esc(value) {
-            return String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-        }
-
-        function formatINR(n) {
-            return '₹' + Number(n || 0).toLocaleString('en-IN');
-        }
+        const isPaid = o => o.payment_status ? o.payment_status === 'paid' : !!o.payment_id;
 
         // New orders store the product name; older ones only a productId,
         // sometimes with a colour suffix (e.g. top-basanti-blue).
@@ -628,8 +158,6 @@
             return id || 'Item';
         }
 
-        const isPaid = o => o.payment_status ? o.payment_status === 'paid' : !!o.payment_id;
-
         function parseItems(o) {
             try {
                 const items = typeof o.items === 'string' ? JSON.parse(o.items) : o.items;
@@ -637,107 +165,7 @@
             } catch { return []; }
         }
 
-        function itemMeta(i) {
-            return [i.size ? `Size ${i.size}` : '', i.color ? i.color : ''].filter(Boolean).join(' · ');
-        }
-
-        // ── Auth gate ──
-        function showView(view) {
-            document.getElementById('loginView').hidden = view !== 'login';
-            document.getElementById('dashboardView').hidden = view !== 'dashboard';
-            document.getElementById('signOutBtn').hidden = view !== 'dashboard';
-        }
-
-        async function checkAccess() {
-            if (!sb) {
-                showView('dashboard');
-                document.getElementById('configBanner').style.display = 'block';
-                document.getElementById('loadingState').classList.add('hidden');
-                return;
-            }
-            const { data: { session } } = await sb.auth.getSession();
-            if (!session) { showView('login'); return; }
-
-            const { data: isAdmin, error } = await sb.rpc('is_admin');
-            if (error || !isAdmin) {
-                await sb.auth.signOut();
-                showView('login');
-                document.getElementById('loginMsg').textContent = error
-                    ? 'Could not verify admin access: ' + error.message
-                    : 'This account is not an admin.';
-                return;
-            }
-            document.getElementById('adminEmail').textContent = session.user.email;
-            showView('dashboard');
-            fetchOrders();
-        }
-
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('loginBtn');
-            const msg = document.getElementById('loginMsg');
-            msg.textContent = '';
-            btn.disabled = true;
-            btn.textContent = 'Signing in…';
-            const { error } = await sb.auth.signInWithPassword({
-                email: document.getElementById('loginEmail').value.trim(),
-                password: document.getElementById('loginPassword').value
-            });
-            btn.disabled = false;
-            btn.textContent = 'Sign in';
-            if (error) { msg.textContent = error.message; return; }
-            checkAccess();
-        });
-
-        async function signOut() {
-            await sb.auth.signOut();
-            ordersCache = [];
-            document.getElementById('ordersBody').innerHTML = '';
-            document.getElementById('adminEmail').textContent = '';
-            showView('login');
-        }
-
-        // ── Fetch & Render ──
-        async function fetchOrders() {
-            const tbody = document.getElementById('ordersBody');
-            const loading = document.getElementById('loadingState');
-            const error = document.getElementById('errorState');
-            const empty = document.getElementById('emptyState');
-
-            tbody.innerHTML = '';
-            loading.classList.remove('hidden');
-            error.classList.add('hidden');
-            empty.classList.add('hidden');
-
-            try {
-                if (!productNames.size) {
-                    const products = await Catalog.load().catch(() => []);
-                    productNames = new Map(products.map(p => [p.id, p.name]));
-                }
-                const { data, error: err } = await sb
-                    .from('orders')
-                    .select('*')
-                    .order('created_at', { ascending: false, nullsFirst: false });
-
-                if (err) throw err;
-                loading.classList.add('hidden');
-
-                ordersCache = data || [];
-                updateStats(ordersCache);
-                if (ordersCache.length === 0) {
-                    empty.classList.remove('hidden');
-                    return;
-                }
-                renderTable(ordersCache);
-                document.getElementById('lastUpdated').textContent = 'Updated ' + new Date().toLocaleTimeString('en-IN');
-
-            } catch (e) {
-                console.error('Fetch error:', e);
-                loading.classList.add('hidden');
-                error.classList.remove('hidden');
-                error.textContent = 'Error loading orders: ' + (e.message || e);
-            }
-        }
+        const itemMeta = i => [i.color, i.size ? `Size ${i.size}` : ''].filter(Boolean).join(' · ');
 
         function formatDate(value) {
             if (!value) return { date: '—', time: '' };
@@ -748,78 +176,125 @@
             };
         }
 
-        function statusBadge(status) {
-            const s = status || 'pending';
-            return `<span class="badge badge-${esc(s)}">${esc(s)}</span>`;
+        function fullAddress(o) {
+            let addr = o.address || '';
+            for (const part of [o.city, o.state, o.pincode]) {
+                if (part && !addr.includes(part)) addr += (addr ? ', ' : '') + part;
+            }
+            return addr;
         }
 
-        function paymentBadge(o) {
-            if (isPaid(o)) return '';
-            const s = o.payment_status || 'unpaid';
-            return `<div><span class="badge badge-unpaid">payment ${esc(s)}</span></div>`;
-        }
+        const statusBadge = s => `<span class="badge badge-${esc(s || 'pending')}">${esc(s || 'pending')}</span>`;
+        const paymentBadge = o => isPaid(o) ? '' : `<div><span class="badge badge-unpaid">payment ${esc(o.payment_status || 'unpaid')}</span></div>`;
+        const testBadge = o => o.is_test ? ' <span class="badge badge-test">test</span>' : '';
 
-        function testBadge(o) {
-            return o.is_test ? ' <span class="badge badge-test">test</span>' : '';
-        }
-
-        function renderTable(orders) {
-            const tbody = document.getElementById('ordersBody');
-            tbody.innerHTML = orders.map((o, idx) => {
-                const { date, time } = formatDate(o.created_at);
-
-                // The address column may already contain city/state/pincode (checkout builds a full address).
-                let addr = o.address || '';
-                for (const part of [o.city, o.state, o.pincode]) {
-                    if (part && !addr.includes(part)) addr += (addr ? ', ' : '') + part;
+        // ── Load ──
+        async function fetchOrders() {
+            const loading = document.getElementById('loadingState');
+            const error = document.getElementById('errorState');
+            loading.classList.remove('hidden');
+            error.classList.add('hidden');
+            try {
+                if (!productNames.size) {
+                    const products = await Catalog.load().catch(() => []);
+                    productNames = new Map(products.map(p => [p.id, p.name]));
                 }
+                const { data, error: err } = await sb
+                    .from('orders')
+                    .select('*')
+                    .order('created_at', { ascending: false, nullsFirst: false });
+                if (err) throw err;
+                orders = data || [];
+                updateStats();
+                render();
+                document.getElementById('lastUpdated').textContent = 'Updated ' + new Date().toLocaleTimeString('en-IN', { timeZone: IST });
+            } catch (e) {
+                console.error('Fetch error:', e);
+                error.classList.remove('hidden');
+                error.textContent = 'Error loading orders: ' + (e.message || e);
+            } finally {
+                loading.classList.add('hidden');
+            }
+        }
 
+        // Stats count real, paid orders only (no test orders or unpaid checkouts; revenue excludes cancellations)
+        function updateStats() {
+            const real = orders.filter(o => isPaid(o) && !o.is_test);
+            const live = real.filter(o => o.status !== 'cancelled');
+            const istDay = d => new Date(d).toLocaleDateString('en-CA', { timeZone: IST });
+            const today = istDay(Date.now());
+            document.getElementById('statTotal').textContent = real.length;
+            document.getElementById('statToday').textContent = real.filter(o => o.created_at && istDay(o.created_at) === today).length;
+            document.getElementById('statRevenue').textContent = formatINR(live.reduce((s, o) => s + Number(o.total || 0), 0));
+            document.getElementById('statToShip').textContent = real.filter(o => o.status === 'pending' || o.status === 'confirmed').length;
+        }
+
+        function visibleOrders() {
+            const q = filters.q.toLowerCase();
+            return orders.filter(o =>
+                (filters.unpaid || isPaid(o)) &&
+                (filters.test || !o.is_test) &&
+                (filters.status === 'all' || (o.status || 'pending') === filters.status) &&
+                (!q || [o.customer_name, o.phone, o.email, o.order_number].some(v => String(v || '').toLowerCase().includes(q)))
+            );
+        }
+
+        function render() {
+            const list = visibleOrders();
+            document.getElementById('resultCount').textContent = `(${list.length})`;
+            document.getElementById('emptyState').classList.toggle('hidden', list.length > 0);
+            document.getElementById('ordersBody').innerHTML = list.map(o => {
+                const { date, time } = formatDate(o.created_at);
                 const items = parseItems(o);
                 const itemsHtml = items.length
                     ? items.map(i => `<div class="item-line">${esc(i.qty || 1)}× ${esc(productName(i))}
                         <div class="item-meta">${esc(itemMeta(i))}</div></div>`).join('')
                     : '<span style="color:var(--text-muted)">—</span>';
-
-                return `<tr onclick="openDrawer(${idx})" style="cursor:pointer">
+                return `<tr data-id="${esc(o.id)}" style="cursor:pointer">
                     <td class="col-order">${esc(o.order_number || '—')}${testBadge(o)}</td>
                     <td class="col-date">${esc(date)}<br>${esc(time)}</td>
                     <td class="col-name">${esc(o.customer_name || '—')}</td>
                     <td class="col-contact">${esc(o.phone)}<br>${esc(o.email)}</td>
-                    <td class="col-address">${esc(addr || '—')}</td>
+                    <td class="col-address">${esc(fullAddress(o) || '—')}</td>
                     <td class="col-items">${itemsHtml}</td>
                     <td class="col-total">${formatINR(o.total)}</td>
                     <td class="col-payment">${esc(o.payment_id || '—')}</td>
                     <td>${statusBadge(o.status)}${paymentBadge(o)}</td>
-                    <td><button class="btn" onclick="event.stopPropagation(); openDrawer(${idx})">View</button></td>
+                    <td><button class="btn">View</button></td>
                 </tr>`;
             }).join('');
         }
 
-        // Stats count real, paid orders only (no test orders, unpaid checkouts, or cancellations in revenue)
-        function updateStats(allOrders) {
-            const orders = allOrders.filter(o => isPaid(o) && !o.is_test);
-            const live = orders.filter(o => o.status !== 'cancelled');
-            document.getElementById('statTotal').textContent = orders.length;
+        document.getElementById('ordersBody').addEventListener('click', e => {
+            const tr = e.target.closest('tr[data-id]');
+            if (tr) openDrawer(tr.dataset.id);
+        });
 
-            const istDay = d => new Date(d).toLocaleDateString('en-CA', { timeZone: IST });
-            const today = istDay(Date.now());
-            const todayCount = orders.filter(o => o.created_at && istDay(o.created_at) === today).length;
-            document.getElementById('statToday').textContent = todayCount;
-
-            const revenue = live.reduce((sum, o) => sum + Number(o.total || 0), 0);
-            document.getElementById('statRevenue').textContent = formatINR(revenue);
-        }
+        // ── Filters ──
+        document.getElementById('searchInput').addEventListener('input', e => { filters.q = e.target.value.trim(); render(); });
+        document.getElementById('statusChips').addEventListener('click', e => {
+            const chip = e.target.closest('.chip');
+            if (!chip) return;
+            filters.status = chip.dataset.status;
+            document.querySelectorAll('#statusChips .chip').forEach(c => c.classList.toggle('active', c === chip));
+            render();
+        });
+        document.getElementById('showUnpaid').addEventListener('change', e => { filters.unpaid = e.target.checked; render(); });
+        document.getElementById('showTest').addEventListener('change', e => { filters.test = e.target.checked; render(); });
+        document.getElementById('refreshBtn').addEventListener('click', fetchOrders);
 
         // ── Drawer ──
-        function openDrawer(idx) {
-            const o = ordersCache[idx];
-            if (!o) return;
+        let drawerOrderId = null;
 
+        function openDrawer(id) {
+            const o = orders.find(x => x.id === id);
+            if (!o) return;
+            drawerOrderId = id;
             document.getElementById('drawerTitle').textContent = o.order_number || 'Order Details';
 
             const items = parseItems(o);
             const itemsHtml = items.length
-                ? items.map(i => `<div class="detail-row"><span class="label">${esc(i.qty || 1)}× ${esc(productName(i))}</span><span class="value">${esc(itemMeta(i))}</span></div>`).join('')
+                ? items.map(i => `<div class="detail-row"><span class="label">${esc(i.qty || 1)}× ${esc(productName(i))}<br><small>${esc(itemMeta(i))}</small></span><span class="value">${i.lineTotal != null ? formatINR(i.lineTotal) : ''}</span></div>`).join('')
                 : '<div class="detail-row"><span class="label">No items data</span></div>';
 
             const row = (label, value, style = '') =>
@@ -827,12 +302,23 @@
 
             document.getElementById('drawerBody').innerHTML = `
                 <div class="detail-section">
+                    <h4>Status</h4>
+                    <div class="detail-row" style="gap:0.5rem;align-items:center">
+                        <select class="status-select" id="statusSelect" aria-label="Order status">
+                            ${STATUSES.map(s => `<option value="${s}" ${s === (o.status || 'pending') ? 'selected' : ''}>${s[0].toUpperCase() + s.slice(1)}</option>`).join('')}
+                        </select>
+                        <button class="btn btn-primary" id="saveStatusBtn">Update status</button>
+                    </div>
+                    ${o.stock_applied && o.status === 'cancelled' ? `
+                        <div class="detail-row" style="align-items:center;gap:0.5rem"><span class="label">Items from this cancelled order are still deducted from stock.</span>
+                        <button class="btn" id="restockBtn">Return to stock</button></div>` : ''}
+                </div>
+                <div class="detail-section">
                     <h4>Order Info</h4>
                     ${row('Order Number', o.order_number)}
                     ${row('Date', o.created_at ? new Date(o.created_at).toLocaleString('en-IN', { timeZone: IST }) + ' IST' : '')}
-                    <div class="detail-row"><span class="label">Status</span><span class="value">${statusBadge(o.status)}</span></div>
                     ${o.subtotal != null ? row('Subtotal', formatINR(o.subtotal)) : ''}
-                    ${Number(o.discount) ? row('Coupon ' + (o.coupon_code || ''), '−' + formatINR(o.discount)) : ''}
+                    ${Number(o.discount) ? row('Coupon ' + esc(o.coupon_code || ''), '−' + formatINR(o.discount)) : ''}
                     ${o.shipping != null ? row('Shipping', formatINR(o.shipping)) : ''}
                     ${row('Total', formatINR(o.total), 'font-weight:700;color:var(--accent)')}
                     ${o.stock_issue ? `<div class="detail-row"><span class="label" style="color:var(--danger-text)">⚠ ${esc(o.stock_issue)}</span></div>` : ''}
@@ -862,20 +348,54 @@
                 </div>
             `;
 
+            document.getElementById('saveStatusBtn').addEventListener('click', saveStatus);
+            const restockBtn = document.getElementById('restockBtn');
+            if (restockBtn) restockBtn.addEventListener('click', () => restock(o.id));
+
             document.getElementById('drawerOverlay').classList.add('active');
             document.getElementById('drawer').classList.add('active');
+        }
+
+        async function saveStatus() {
+            const o = orders.find(x => x.id === drawerOrderId);
+            const status = document.getElementById('statusSelect').value;
+            if (!o || status === (o.status || 'pending')) return;
+            const btn = document.getElementById('saveStatusBtn');
+            btn.disabled = true;
+            const { data, error } = await sb.from('orders').update({ status }).eq('id', o.id).select().single();
+            btn.disabled = false;
+            if (error) { toast('Could not update status: ' + error.message, false); return; }
+            Object.assign(o, data);
+            toast(`${o.order_number} → ${status}`);
+            updateStats();
+            render();
+            if (status === 'cancelled' && o.stock_applied &&
+                confirm(`Return the items from ${o.order_number} to stock?`)) {
+                await restock(o.id);
+            } else {
+                openDrawer(o.id);
+            }
+        }
+
+        async function restock(id) {
+            const { data, error } = await sb.rpc('restock_order', { p_order_id: id });
+            if (error) { toast('Could not restock: ' + error.message, false); return; }
+            const o = orders.find(x => x.id === id);
+            Object.assign(o, data);
+            toast('Items returned to stock');
+            openDrawer(id);
         }
 
         function closeDrawer() {
             document.getElementById('drawerOverlay').classList.remove('active');
             document.getElementById('drawer').classList.remove('active');
+            drawerOrderId = null;
         }
-
-        // Close drawer on Escape
+        document.getElementById('drawerOverlay').addEventListener('click', closeDrawer);
+        document.getElementById('drawerClose').addEventListener('click', closeDrawer);
         document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
 
-        // Init
-        document.addEventListener('DOMContentLoaded', checkAccess);
+        document.addEventListener('DOMContentLoaded', () => Admin.init(fetchOrders));
     </script>
 </body>
 

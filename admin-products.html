@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin — Products | Mrignaini</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" href="assets/images/logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="admin.css">
+    <style>
+        .products-layout {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 1.25rem;
+            align-items: start;
+        }
+
+        .product-list { padding: 0.5rem; display: flex; flex-direction: column; gap: 0.25rem; }
+
+        .product-row {
+            display: flex;
+            gap: 0.7rem;
+            align-items: center;
+            padding: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            background: none;
+            font: inherit;
+            text-align: left;
+            width: 100%;
+        }
+
+        .product-row:hover { background: var(--border-light); }
+        .product-row.active { background: var(--accent-light); border-color: #a7f3d0; }
+
+        .product-row img, .thumb {
+            width: 44px;
+            height: 56px;
+            object-fit: cover;
+            border-radius: 6px;
+            background: #f3ede3;
+            flex-shrink: 0;
+        }
+
+        .product-row .meta { min-width: 0; flex: 1; }
+        .product-row .name { font-size: 0.82rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .product-row .sub { font-size: 0.72rem; color: var(--text-muted); }
+
+        .editor { display: flex; flex-direction: column; gap: 1.25rem; }
+        .editor-section { padding: 1.25rem; }
+        .editor-section h3 { font-size: 0.95rem; margin-bottom: 0.25rem; }
+        .editor-section .hint { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1rem; }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.85rem 1rem;
+        }
+
+        .field { display: flex; flex-direction: column; gap: 0.3rem; }
+        .field.full { grid-column: 1 / -1; }
+        .field label { font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); }
+        .field small { font-size: 0.72rem; color: var(--text-muted); }
+        .field textarea { min-height: 90px; resize: vertical; line-height: 1.45; }
+        .field textarea.tall { min-height: 160px; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.78rem; }
+        .field .private { color: #92400e; }
+
+        .actions-row { display: flex; gap: 0.6rem; justify-content: flex-end; margin-top: 1rem; flex-wrap: wrap; }
+
+        .size-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; }
+        .size-chip {
+            display: inline-flex; align-items: center; gap: 0.35rem;
+            padding: 0.3rem 0.4rem 0.3rem 0.7rem;
+            border: 1px solid var(--border); border-radius: 999px; font-size: 0.8rem; background: var(--surface);
+        }
+        .size-chip button { border: none; background: none; cursor: pointer; color: var(--text-muted); font-size: 1rem; line-height: 1; padding: 0 0.2rem; }
+        .size-chip button:hover { color: var(--danger-text); }
+        .inline-add { display: inline-flex; gap: 0.35rem; }
+        .inline-add input { width: 110px; padding: 0.35rem 0.6rem; border: 1px solid var(--border); border-radius: 6px; font: inherit; font-size: 0.8rem; }
+
+        .color-card { border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; margin-top: 1rem; }
+        .color-head { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; margin-bottom: 0.9rem; }
+        .color-head input[type="text"] { padding: 0.45rem 0.6rem; border: 1px solid var(--border); border-radius: 6px; font: inherit; font-size: 0.9rem; font-weight: 600; min-width: 160px; }
+        .color-head input[type="color"] { width: 38px; height: 34px; border: 1px solid var(--border); border-radius: 6px; padding: 2px; background: var(--surface); }
+        .color-head .spacer { flex: 1; }
+
+        .stock-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 0.5rem; margin-bottom: 1rem; }
+        .stock-cell { border: 1px solid var(--border-light); background: #fafbfc; border-radius: 8px; padding: 0.5rem 0.6rem; }
+        .stock-cell .size { font-size: 0.75rem; font-weight: 700; color: var(--text-secondary); }
+        .stock-cell input[type="number"] { width: 100%; margin: 0.3rem 0; padding: 0.35rem 0.5rem; border: 1px solid var(--border); border-radius: 6px; font: inherit; font-size: 0.85rem; }
+        .stock-cell label { font-size: 0.72rem; color: var(--text-secondary); display: flex; gap: 0.3rem; align-items: center; }
+        .stock-cell.out { background: var(--danger-bg); border-color: #fecaca; }
+
+        .photos { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+        .photo {
+            position: relative; width: 104px; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: var(--surface);
+        }
+        .photo img { width: 104px; height: 130px; object-fit: cover; display: block; background: #f3ede3; }
+        .photo .badge-first { position: absolute; top: 4px; left: 4px; background: var(--accent); color: #fff; font-size: 0.62rem; padding: 2px 6px; border-radius: 4px; }
+        .photo .photo-actions { display: flex; justify-content: space-between; padding: 3px; }
+        .photo .photo-actions button {
+            border: 1px solid var(--border); background: var(--surface); border-radius: 5px; cursor: pointer;
+            width: 28px; height: 26px; font-size: 0.85rem; color: var(--text-secondary);
+        }
+        .photo .photo-actions button:hover:not(:disabled) { background: var(--border-light); }
+        .photo .photo-actions button.del:hover { color: var(--danger-text); background: var(--danger-bg); }
+        .photo .photo-actions button:disabled { opacity: 0.3; cursor: default; }
+        .upload-tile {
+            width: 104px; height: 161px; border: 2px dashed var(--border); border-radius: 8px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.3rem;
+            font-size: 0.75rem; color: var(--text-secondary); cursor: pointer; text-align: center; padding: 0.5rem;
+        }
+        .upload-tile:hover { border-color: var(--accent); color: var(--accent); }
+        .upload-tile input { display: none; }
+
+        .empty-editor { padding: 3rem 1.5rem; text-align: center; color: var(--text-muted); font-size: 0.9rem; }
+        .badge-hidden { background: #f3f4f6; color: #6b7280; }
+        .dirty-note { font-size: 0.75rem; color: #92400e; align-self: center; }
+
+        @media (max-width: 900px) {
+            .products-layout { grid-template-columns: 1fr; }
+            .product-list { flex-direction: row; overflow-x: auto; }
+            .product-row { min-width: 220px; }
+            .form-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="admin-header">
+        <div class="left">
+            <h1><span class="dot"></span> Mrignaini Admin</h1>
+            <nav class="admin-tabs" hidden>
+                <a href="admin-orders.html">Orders</a>
+                <a href="admin-products.html" class="active">Products</a>
+            </nav>
+        </div>
+        <div class="header-right">
+            <span class="header-meta" id="adminEmail"></span>
+            <button class="btn" id="signOutBtn" hidden>Sign out</button>
+        </div>
+    </header>
+
+    <!-- Admin Login -->
+    <div class="login-wrap" id="loginView" hidden>
+        <form class="login-card" id="loginForm">
+            <h2>Admin sign in</h2>
+            <p class="login-sub">Only Mrignaini admins can manage products.</p>
+            <label for="loginEmail">Email</label>
+            <input type="email" id="loginEmail" autocomplete="username" required>
+            <label for="loginPassword">Password</label>
+            <input type="password" id="loginPassword" autocomplete="current-password" required>
+            <button type="submit" class="btn btn-primary" id="loginBtn">Sign in</button>
+            <p class="login-msg" id="loginMsg" role="alert"></p>
+        </form>
+    </div>
+
+    <div class="container" id="dashboardView" hidden>
+        <div class="products-layout">
+            <!-- Product list -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>Products</h2>
+                    <button class="btn btn-primary" id="newProductBtn">+ New</button>
+                </div>
+                <div class="product-list" id="productList">
+                    <div class="state-msg"><div class="spinner"></div>Loading…</div>
+                </div>
+            </div>
+
+            <!-- Editor -->
+            <div class="editor" id="editor">
+                <div class="card empty-editor">Select a product to edit, or create a new one.</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script src="products.js"></script>
+    <script src="admin.js"></script>
+    <script>
+        const BUCKET = 'product-images';
+        const CATEGORY_OPTIONS = ['tops', 'layers', 'sets', 'test'];
+        const ICON_KEYS = Object.keys(ICONS);
+        const MAX_EDGE = 1600;
+
+        let products = [];
+        let currentId = null;     // id of the product in the editor (null = new product)
+        let dirty = false;
+
+        const slugify = s => String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+        const bySort = (a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0);
+        const privateOf = p => Array.isArray(p.product_private) ? (p.product_private[0] || {}) : (p.product_private || {});
+        const sizesOf = p => {
+            const sizes = [];
+            (p.product_colors || []).slice().sort(bySort).forEach(c => (c.variants || []).slice().sort(bySort).forEach(v => { if (!sizes.includes(v.size)) sizes.push(v.size); }));
+            return sizes;
+        };
+        const totalStock = p => (p.product_colors || []).reduce((s, c) => s + (c.variants || []).reduce((t, v) => t + (v.is_sold_out ? 0 : v.stock), 0), 0);
+
+        // Specs <-> text: "# Section title" lines start a section; other lines are bullet items
+        function specsToText(specs) {
+            return (specs || []).map(s => (s.title ? `# ${s.title}\n` : '') + (s.items || []).join('\n')).join('\n\n');
+        }
+        function textToSpecs(text) {
+            const sections = [];
+            let cur = null;
+            text.split('\n').map(l => l.trim()).forEach(line => {
+                if (!line) return;
+                if (line.startsWith('#')) { cur = { title: line.replace(/^#+\s*/, ''), items: [] }; sections.push(cur); return; }
+                if (!cur) { cur = { title: '', items: [] }; sections.push(cur); }
+                cur.items.push(line.replace(/^[-•●]\s*/, ''));
+            });
+            return sections.filter(s => s.items.length);
+        }
+        // Trust badges <-> text: "icon: Label" per line
+        const badgesToText = b => (b || []).map(x => `${x.icon}: ${x.label}`).join('\n');
+        function textToBadges(text) {
+            return text.split('\n').map(l => l.trim()).filter(Boolean).map(l => {
+                const i = l.indexOf(':');
+                const icon = i > 0 ? l.slice(0, i).trim().toLowerCase() : '';
+                return ICON_KEYS.includes(icon) ? { icon, label: l.slice(i + 1).trim() } : { icon: 'statement', label: l };
+            });
+        }
+
+        // ── Load ──
+        async function loadProducts(selectId) {
+            const { data, error } = await sb
+                .from('products')
+                .select('*, product_private(*), product_colors(*, variants(*))')
+                .order('sort_order');
+            if (error) { toast('Could not load products: ' + error.message, false); return; }
+            products = data;
+            renderList();
+            if (selectId !== undefined) openEditor(selectId);
+        }
+
+        function renderList() {
+            document.getElementById('productList').innerHTML = products.map(p => {
+                const colors = (p.product_colors || []).slice().sort(bySort);
+                const img = (colors.find(c => (c.images || []).length) || {}).images?.[0] || PLACEHOLDER_IMG;
+                const stock = totalStock(p);
+                return `<button class="product-row ${p.id === currentId ? 'active' : ''}" data-id="${esc(p.id)}">
+                    <img src="${esc(img)}" alt="" loading="lazy" onerror="imgFallback(this)">
+                    <div class="meta">
+                        <div class="name">${esc(p.short_name || p.name)}</div>
+                        <div class="sub">${formatINR(p.price)} · ${stock} in stock</div>
+                        <div class="sub">${!p.is_active ? '<span class="badge badge-hidden">hidden</span> ' : ''}${p.is_test ? '<span class="badge badge-test">test</span> ' : ''}${stock === 0 ? '<span class="badge badge-cancelled">sold out</span>' : ''}</div>
+                    </div>
+                </button>`;
+            }).join('');
+        }
+
+        document.getElementById('productList').addEventListener('click', e => {
+            const row = e.target.closest('.product-row');
+            if (row && confirmDiscard()) openEditor(row.dataset.id);
+        });
+        document.getElementById('newProductBtn').addEventListener('click', () => { if (confirmDiscard()) openEditor(null); });
+
+        function confirmDiscard() {
+            return !dirty || confirm('You have unsaved product details. Discard them?');
+        }
+        window.addEventListener('beforeunload', e => { if (dirty) { e.preventDefault(); e.returnValue = ''; } });
+
+        // ── Editor ──
+        function openEditor(id) {
+            currentId = id;
+            dirty = false;
+            renderList();
+            const p = id ? products.find(x => x.id === id) : null;
+            if (id && !p) { document.getElementById('editor').innerHTML = '<div class="card empty-editor">Product not found.</div>'; return; }
+            const priv = p ? privateOf(p) : {};
+            const v = (field, fallback = '') => esc(p ? (p[field] ?? fallback) : fallback);
+
+            const detailsHtml = `
+                <div class="card editor-section" id="detailsCard">
+                    <h3>${p ? esc(p.name) : 'New product'}</h3>
+                    <p class="hint">${p ? `<a href="product.html?id=${encodeURIComponent(p.id)}" target="_blank" rel="noopener">View on site ↗</a>` : 'Fill in the details, save, then add colours, sizes and photos.'}</p>
+                    <form id="detailsForm" class="form-grid" autocomplete="off">
+                        <div class="field full"><label for="f_name">Full name *</label><input id="f_name" required value="${v('name')}"></div>
+                        <div class="field"><label for="f_id">URL id *</label><input id="f_id" required pattern="[a-z0-9]+(-[a-z0-9]+)*" value="${v('id')}" ${p ? 'readonly' : ''}><small>${p ? 'Fixed once created (links and orders use it).' : 'Lowercase letters, numbers and dashes, e.g. top-meher'}</small></div>
+                        <div class="field"><label for="f_category">Category</label><select id="f_category">${CATEGORY_OPTIONS.map(c => `<option value="${c}" ${(p ? p.category : 'tops') === c ? 'selected' : ''}>${c}</option>`).join('')}</select></div>
+                        <div class="field"><label for="f_price">Price charged (₹) *</label><input id="f_price" type="number" min="0" step="1" required value="${v('price')}"></div>
+                        <div class="field"><label for="f_second" class="private">Second price (₹) — private, never shown on the site</label><input id="f_second" type="number" min="0" step="1" value="${esc(priv.second_price ?? '')}"></div>
+                        <div class="field"><label for="f_short">Short name (homepage card)</label><input id="f_short" value="${v('short_name')}"></div>
+                        <div class="field"><label for="f_tag">Tag</label><input id="f_tag" value="${v('tag')}" placeholder="New Arrival, Upcycled, Exclusive Drop…"></div>
+                        <div class="field full"><label for="f_shortdesc">Short description (homepage card)</label><input id="f_shortdesc" value="${v('short_description')}"></div>
+                        <div class="field full"><label for="f_desc">Description</label><textarea id="f_desc" rows="6">${v('description')}</textarea><small>Blank lines start a new paragraph.</small></div>
+                        <div class="field full"><label for="f_specs">Product details</label><textarea id="f_specs" class="tall">${esc(p ? specsToText(p.specs) : '# Product Specifications\nFabric: 100% Pure Cotton')}</textarea><small>Lines starting with “#” are section titles; every other line is a bullet.</small></div>
+                        <div class="field full"><label for="f_care">Wash care</label><textarea id="f_care" rows="3">${v('care')}</textarea></div>
+                        <div class="field"><label for="f_special">Special note</label><textarea id="f_special" rows="3">${v('special_note')}</textarea><small>e.g. one-of-a-kind notice</small></div>
+                        <div class="field"><label for="f_carenote">Highlighted care warning</label><textarea id="f_carenote" rows="3">${v('care_note')}</textarea><small>e.g. indigo bleeding</small></div>
+                        <div class="field"><label for="f_sizelabel">Size label</label><input id="f_sizelabel" value="${v('size_label')}" placeholder="Select Size"></div>
+                        <div class="field"><label for="f_sizenote">Size note</label><input id="f_sizenote" value="${v('size_note')}" placeholder="e.g. Skirt is Free Size"></div>
+                        <div class="field"><label for="f_badges">Trust badges</label><textarea id="f_badges" rows="3">${esc(p ? badgesToText(p.trust_badges) : 'cotton: 100% Cotton')}</textarea><small>One per line as “icon: Label”. Icons: ${ICON_KEYS.join(', ')}</small></div>
+                        <div class="field"><label for="f_sort">Sort order</label><input id="f_sort" type="number" step="1" value="${v('sort_order', products.length + 1)}"><small>Lower numbers appear first.</small></div>
+                        <div class="field full"><label class="toggle-label"><input type="checkbox" id="f_active" ${!p || p.is_active ? 'checked' : ''}> Visible in the shop</label></div>
+                    </form>
+                    <div class="actions-row">
+                        <span class="dirty-note" id="dirtyNote" hidden>Unsaved changes</span>
+                        <button class="btn btn-primary" id="saveDetailsBtn">${p ? 'Save details' : 'Create product'}</button>
+                    </div>
+                </div>`;
+
+            const variantsHtml = p ? renderVariantsSection(p) : '';
+            document.getElementById('editor').innerHTML = detailsHtml + variantsHtml;
+
+            const form = document.getElementById('detailsForm');
+            form.addEventListener('input', () => { dirty = true; document.getElementById('dirtyNote').hidden = false; });
+            if (!p) document.getElementById('f_name').addEventListener('input', e => { document.getElementById('f_id').value = slugify(e.target.value); });
+            document.getElementById('saveDetailsBtn').addEventListener('click', () => saveDetails(p));
+            if (p) bindVariantsSection(p);
+        }
+
+        async function saveDetails(p) {
+            const form = document.getElementById('detailsForm');
+            if (!form.reportValidity()) return;
+            const val = id => document.getElementById(id).value.trim();
+            const nullable = id => val(id) || null;
+            const id = p ? p.id : slugify(val('f_id'));
+            if (!p && products.some(x => x.id === id)) { toast(`A product with id "${id}" already exists.`, false); return; }
+
+            const row = {
+                id,
+                name: val('f_name'),
+                short_name: nullable('f_short'),
+                short_description: nullable('f_shortdesc'),
+                category: val('f_category'),
+                price: parseInt(val('f_price'), 10),
+                tag: nullable('f_tag'),
+                description: document.getElementById('f_desc').value.trim(),
+                specs: textToSpecs(document.getElementById('f_specs').value),
+                care: nullable('f_care'),
+                special_note: nullable('f_special'),
+                care_note: nullable('f_carenote'),
+                size_label: nullable('f_sizelabel'),
+                size_note: nullable('f_sizenote'),
+                trust_badges: textToBadges(document.getElementById('f_badges').value),
+                sort_order: parseInt(val('f_sort'), 10) || 0,
+                is_active: document.getElementById('f_active').checked,
+                is_test: val('f_category') === 'test'
+            };
+            const btn = document.getElementById('saveDetailsBtn');
+            btn.disabled = true;
+            const { error } = p
+                ? await sb.from('products').update(row).eq('id', id)
+                : await sb.from('products').insert(row);
+            if (!error) {
+                const second = val('f_second');
+                const res = await sb.from('product_private').upsert({ product_id: id, second_price: second === '' ? null : parseInt(second, 10) });
+                if (res.error) toast('Saved, but the second price failed: ' + res.error.message, false);
+            }
+            btn.disabled = false;
+            if (error) { toast('Could not save: ' + error.message, false); return; }
+            dirty = false;
+            toast(p ? 'Product saved' : 'Product created — now add colours and sizes');
+            await loadProducts(id);
+        }
+
+        // ── Colours, sizes, stock, photos ──
+        function renderVariantsSection(p) {
+            const colors = (p.product_colors || []).slice().sort(bySort);
+            const sizes = sizesOf(p);
+            return `
+                <div class="card editor-section">
+                    <h3>Sizes</h3>
+                    <p class="hint">Sizes apply to every colour. Removing a size deletes its stock for all colours.</p>
+                    <div class="size-chips">
+                        ${sizes.map(s => `<span class="size-chip">${esc(s)}<button data-remove-size="${esc(s)}" aria-label="Remove size ${esc(s)}">×</button></span>`).join('') || '<span class="hint">No sizes yet.</span>'}
+                        <span class="inline-add"><input id="newSize" placeholder="e.g. XL or 38" aria-label="New size"><button class="btn" id="addSizeBtn">Add size</button></span>
+                    </div>
+                </div>
+                <div class="card editor-section">
+                    <h3>Colours, stock &amp; photos</h3>
+                    <p class="hint">First photo of each colour is its card image. Photos are resized to ${MAX_EDGE}px WebP before upload. Tick “Sold out” to hide a variant without changing its count.</p>
+                    ${colors.map((c, ci) => colorCard(p, c, ci, colors.length, sizes)).join('')}
+                    <div class="color-card">
+                        <div class="color-head">
+                            <input type="text" id="newColorName" placeholder="New colour name" aria-label="New colour name">
+                            <input type="color" id="newColorHex" value="#b8945a" aria-label="New colour swatch">
+                            <button class="btn" id="addColorBtn">+ Add colour</button>
+                        </div>
+                    </div>
+                </div>`;
+        }
+
+        function colorCard(p, c, ci, count, sizes) {
+            const variants = c.variants || [];
+            const images = Array.isArray(c.images) ? c.images : [];
+            return `
+                <div class="color-card" data-color="${esc(c.id)}">
+                    <div class="color-head">
+                        <input type="text" value="${esc(c.name)}" data-field="name" aria-label="Colour name">
+                        <input type="color" value="${esc(/^#[0-9a-f]{6}$/i.test(c.hex || '') ? c.hex : '#cccccc')}" data-field="hex" aria-label="Swatch colour">
+                        <label class="toggle-label"><input type="checkbox" data-field="is_active" ${c.is_active !== false ? 'checked' : ''}> Visible</label>
+                        <button class="btn" data-action="move-color" data-dir="-1" ${ci === 0 ? 'disabled' : ''} aria-label="Move colour up">↑</button>
+                        <button class="btn" data-action="move-color" data-dir="1" ${ci === count - 1 ? 'disabled' : ''} aria-label="Move colour down">↓</button>
+                        <span class="spacer"></span>
+                        <button class="btn btn-danger" data-action="delete-color">Delete colour</button>
+                    </div>
+                    <div class="stock-grid">
+                        ${sizes.map(size => {
+                            const v = variants.find(x => x.size === size);
+                            const out = !v || v.is_sold_out || v.stock <= 0;
+                            return `<div class="stock-cell ${out ? 'out' : ''}">
+                                <div class="size">${esc(size)}</div>
+                                <input type="number" min="0" step="1" value="${v ? v.stock : 0}" data-size="${esc(size)}" data-variant="${v ? esc(v.id) : ''}" aria-label="Stock for ${esc(c.name)} ${esc(size)}">
+                                <label><input type="checkbox" data-soldout="${esc(size)}" ${v && v.is_sold_out ? 'checked' : ''}> Sold out</label>
+                            </div>`;
+                        }).join('') || '<span class="hint">Add a size above first.</span>'}
+                    </div>
+                    <div class="actions-row" style="justify-content:flex-start;margin:0 0 1rem">
+                        <button class="btn btn-primary" data-action="save-color">Save colour &amp; stock</button>
+                    </div>
+                    <div class="photos">
+                        ${images.map((src, i) => `
+                            <div class="photo">
+                                ${i === 0 ? '<span class="badge-first">Card image</span>' : ''}
+                                <img src="${esc(src)}" alt="${esc(c.name)} photo ${i + 1}" loading="lazy" onerror="imgFallback(this)">
+                                <div class="photo-actions">
+                                    <button data-action="move-photo" data-index="${i}" data-dir="-1" ${i === 0 ? 'disabled' : ''} aria-label="Move left">←</button>
+                                    <button class="del" data-action="delete-photo" data-index="${i}" aria-label="Delete photo">🗑</button>
+                                    <button data-action="move-photo" data-index="${i}" data-dir="1" ${i === images.length - 1 ? 'disabled' : ''} aria-label="Move right">→</button>
+                                </div>
+                            </div>`).join('')}
+                        <label class="upload-tile">
+                            <input type="file" accept="image/*" multiple data-action="upload">
+                            <span style="font-size:1.4rem">＋</span>
+                            Add photos
+                        </label>
+                    </div>
+                </div>`;
+        }
+
+        function bindVariantsSection(p) {
+            document.getElementById('addSizeBtn').addEventListener('click', () => addSize(p));
+            document.getElementById('newSize').addEventListener('keydown', e => { if (e.key === 'Enter') addSize(p); });
+            document.querySelectorAll('[data-remove-size]').forEach(b => b.addEventListener('click', () => removeSize(p, b.dataset.removeSize)));
+            document.getElementById('addColorBtn').addEventListener('click', () => addColor(p));
+
+            document.querySelectorAll('.color-card[data-color]').forEach(card => {
+                const color = p.product_colors.find(c => c.id === card.dataset.color);
+                card.addEventListener('click', e => {
+                    const btn = e.target.closest('button[data-action]');
+                    if (!btn) return;
+                    const action = btn.dataset.action;
+                    if (action === 'save-color') saveColor(p, color, card, btn);
+                    if (action === 'delete-color') deleteColor(p, color);
+                    if (action === 'move-color') moveColor(p, color, Number(btn.dataset.dir));
+                    if (action === 'move-photo') movePhoto(p, color, Number(btn.dataset.index), Number(btn.dataset.dir));
+                    if (action === 'delete-photo') deletePhoto(p, color, Number(btn.dataset.index));
+                });
+                card.querySelector('input[data-action="upload"]').addEventListener('change', e => uploadPhotos(p, color, e.target));
+            });
+        }
+
+        async function addSize(p) {
+            const input = document.getElementById('newSize');
+            const size = input.value.trim();
+            if (!size) return;
+            if (sizesOf(p).includes(size)) { toast(`Size ${size} already exists.`, false); return; }
+            const colors = p.product_colors || [];
+            if (!colors.length) { toast('Add a colour first.', false); return; }
+            const order = sizesOf(p).length + 1;
+            const rows = colors.map(c => ({ product_id: p.id, color_id: c.id, size, stock: 0, sort_order: order }));
+            const { error } = await sb.from('variants').insert(rows);
+            if (error) { toast('Could not add size: ' + error.message, false); return; }
+            toast(`Size ${size} added (stock 0 — set it below)`);
+            await loadProducts(p.id);
+        }
+
+        async function removeSize(p, size) {
+            if (!confirm(`Remove size ${size} from every colour of ${p.name}? Its stock counts will be deleted.`)) return;
+            const { error } = await sb.from('variants').delete().eq('product_id', p.id).eq('size', size);
+            if (error) { toast('Could not remove size: ' + error.message, false); return; }
+            toast(`Size ${size} removed`);
+            await loadProducts(p.id);
+        }
+
+        async function addColor(p) {
+            const name = document.getElementById('newColorName').value.trim();
+            const hex = document.getElementById('newColorHex').value;
+            if (!name) { toast('Enter a colour name.', false); return; }
+            if ((p.product_colors || []).some(c => c.name.toLowerCase() === name.toLowerCase())) { toast('That colour already exists.', false); return; }
+            const sort = Math.max(0, ...(p.product_colors || []).map(c => c.sort_order || 0)) + 1;
+            const { data: color, error } = await sb.from('product_colors').insert({ product_id: p.id, name, hex, images: [], sort_order: sort }).select().single();
+            if (error) { toast('Could not add colour: ' + error.message, false); return; }
+            const sizes = sizesOf(p);
+            if (sizes.length) {
+                const { error: vErr } = await sb.from('variants').insert(sizes.map((size, i) => ({ product_id: p.id, color_id: color.id, size, stock: 0, sort_order: i + 1 })));
+                if (vErr) toast('Colour added, but sizes failed: ' + vErr.message, false);
+            }
+            toast(`${name} added — set stock and add photos`);
+            await loadProducts(p.id);
+        }
+
+        async function saveColor(p, color, card, btn) {
+            const name = card.querySelector('[data-field="name"]').value.trim();
+            if (!name) { toast('Colour name cannot be empty.', false); return; }
+            btn.disabled = true;
+            const { error } = await sb.from('product_colors').update({
+                name,
+                hex: card.querySelector('[data-field="hex"]').value,
+                is_active: card.querySelector('[data-field="is_active"]').checked
+            }).eq('id', color.id);
+            if (error) { btn.disabled = false; toast('Could not save colour: ' + error.message, false); return; }
+
+            const sizes = sizesOf(p);
+            const rows = [...card.querySelectorAll('input[type="number"][data-size]')].map(inp => ({
+                product_id: p.id,
+                color_id: color.id,
+                size: inp.dataset.size,
+                stock: Math.max(0, parseInt(inp.value, 10) || 0),
+                is_sold_out: card.querySelector(`[data-soldout="${CSS.escape(inp.dataset.size)}"]`).checked,
+                sort_order: sizes.indexOf(inp.dataset.size) + 1
+            }));
+            const { error: vErr } = await sb.from('variants').upsert(rows, { onConflict: 'color_id,size' });
+            btn.disabled = false;
+            if (vErr) { toast('Colour saved, but stock failed: ' + vErr.message, false); return; }
+            toast(`${name}: colour and stock saved`);
+            await loadProducts(p.id);
+        }
+
+        async function deleteColor(p, color) {
+            if (!confirm(`Delete the colour "${color.name}" with all its stock and photos? Past orders keep their details. Tip: untick "Visible" instead to just hide it.`)) return;
+            const paths = (color.images || []).map(storagePath).filter(Boolean);
+            const { error } = await sb.from('product_colors').delete().eq('id', color.id);
+            if (error) { toast('Could not delete colour: ' + error.message, false); return; }
+            if (paths.length) await sb.storage.from(BUCKET).remove(paths);
+            toast(`${color.name} deleted`);
+            await loadProducts(p.id);
+        }
+
+        async function moveColor(p, color, dir) {
+            const colors = p.product_colors.slice().sort(bySort);
+            const i = colors.findIndex(c => c.id === color.id);
+            const j = i + dir;
+            if (j < 0 || j >= colors.length) return;
+            [colors[i], colors[j]] = [colors[j], colors[i]];
+            const results = await Promise.all(colors.map((c, k) => sb.from('product_colors').update({ sort_order: k + 1 }).eq('id', c.id)));
+            const failed = results.find(r => r.error);
+            if (failed) toast('Could not reorder: ' + failed.error.message, false);
+            await loadProducts(p.id);
+        }
+
+        // ── Photos ──
+        // Object path inside our bucket for a public URL, or null for anything else
+        function storagePath(url) {
+            const marker = `/storage/v1/object/public/${BUCKET}/`;
+            const i = String(url).indexOf(marker);
+            return i === -1 ? null : decodeURIComponent(url.slice(i + marker.length));
+        }
+
+        async function saveImages(p, color, images, message) {
+            const { error } = await sb.from('product_colors').update({ images }).eq('id', color.id);
+            if (error) { toast('Could not save photos: ' + error.message, false); return false; }
+            if (message) toast(message);
+            await loadProducts(p.id);
+            return true;
+        }
+
+        async function movePhoto(p, color, index, dir) {
+            const images = (color.images || []).slice();
+            const j = index + dir;
+            if (j < 0 || j >= images.length) return;
+            [images[index], images[j]] = [images[j], images[index]];
+            await saveImages(p, color, images, j === 0 || index === 0 ? 'Card image updated' : null);
+        }
+
+        async function deletePhoto(p, color, index) {
+            if (!confirm('Delete this photo?')) return;
+            const images = (color.images || []).slice();
+            const [removed] = images.splice(index, 1);
+            if (!(await saveImages(p, color, images, 'Photo deleted'))) return;
+            const path = storagePath(removed);
+            if (path) {
+                const { error } = await sb.storage.from(BUCKET).remove([path]);
+                if (error) console.warn('Photo removed from product but not from storage:', error.message);
+            }
+        }
+
+        // Resize in the browser to max 1600px and convert to WebP (falls back to JPEG)
+        async function compressImage(file) {
+            const bitmap = await createImageBitmap(file, { imageOrientation: 'from-image' });
+            const scale = Math.min(1, MAX_EDGE / Math.max(bitmap.width, bitmap.height));
+            const canvas = document.createElement('canvas');
+            canvas.width = Math.round(bitmap.width * scale);
+            canvas.height = Math.round(bitmap.height * scale);
+            canvas.getContext('2d').drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+            bitmap.close && bitmap.close();
+            let blob = await new Promise(r => canvas.toBlob(r, 'image/webp', 0.8));
+            if (!blob || blob.type !== 'image/webp') blob = await new Promise(r => canvas.toBlob(r, 'image/jpeg', 0.85));
+            return blob;
+        }
+
+        async function uploadPhotos(p, color, input) {
+            const files = [...input.files].filter(f => f.type.startsWith('image/'));
+            input.value = '';
+            if (!files.length) return;
+            const tile = input.closest('.upload-tile');
+            const added = [];
+            for (const [n, file] of files.entries()) {
+                tile.lastChild.textContent = ` Uploading ${n + 1}/${files.length}…`;
+                try {
+                    const blob = await compressImage(file);
+                    const ext = blob.type === 'image/webp' ? 'webp' : 'jpg';
+                    const base = slugify(file.name.replace(/\.[^.]+$/, '')) || 'photo';
+                    const path = `${p.id}/${slugify(color.name)}/${base}-${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}.${ext}`;
+                    const { error } = await sb.storage.from(BUCKET).upload(path, blob, { contentType: blob.type, cacheControl: '31536000' });
+                    if (error) throw error;
+                    added.push(sb.storage.from(BUCKET).getPublicUrl(path).data.publicUrl);
+                } catch (e) {
+                    toast(`${file.name}: ${e.message || 'upload failed'}`, false);
+                }
+            }
+            if (added.length) await saveImages(p, color, [...(color.images || []), ...added], `${added.length} photo(s) added to ${color.name}`);
+            else tile.lastChild.textContent = ' Add photos';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => Admin.init(() => loadProducts()));
+    </script>
+</body>
+
+</html>
