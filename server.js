@@ -226,10 +226,12 @@ function orderItemsForStorage(lines) {
     }));
 }
 
+// HttpErrors carry customer-safe messages; anything else is unexpected and stays generic.
 const asyncRoute = fn => (req, res) => fn(req, res).catch(err => {
-    const status = err.status || 500;
+    const known = err instanceof HttpError;
+    const status = known ? err.status : 500;
     if (status >= 500) console.error(`❌ ${req.method} ${req.path}:`, err.message || err);
-    res.status(status).json({ success: false, message: status >= 500 ? 'Something went wrong. Please try again.' : err.message, ...(err.details || {}) });
+    res.status(status).json({ success: false, message: known ? err.message : 'Something went wrong. Please try again.', ...(known && err.details || {}) });
 });
 
 // ─────────────────────────────────────────

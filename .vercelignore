@@ -1,0 +1,11 @@
+# Vercel serves this repo as a static site. Never publish server code,
+# tooling, database migrations, or private business data.
+server.js
+package.json
+package-lock.json
+node_modules
+scripts
+supabase
+products-catalog.txt
+*.md
+.env*

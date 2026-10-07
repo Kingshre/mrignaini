@@ -514,7 +514,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </svg>
                     </div>
                     <h3>Welcome to Mrignaini!</h3>
-                    <p>Use this code at checkout for <strong>₹200 off</strong></p>
+                    <p>Use this code at checkout for <strong>₹200 off</strong> on orders above ₹999</p>
                     <div class="coupon-popup-code">MRIG200</div>
                 </div>
             `;
