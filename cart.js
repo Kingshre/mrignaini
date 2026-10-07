@@ -1,140 +1,99 @@
 /* ======================================
    MRIGNAINI — CART SYSTEM
-   localStorage-based shopping cart
+   localStorage cart of { variantId, qty }. A variant is one colour + size,
+   so the same top in two colours is two lines. Prices are never stored here:
+   the server prices every cart from the database.
    ====================================== */
 
-const CART_KEY = 'mrignaini_cart';
+const CART_KEY = 'mrignaini_cart_v2';
+const CART_MAX_QTY = 10;
+
+// Carts from the old site referenced products, not colour/size variants, and can't be mapped safely.
+try { localStorage.removeItem('mrignaini_cart'); } catch (e) { /* storage unavailable */ }
 
 const Cart = {
-    // Get all cart items
     getItems() {
-        const data = localStorage.getItem(CART_KEY);
-        let items = data ? JSON.parse(data) : [];
-        if (typeof getProductById === 'function') {
-            const valid = items.filter(i => getProductById(i.productId));
-            if (valid.length !== items.length) {
-                localStorage.setItem(CART_KEY, JSON.stringify(valid));
-                items = valid;
-            }
+        try {
+            const items = JSON.parse(localStorage.getItem(CART_KEY) || '[]');
+            return Array.isArray(items) ? items.filter(i => i && i.variantId && i.qty > 0) : [];
+        } catch (e) {
+            return [];
         }
-        return items;
     },
 
-    // Save items
     _save(items) {
-        localStorage.setItem(CART_KEY, JSON.stringify(items));
+        try { localStorage.setItem(CART_KEY, JSON.stringify(items)); } catch (e) { /* storage unavailable */ }
         Cart.updateBadge();
     },
 
-    // Add item to cart
-    add(productId, size, qty = 1) {
+    // maxQty = stock available for this variant (caps the line)
+    add(variantId, qty = 1, maxQty = CART_MAX_QTY) {
         const items = Cart.getItems();
-        const existing = items.find(i => i.productId === productId && i.size === size);
-        if (existing) {
-            existing.qty += qty;
-        } else {
-            items.push({ productId, size, qty });
+        const limit = Math.min(maxQty, CART_MAX_QTY);
+        const existing = items.find(i => i.variantId === variantId);
+        const current = existing ? existing.qty : 0;
+        const newQty = Math.min(current + qty, limit);
+        if (newQty <= current) {
+            Cart.showNotification(`You already have the last ${limit === 1 ? 'piece' : limit + ' pieces'} in your cart.`, false);
+            return false;
         }
+        if (existing) existing.qty = newQty;
+        else items.push({ variantId, qty: newQty });
         Cart._save(items);
-        Cart.showNotification('Added to cart!');
+        Cart.showNotification(newQty - current < qty ? `Added — only ${limit} available.` : 'Added to cart!');
+        return true;
     },
 
-    // Remove item from cart
-    remove(productId, size) {
-        let items = Cart.getItems();
-        items = items.filter(i => !(i.productId === productId && String(i.size) === String(size)));
-        Cart._save(items);
+    remove(variantId) {
+        Cart._save(Cart.getItems().filter(i => i.variantId !== variantId));
     },
 
-    // Update quantity
-    updateQty(productId, size, newQty) {
+    updateQty(variantId, newQty) {
+        if (newQty <= 0) return Cart.remove(variantId);
         const items = Cart.getItems();
-        const item = items.find(i => i.productId === productId && String(i.size) === String(size));
+        const item = items.find(i => i.variantId === variantId);
         if (item) {
-            if (newQty <= 0) {
-                Cart.remove(productId, size);
-            } else {
-                item.qty = newQty;
-                Cart._save(items);
-            }
+            item.qty = Math.min(newQty, CART_MAX_QTY);
+            Cart._save(items);
         }
     },
 
-    // Clear entire cart
     clear() {
-        localStorage.removeItem(CART_KEY);
+        try { localStorage.removeItem(CART_KEY); } catch (e) { /* storage unavailable */ }
         Cart.updateBadge();
     },
 
-    // Get total item count
     getCount() {
         return Cart.getItems().reduce((sum, i) => sum + i.qty, 0);
     },
 
-    // Get cart total price
-    getTotal() {
-        const items = Cart.getItems();
-        let total = 0;
-        items.forEach(item => {
-            const product = getProductById(item.productId);
-            if (product) {
-                total += product.price * item.qty;
-            }
-        });
-        return total;
-    },
-
-    // Get original total (before discount)
-    getOriginalTotal() {
-        const items = Cart.getItems();
-        let total = 0;
-        items.forEach(item => {
-            const product = getProductById(item.productId);
-            if (product) {
-                total += product.originalPrice * item.qty;
-            }
-        });
-        return total;
-    },
-
     // Update the cart badge in the navbar
     updateBadge() {
-        const badges = document.querySelectorAll('.cart-badge');
         const count = Cart.getCount();
-        badges.forEach(badge => {
+        document.querySelectorAll('.cart-badge').forEach(badge => {
             badge.textContent = count;
-            if (count > 0) {
-                badge.classList.add('visible');
-            } else {
-                badge.classList.remove('visible');
-            }
+            badge.classList.toggle('visible', count > 0);
         });
     },
 
     // Show a mini notification with Checkout / Explore options
-    showNotification(message) {
-        // Remove existing
+    showNotification(message, success = true) {
         const existing = document.querySelector('.cart-notification');
         if (existing) existing.remove();
 
         const notif = document.createElement('div');
         notif.className = 'cart-notification';
+        notif.setAttribute('role', 'status');
         notif.innerHTML = `
-            <svg viewBox="0 0 24 24" width="18" height="18"><path d="M20 6L9 17l-5-5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <span>${message}</span>
+            ${success ? '<svg viewBox="0 0 24 24" width="18" height="18"><path d="M20 6L9 17l-5-5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>' : ''}
+            <span>${escapeHtml(message)}</span>
             <div class="cart-notif-actions">
                 <a href="cart.html" class="cart-notif-checkout">Checkout →</a>
                 <a href="category.html?cat=all" class="cart-notif-explore">Continue shopping</a>
             </div>
         `;
         document.body.appendChild(notif);
-
-        // Animate in
-        requestAnimationFrame(() => {
-            notif.classList.add('show');
-        });
-
-        // Remove after 5s (longer to give time to click)
+        requestAnimationFrame(() => notif.classList.add('show'));
         setTimeout(() => {
             notif.classList.remove('show');
             setTimeout(() => notif.remove(), 400);
@@ -143,6 +102,4 @@ const Cart = {
 };
 
 // Initialize badge on page load
-document.addEventListener('DOMContentLoaded', () => {
-    Cart.updateBadge();
-});
+document.addEventListener('DOMContentLoaded', () => Cart.updateBadge());

@@ -2,9 +2,11 @@
   "name": "mrignaini",
   "version": "1.0.0",
   "description": "",
-  "main": "auth.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js",
+    "seed": "node scripts/seed-catalog.js",
+    "upload-photos": "node scripts/upload-photos.js"
   },
   "keywords": [],
   "author": "",
@@ -17,5 +19,8 @@
     "express": "^5.2.1",
     "nodemailer": "^8.0.5",
     "razorpay": "^2.9.6"
+  },
+  "devDependencies": {
+    "sharp": "^0.34.5"
   }
 }

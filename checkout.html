@@ -479,6 +479,21 @@
             font-weight: 500;
             text-decoration: none;
         }
+        .checkout-notice {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: #991b1b;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            padding: 10px 12px;
+            margin-bottom: 12px;
+        }
+        .place-order-btn:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
@@ -491,10 +506,9 @@
             </a>
             <div class="nav-links" id="navLinks">
                 <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-link-dropdown">Shop <svg viewBox="0 0 12 8" width="10" height="8"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
+                    <a href="category.html?cat=all" class="nav-link nav-link-dropdown">Shop <svg viewBox="0 0 12 8" width="10" height="8"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
                     <div class="dropdown-menu">
                         <a href="category.html?cat=tops" class="dropdown-item">Tops</a>
-                        <a href="category.html?cat=kurtis" class="dropdown-item">Kurtis</a>
                         <a href="category.html?cat=sets" class="dropdown-item">Sets</a>
                         <a href="category.html?cat=layers" class="dropdown-item">Layers</a>
                         <a href="category.html?cat=all" class="dropdown-item">All Products</a>
@@ -537,7 +551,7 @@
             <div class="checkout-empty" id="checkoutEmpty" style="display:none;">
                 <h2>Nothing to checkout</h2>
                 <p>Your cart is empty. Browse our collections and find something you love.</p>
-                <a href="category.html?cat=tops" class="btn">Start Shopping</a>
+                <a href="category.html?cat=all" class="btn">Start Shopping</a>
             </div>
 
             <div class="checkout-grid" id="checkoutGrid" style="display:none;">
@@ -552,19 +566,20 @@
                         <form id="checkoutForm" novalidate>
                             <div class="form-row">
                                 <div class="form-group">
-                                    <input type="text" id="checkName" placeholder="Full Name" required>
+                                    <input type="text" id="checkName" autocomplete="name" placeholder="Full Name" required>
                                     <label for="checkName">Full Name *</label>
                                     <p class="field-error" id="nameError">Please enter your full name</p>
                                 </div>
                                 <div class="form-group">
-                                    <input type="tel" id="checkPhone" placeholder="Phone Number" required>
+                                    <input type="tel" id="checkPhone" autocomplete="tel" inputmode="numeric" maxlength="10" placeholder="Phone Number" required>
                                     <label for="checkPhone">Phone Number *</label>
                                     <p class="field-error" id="phoneError">Please enter a valid 10-digit phone number</p>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <input type="email" id="checkEmail" placeholder="Email Address (optional)">
-                                <label for="checkEmail">Email Address</label>
+                                <input type="email" id="checkEmail" placeholder="Email Address (optional)" autocomplete="email">
+                                <label for="checkEmail">Email Address (for your order confirmation)</label>
+                                <p class="field-error" id="emailError">Please enter a valid email</p>
                             </div>
                         </form>
                     </div>
@@ -576,27 +591,27 @@
                             <h2>Shipping Address</h2>
                         </div>
                         <div class="form-group">
-                            <input type="text" id="checkAddress1" placeholder="Address Line 1" required>
+                            <input type="text" id="checkAddress1" autocomplete="address-line1" placeholder="Address Line 1" required>
                             <label for="checkAddress1">Address Line 1 *</label>
                             <p class="field-error" id="addr1Error">Please enter your address</p>
                         </div>
                         <div class="form-group">
-                            <input type="text" id="checkAddress2" placeholder="Address Line 2 (optional)">
+                            <input type="text" id="checkAddress2" autocomplete="address-line2" placeholder="Address Line 2 (optional)">
                             <label for="checkAddress2">Address Line 2</label>
                         </div>
                         <div class="form-row-3">
                             <div class="form-group">
-                                <input type="text" id="checkCity" placeholder="City" required>
+                                <input type="text" id="checkCity" autocomplete="address-level2" placeholder="City" required>
                                 <label for="checkCity">City *</label>
                                 <p class="field-error" id="cityError">Required</p>
                             </div>
                             <div class="form-group">
-                                <input type="text" id="checkState" placeholder="State" required>
+                                <input type="text" id="checkState" autocomplete="address-level1" placeholder="State" required>
                                 <label for="checkState">State *</label>
                                 <p class="field-error" id="stateError">Required</p>
                             </div>
                             <div class="form-group">
-                                <input type="text" id="checkPincode" placeholder="Pincode" required>
+                                <input type="text" id="checkPincode" autocomplete="postal-code" inputmode="numeric" maxlength="6" placeholder="Pincode" required>
                                 <label for="checkPincode">Pincode *</label>
                                 <p class="field-error" id="pincodeError">Enter valid 6-digit pincode</p>
                             </div>
@@ -647,10 +662,6 @@
                             <span>Shipping</span>
                             <span id="checkShipping">₹99</span>
                         </div>
-                        <div class="summary-row">
-                            <span>You Save</span>
-                            <span class="summary-savings" id="checkSavings">₹0</span>
-                        </div>
                         <div class="summary-divider"></div>
                         <div class="summary-row summary-total">
                             <span>Total</span>
@@ -660,6 +671,7 @@
                             <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                             Delivery in 0–7 days
                         </div>
+                        <p class="checkout-notice" id="checkoutNotice" role="alert" hidden></p>
                         <button class="place-order-btn" id="placeOrderBtn" type="button">
                             <span>Place Order</span>
                             <svg viewBox="0 0 24 24" width="18" height="18"><path d="M20 6L9 17l-5-5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -682,7 +694,7 @@
             </div>
             <h2 class="modal-title">Order Placed Successfully!</h2>
             <p class="confirm-text">Thank you for your order! Your handcrafted Mrignaini pieces will be lovingly prepared and shipped to you.</p>
-            <div class="confirm-order-id">Order #MRG<span id="confirmOrderId"></span></div>
+            <div class="confirm-order-id">Order #<span id="confirmOrderId"></span></div>
             <p class="confirm-subtext">You will receive a confirmation message with tracking details shortly.</p>
             <a href="index.html" class="btn">Back to Home</a>
         </div>
@@ -696,7 +708,6 @@
             <div class="footer-divider"></div>
             <div class="footer-links">
                 <a href="category.html?cat=tops">Tops</a>
-                <a href="category.html?cat=kurtis">Kurtis</a>
                 <a href="category.html?cat=sets">Sets</a>
                 <a href="category.html?cat=layers">Layers</a>
                 <a href="index.html#story">Our Story</a>
@@ -707,41 +718,27 @@
     </footer>
 
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
     <script src="products.js"></script>
     <script src="cart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="auth.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
-            if (typeof supabaseClient !== 'undefined') {
-                try {
-                    const { data: { session } } = await supabaseClient.auth.getSession();
-                    if (session && session.user) {
-                        const emailInput = document.getElementById('checkEmail');
-                        const nameInput = document.getElementById('checkName');
-                        if (emailInput && !emailInput.value) emailInput.value = session.user.email || '';
-                        if (nameInput && !nameInput.value) nameInput.value = session.user.user_metadata?.full_name || '';
-                    }
-                } catch (e) {
-                    console.error('Auth check failed silently:', e);
-                }
-            }
+            // Mobile nav
+            const navToggle = document.getElementById('navToggle');
+            const navLinks = document.getElementById('navLinks');
+            navToggle.addEventListener('click', () => {
+                navToggle.classList.toggle('active');
+                navLinks.classList.toggle('open');
+            });
 
             const params = new URLSearchParams(window.location.search);
             const isBuyNow = params.get('mode') === 'buynow';
             let checkoutItems = [];
-
             if (isBuyNow) {
-                // Buy Now mode — single item from sessionStorage
-                const buyNowData = sessionStorage.getItem('mrignaini_buynow');
-                if (!buyNowData) {
-                    document.getElementById('checkoutEmpty').style.display = 'block';
-                    return;
-                }
-                const item = JSON.parse(buyNowData);
-                checkoutItems = [item];
+                try { checkoutItems = [JSON.parse(sessionStorage.getItem('mrignaini_buynow'))].filter(i => i && i.variantId); } catch (e) { checkoutItems = []; }
             } else {
-                // Cart mode — all cart items
                 checkoutItems = Cart.getItems();
             }
 
@@ -750,88 +747,99 @@
                 return;
             }
 
+            // Prefill from the signed-in account
+            const sb = getSupabase();
+            if (sb) {
+                const { data: { session } } = await sb.auth.getSession();
+                if (session) {
+                    const emailInput = document.getElementById('checkEmail');
+                    const nameInput = document.getElementById('checkName');
+                    if (!emailInput.value) emailInput.value = session.user.email || '';
+                    if (!nameInput.value) nameInput.value = (session.user.user_metadata && session.user.user_metadata.full_name) || '';
+                }
+            }
+
             document.getElementById('checkoutGrid').style.display = 'grid';
+            const placeBtn = document.getElementById('placeOrderBtn');
+            const notice = document.getElementById('checkoutNotice');
+            const showNotice = (text) => { notice.textContent = text; notice.hidden = !text; };
 
-            // Render checkout items & calculate totals
-            const checkoutItemsEl = document.getElementById('checkoutItems');
-            let subtotal = 0;
-            let originalTotal = 0;
-            let totalShipping = 0;
+            // --- Order summary from the server's price calculation ---
+            let quote = null;
+            async function loadQuote() {
+                try {
+                    quote = await mrgApi('/api/checkout/quote', { items: checkoutItems });
+                } catch (e) {
+                    showNotice(e.message);
+                    placeBtn.disabled = true;
+                    return;
+                }
 
-            checkoutItemsEl.innerHTML = checkoutItems.map(item => {
-                const product = getProductById(item.productId);
-                if (!product) return '';
+                const problemFor = id => quote.problems.find(p => p.variantId === id);
+                const lines = await Promise.all(checkoutItems.map(async item => {
+                    const found = await Catalog.findVariant(item.variantId).catch(() => null);
+                    const priced = quote.lines.find(l => l.variantId === item.variantId);
+                    return { item, found, priced, problem: problemFor(item.variantId) };
+                }));
 
-                const itemTotal = product.price * item.qty;
-                const itemOriginal = product.originalPrice * item.qty;
-                const itemShipping = 99;
-                subtotal += itemTotal;
-                originalTotal += itemOriginal;
-                totalShipping += itemShipping;
+                document.getElementById('checkoutItems').innerHTML = lines.map(({ item, found, priced, problem }) => {
+                    const name = priced ? priced.name : found ? found.product.name : 'Unavailable item';
+                    const meta = priced ? `${priced.color} · Size ${priced.size} × ${priced.qty}`
+                        : found ? `${found.color.name} · Size ${found.variant.size} × ${item.qty}` : '';
+                    const img = (priced && priced.image) || (found && (found.color.images[0] || found.product.image)) || PLACEHOLDER_IMG;
+                    return `
+                        <div class="checkout-item">
+                            <img src="${escapeHtml(img)}" alt="${escapeHtml(name)}" class="checkout-item-img" onerror="imgFallback(this)">
+                            <div class="checkout-item-info">
+                                <span class="checkout-item-name">${escapeHtml(name)}</span>
+                                <span class="checkout-item-meta">${escapeHtml(meta)}</span>
+                                ${problem ? `<span class="cart-item-warning">${escapeHtml(problem.message)}</span>` : ''}
+                            </div>
+                            <span class="checkout-item-price">${priced ? formatPrice(priced.lineTotal) : '—'}</span>
+                        </div>`;
+                }).join('');
 
-                // Build meta info
-                let meta = `Size: ${item.size}`;
-                if (item.color) meta += ` • ${item.color}`;
-                meta += ` × ${item.qty}`;
+                document.getElementById('checkSubtotal').textContent = formatPrice(quote.subtotal);
+                document.getElementById('checkShipping').textContent = formatPrice(quote.shipping);
+                document.getElementById('checkTotal').textContent = formatPrice(quote.total);
 
-                return `
-                    <div class="checkout-item">
-                        <img src="${product.image}" alt="${product.name}" class="checkout-item-img">
-                        <div class="checkout-item-info">
-                            <span class="checkout-item-name">${product.name}</span>
-                            <span class="checkout-item-meta">${meta}</span>
-                        </div>
-                        <span class="checkout-item-price">${formatPrice(itemTotal)}</span>
-                    </div>
-                `;
-            }).join('');
-
-            const savings = originalTotal - subtotal;
-            const grandTotal = subtotal + totalShipping;
-
-            document.getElementById('checkSubtotal').textContent = formatPrice(subtotal);
-            document.getElementById('checkShipping').textContent = formatPrice(totalShipping);
-            document.getElementById('checkSavings').textContent = `-${formatPrice(savings)}`;
-            document.getElementById('checkTotal').textContent = formatPrice(grandTotal);
-
-            // Payment option selection
-            document.querySelectorAll('.payment-option').forEach(opt => {
-                opt.addEventListener('click', () => {
-                    document.querySelectorAll('.payment-option').forEach(o => o.classList.remove('selected'));
-                    opt.classList.add('selected');
-                });
-            });
+                if (quote.problems.length) {
+                    showNotice((isBuyNow ? '' : 'Please update your cart: ') + quote.problems[0].message);
+                    placeBtn.disabled = true;
+                } else {
+                    showNotice('');
+                    placeBtn.disabled = false;
+                }
+            }
+            await loadQuote();
 
             // --- FORM VALIDATION ---
+            const validations = [
+                { id: 'checkName', errorId: 'nameError', test: v => v.trim().length >= 2 },
+                { id: 'checkPhone', errorId: 'phoneError', test: v => /^[6-9]\d{9}$/.test(v.replace(/\s+/g, '')) },
+                { id: 'checkEmail', errorId: 'emailError', test: v => !v.trim() || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()) },
+                { id: 'checkAddress1', errorId: 'addr1Error', test: v => v.trim().length >= 5 },
+                { id: 'checkCity', errorId: 'cityError', test: v => v.trim().length >= 2 },
+                { id: 'checkState', errorId: 'stateError', test: v => v.trim().length >= 2 },
+                { id: 'checkPincode', errorId: 'pincodeError', test: v => /^\d{6}$/.test(v.trim()) }
+            ];
+            const fieldIds = { name: 'checkName', phone: 'checkPhone', email: 'checkEmail', address1: 'checkAddress1', city: 'checkCity', state: 'checkState', pincode: 'checkPincode' };
+
+            function setFieldError(id, errorId, bad) {
+                document.getElementById(id).classList.toggle('error', bad);
+                document.getElementById(errorId).classList.toggle('show', bad);
+            }
+
             function validateForm() {
                 let valid = true;
-
-                const validations = [
-                    { id: 'checkName', errorId: 'nameError', test: v => v.trim().length >= 2 },
-                    { id: 'checkPhone', errorId: 'phoneError', test: v => /^[6-9]\d{9}$/.test(v.trim()) },
-                    { id: 'checkAddress1', errorId: 'addr1Error', test: v => v.trim().length >= 5 },
-                    { id: 'checkCity', errorId: 'cityError', test: v => v.trim().length >= 2 },
-                    { id: 'checkState', errorId: 'stateError', test: v => v.trim().length >= 2 },
-                    { id: 'checkPincode', errorId: 'pincodeError', test: v => /^\d{6}$/.test(v.trim()) }
-                ];
-
                 validations.forEach(({ id, errorId, test }) => {
-                    const input = document.getElementById(id);
-                    const error = document.getElementById(errorId);
-                    if (!test(input.value)) {
-                        input.classList.add('error');
-                        error.classList.add('show');
-                        valid = false;
-                    } else {
-                        input.classList.remove('error');
-                        error.classList.remove('show');
-                    }
+                    const bad = !test(document.getElementById(id).value);
+                    setFieldError(id, errorId, bad);
+                    if (bad) valid = false;
                 });
-
                 return valid;
             }
 
-            // Clear errors on input
             document.querySelectorAll('.checkout-card input').forEach(input => {
                 input.addEventListener('input', () => {
                     input.classList.remove('error');
@@ -840,166 +848,99 @@
                 });
             });
 
+            const val = id => document.getElementById(id).value.trim();
+            const resetBtn = () => {
+                placeBtn.disabled = false;
+                placeBtn.innerHTML = '<span>Place Order</span><svg viewBox="0 0 24 24" width="18" height="18"><path d="M20 6L9 17l-5-5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+            };
+
+            function orderSucceeded(orderNumber) {
+                document.getElementById('confirmOrderId').textContent = orderNumber;
+                document.getElementById('confirmModal').classList.add('active');
+                if (isBuyNow) {
+                    try { sessionStorage.removeItem('mrignaini_buynow'); } catch (e) { /* ignore */ }
+                } else {
+                    Cart.clear();
+                }
+            }
+
             // --- PLACE ORDER ---
-            document.getElementById('placeOrderBtn').addEventListener('click', async () => {
+            placeBtn.addEventListener('click', async () => {
                 if (!validateForm()) {
-                    // Scroll to first error
                     const firstError = document.querySelector('.form-group input.error');
                     if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     return;
                 }
-
-                const btn = document.getElementById('placeOrderBtn');
-                const originalText = btn.innerHTML;
-                btn.innerHTML = `<span>Processing...</span>`;
-                btn.disabled = true;
-
-                try {
-                    const name = document.getElementById('checkName').value;
-                    const email = document.getElementById('checkEmail').value;
-                    const phone = document.getElementById('checkPhone').value;
-                    const checkAddr = document.getElementById('checkAddress1').value;
-                    const checkAddr2 = document.getElementById('checkAddress2').value;
-                    const city = document.getElementById('checkCity').value;
-                    const state = document.getElementById('checkState').value;
-                    const pin = document.getElementById('checkPincode').value;
-                    const fullAddress = `${checkAddr}${checkAddr2 ? ', ' + checkAddr2 : ''}, ${city}, ${state} - ${pin}`;
-                    const amountInPaise = Math.round(grandTotal * 100);
-
-                    // --- BACKEND CONFIGURATION ---
-                    const API_BASE_URL = 'https://mrignaini-backend.onrender.com'; 
-
-                    // 1. Get Matching Public Key ID
-                    const keyRes = await fetch(`${API_BASE_URL}/get-razorpay-key`);
-                    const keyData = await keyRes.json();
-                    
-                    if (!keyData.key) {
-                        console.error('Failed to load Razorpay key from backend:', keyData);
-                        alert("Payment system configuration missing. Please try again later.");
-                        btn.innerHTML = originalText;
-                        btn.disabled = false;
-                        return;
-                    }
-
-                    // 2. Create Order on Backend
-                    const createRes = await fetch(`${API_BASE_URL}/create-order`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ amount: amountInPaise, currency: 'INR' })
-                    });
-                    
-                    const createData = await createRes.json();
-                    
-                    if (!createData.success) {
-                        console.error('Backend returned an error on /create-order:', createData);
-                        alert(createData.message || "Failed to initialize payment order.");
-                        btn.innerHTML = originalText;
-                        btn.disabled = false;
-                        return;
-                    }
-
-                    // 3. Open Razorpay Checkout with the Order ID
-                    var options = {
-                        "key": keyData.key, // Dynamically loaded to match backend mode
-                        "amount": amountInPaise, 
-                        "currency": "INR",
-                        "name": "Mrignaini",
-                        "description": "Order Payment",
-                        "image": "assets/images/logo.png",
-                        "order_id": createData.order.id, // ID securely generated on server
-                        "handler": async function (response){
-                            // 3. Verify Payment on Backend
-                            try {
-                                const verifyRes = await fetch(`${API_BASE_URL}/verify-payment`, {
-                                    method: 'POST',
-                                    headers: { 'Content-Type': 'application/json' },
-                                    body: JSON.stringify({
-                                        razorpay_order_id: response.razorpay_order_id,
-                                        razorpay_payment_id: response.razorpay_payment_id,
-                                        razorpay_signature: response.razorpay_signature,
-                                        orderDetails: {
-                                            name: name,
-                                            email: email,
-                                            phone: phone,
-                                            address: fullAddress,
-                                            city: city,
-                                            state: state,
-                                            pincode: pin,
-                                            items: checkoutItems,
-                                            total: grandTotal
-                                        }
-                                    })
-                                });
-                                
-                                const verifyData = await verifyRes.json();
-                                
-                                if (verifyData.success) {
-                                    // Set order ID from backend
-                                    document.getElementById('confirmOrderId').textContent = verifyData.orderNumber || response.razorpay_payment_id.slice(-6);
-
-                                    // Show success modal
-                                    document.getElementById('confirmModal').classList.add('active');
-
-                                    if (isBuyNow) {
-                                        sessionStorage.removeItem('mrignaini_buynow');
-                                    } else {
-                                        Cart.clear();
-                                    }
-                                } else {
-                                    console.error('Backend verification failed on /verify-payment:', verifyData);
-                                    alert(verifyData.message || "Payment verification failed! Please contact support.");
-                                    btn.innerHTML = originalText;
-                                    btn.disabled = false;
-                                }
-                            } catch (e) {
-                                console.error('Network or parsing error during /verify-payment:', e);
-                                alert("Verification network error. Please contact support.");
-                                btn.innerHTML = originalText;
-                                btn.disabled = false;
-                            }
-                        },
-                        "prefill": {
-                            "name": name,
-                            "email": email,
-                            "contact": phone
-                        },
-                        "theme": {
-                            "color": "#1a4a3a"
-                        }
-                    };
-                    
-                    var rzp1 = new window.Razorpay(options);
-                    
-                    rzp1.on('payment.failed', function (response){
-                        alert("Payment failed. Please try again.");
-                        btn.innerHTML = originalText;
-                        btn.disabled = false;
-                    });
-                    
-                    rzp1.open();
-
-                    // Optional fallback reset (Razorpay JS has a known bug missing the modal closed event sometimes)
-                    setTimeout(() => {
-                        if(!document.getElementById('confirmModal').classList.contains('active')) {
-                            btn.innerHTML = originalText;
-                            btn.disabled = false;
-                        }
-                    }, 5000);
-
-                } catch (error) {
-                    console.error(error);
-                    alert("Error reaching server for checkout.");
-                    btn.innerHTML = originalText;
-                    btn.disabled = false;
+                if (typeof window.Razorpay !== 'function') {
+                    showNotice('The payment window could not load. Please disable any ad-blocker for this site and refresh.');
+                    return;
                 }
-            });
 
-            // Mobile nav
-            const navToggle = document.getElementById('navToggle');
-            const navLinks = document.getElementById('navLinks');
-            navToggle.addEventListener('click', () => {
-                navToggle.classList.toggle('active');
-                navLinks.classList.toggle('open');
+                placeBtn.disabled = true;
+                placeBtn.innerHTML = '<span>Processing...</span>';
+                showNotice('');
+
+                const customer = {
+                    name: val('checkName'), phone: val('checkPhone').replace(/\s+/g, ''), email: val('checkEmail'),
+                    address1: val('checkAddress1'), address2: val('checkAddress2'),
+                    city: val('checkCity'), state: val('checkState'), pincode: val('checkPincode')
+                };
+
+                let created;
+                try {
+                    // The server recalculates the amount from the database
+                    created = await mrgApi('/api/checkout/create-order', { items: checkoutItems, customer });
+                } catch (e) {
+                    const fields = e.body && e.body.fields;
+                    if (fields) {
+                        Object.keys(fields).forEach(k => {
+                            const v = validations.find(x => x.id === fieldIds[k]);
+                            if (v) setFieldError(v.id, v.errorId, true);
+                        });
+                    }
+                    showNotice(e.message);
+                    if (e.status === 409) await loadQuote();   // stock changed
+                    resetBtn();
+                    return;
+                }
+
+                let settled = false;
+                const rzp = new window.Razorpay({
+                    key: created.keyId,
+                    amount: created.amount,
+                    currency: created.currency,
+                    name: 'Mrignaini',
+                    description: `Order ${created.orderNumber}`,
+                    image: new URL('assets/images/logo.png', window.location.href).href,
+                    order_id: created.razorpayOrderId,
+                    prefill: { name: customer.name, email: customer.email, contact: customer.phone },
+                    notes: { order_number: created.orderNumber },
+                    theme: { color: '#1a4a3a' },
+                    handler: async (response) => {
+                        settled = true;
+                        placeBtn.innerHTML = '<span>Confirming payment...</span>';
+                        try {
+                            const verified = await mrgApi('/api/checkout/verify', {
+                                razorpay_order_id: response.razorpay_order_id,
+                                razorpay_payment_id: response.razorpay_payment_id,
+                                razorpay_signature: response.razorpay_signature
+                            });
+                            orderSucceeded(verified.orderNumber);
+                        } catch (e) {
+                            console.error('Verification failed:', e);
+                            showNotice(`We received your payment but could not confirm it automatically. Please contact us with order ${created.orderNumber} and payment ID ${response.razorpay_payment_id} — you will not be charged twice.`);
+                            resetBtn();
+                            placeBtn.disabled = true;
+                        }
+                    },
+                    modal: {
+                        ondismiss: () => { if (!settled) { showNotice('Payment was cancelled. You can try again.'); resetBtn(); } }
+                    }
+                });
+                rzp.on('payment.failed', (response) => {
+                    showNotice('Payment failed: ' + ((response.error && response.error.description) || 'please try again.'));
+                });
+                rzp.open();
             });
         });
     </script>

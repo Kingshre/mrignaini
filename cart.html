@@ -20,17 +20,17 @@
     <div class="announcement-bar" id="announcementBar">
         <div class="announcement-track">
             <div class="announcement-content">
-                <span class="ann-item">Use code <span class="ann-code" data-code="MRIG500">MRIG500</span> for <strong>₹500 off</strong> above ₹3999</span>
+                <span class="ann-item">Flat ₹99 shipping across India</span>
                 <span class="ann-sep">✦</span>
-                <span class="ann-item">Use code <span class="ann-code" data-code="MRIG1000">MRIG1000</span> for <strong>₹1000 off</strong> above ₹7999</span>
+                <span class="ann-item">Delivery in 0–7 days</span>
                 <span class="ann-sep">✦</span>
                 <span class="ann-item">✋ Handcrafted in Jaipur</span>
                 <span class="ann-sep">✦</span>
                 <span class="ann-item">🎨 Block printed with love</span>
                 <span class="ann-sep">✦</span>
-                <span class="ann-item">Use code <span class="ann-code" data-code="MRIG500">MRIG500</span> for <strong>₹500 off</strong> above ₹3999</span>
+                <span class="ann-item">Flat ₹99 shipping across India</span>
                 <span class="ann-sep">✦</span>
-                <span class="ann-item">Use code <span class="ann-code" data-code="MRIG1000">MRIG1000</span> for <strong>₹1000 off</strong> above ₹7999</span>
+                <span class="ann-item">Delivery in 0–7 days</span>
                 <span class="ann-sep">✦</span>
                 <span class="ann-item">✋ Handcrafted in Jaipur</span>
                 <span class="ann-sep">✦</span>
@@ -48,10 +48,9 @@
             </a>
             <div class="nav-links" id="navLinks">
                 <div class="nav-dropdown">
-                    <a href="#" class="nav-link nav-link-dropdown">Shop <svg viewBox="0 0 12 8" width="10" height="8"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
+                    <a href="category.html?cat=all" class="nav-link nav-link-dropdown">Shop <svg viewBox="0 0 12 8" width="10" height="8"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
                     <div class="dropdown-menu">
                         <a href="category.html?cat=tops" class="dropdown-item">Tops</a>
-                        <a href="category.html?cat=kurtis" class="dropdown-item">Kurtis</a>
                         <a href="category.html?cat=sets" class="dropdown-item">Sets</a>
                         <a href="category.html?cat=layers" class="dropdown-item">Layers</a>
                     </div>
@@ -94,7 +93,7 @@
                 </div>
                 <h2>Your cart is empty</h2>
                 <p>Looks like you haven't added anything yet. Explore our collections and find something you love.</p>
-                <a href="category.html?cat=tops" class="btn btn-primary">Continue Shopping</a>
+                <a href="category.html?cat=all" class="btn btn-primary">Continue Shopping</a>
             </div>
 
             <!-- Cart with items -->
@@ -114,49 +113,13 @@
                                 <span>Shipping</span>
                                 <span id="summaryShipping">₹99</span>
                             </div>
-                            <div class="summary-row coupon-row" id="couponDiscountRow" style="display:none">
-                                <span>Coupon (<span id="appliedCouponName"></span>)</span>
-                                <span id="couponDiscountAmt"></span>
-                            </div>
                             <div class="summary-divider"></div>
                             <div class="summary-row summary-total">
                                 <span>Total</span>
                                 <span id="summaryTotal">₹0</span>
                             </div>
 
-                            <!-- Coupon section -->
-                            <div class="coupon-section">
-                                <div class="coupon-label">
-                                    <svg viewBox="0 0 24 24" width="14" height="14"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="7" y1="7" x2="7.01" y2="7" stroke="currentColor" stroke-width="1.5"/></svg>
-                                    Have a coupon code?
-                                </div>
-                                <div class="coupon-input-row">
-                                    <input type="text" class="coupon-input" id="cartCouponInput" placeholder="Enter code">
-                                    <button class="coupon-apply-btn" id="cartCouponApply">Apply</button>
-                                </div>
-                                <div class="codes-available" id="codesAvailable">
-                                    <button class="codes-toggle" id="codesToggle">
-                                        <svg viewBox="0 0 24 24" width="12" height="12"><path d="M9 18l6-6-6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                                        Codes available
-                                    </button>
-                                    <div class="codes-list" id="codesList" style="display:none">
-                                        <div class="code-item" data-code="MRIG500">
-                                            <span class="code-name">MRIG500</span>
-                                            <span class="code-desc">₹500 off above ₹3,999</span>
-                                        </div>
-                                        <div class="code-item" data-code="MRIG1000">
-                                            <span class="code-name">MRIG1000</span>
-                                            <span class="code-desc">₹1,000 off above ₹7,999</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <p class="coupon-message" id="cartCouponMsg"></p>
-                                <div class="coupon-applied" id="cartCouponApplied">
-                                    <span class="coupon-applied-text">✓ <span class="coupon-applied-code" id="cartAppliedCode"></span> applied</span>
-                                    <button class="coupon-remove-btn" id="cartCouponRemove">Remove</button>
-                                </div>
-                            </div>
-
+                            <p class="cart-notice" id="cartNotice" role="alert"></p>
                             <div class="delivery-message" style="margin-bottom: 16px; justify-content: center;">
                                 <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                                 Delivery in 0–7 days
@@ -166,7 +129,7 @@
                                 <span>Proceed to Checkout</span>
                                 <svg viewBox="0 0 24 24" width="18" height="18"><path d="M5 12h14M12 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                             </a>
-                            <a href="category.html?cat=tops" class="continue-shopping">← Continue Shopping</a>
+                            <a href="category.html?cat=all" class="continue-shopping">← Continue Shopping</a>
                         </div>
                     </div>
                 </div>
@@ -182,7 +145,6 @@
             <div class="footer-divider"></div>
             <div class="footer-links">
                 <a href="category.html?cat=tops">Tops</a>
-                <a href="category.html?cat=kurtis">Kurtis</a>
                 <a href="category.html?cat=sets">Sets</a>
                 <a href="category.html?cat=layers">Layers</a>
                 <a href="index.html#story">Our Story</a>
@@ -192,22 +154,25 @@
         </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
     <script src="products.js"></script>
     <script src="cart.js"></script>
+    <script src="auth.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            renderCart();
+        let quoteSeq = 0;
 
-            // Mobile nav
+        document.addEventListener('DOMContentLoaded', () => {
             const navToggle = document.getElementById('navToggle');
             const navLinks = document.getElementById('navLinks');
             navToggle.addEventListener('click', () => {
                 navToggle.classList.toggle('active');
                 navLinks.classList.toggle('open');
             });
+            renderCart();
         });
 
-        function renderCart() {
+        async function renderCart() {
             const items = Cart.getItems();
             const cartEmpty = document.getElementById('cartEmpty');
             const cartContent = document.getElementById('cartContent');
@@ -218,149 +183,109 @@
                 return;
             }
 
+            // Resolve each line against the live catalog; drop lines that no longer exist
+            let lines;
+            try {
+                lines = await Promise.all(items.map(async i => ({ item: i, found: await Catalog.findVariant(i.variantId) })));
+            } catch (e) {
+                console.error('Catalog load failed:', e);
+                cartEmpty.style.display = 'none';
+                cartContent.style.display = 'block';
+                document.getElementById('cartItems').innerHTML = '<p class="shop-status">We couldn’t load your cart right now. Please refresh the page.</p>';
+                return;
+            }
+            const missing = lines.filter(l => !l.found);
+            if (missing.length) {
+                missing.forEach(l => Cart.remove(l.item.variantId));
+                lines = lines.filter(l => l.found);
+                if (!lines.length) return renderCart();
+            }
+
             cartEmpty.style.display = 'none';
             cartContent.style.display = 'block';
 
-            const cartItemsEl = document.getElementById('cartItems');
-            cartItemsEl.innerHTML = items.map(item => {
-                const product = getProductById(item.productId);
-                if (!product) return '';
+            document.getElementById('cartItems').innerHTML = lines.map(({ item, found }) => {
+                const { product, color, variant } = found;
+                const max = Math.min(variant.stock, CART_MAX_QTY);
+                const img = color.images[0] || product.image;
+                const href = `product.html?id=${encodeURIComponent(product.id)}`;
                 return `
-                    <div class="cart-item">
-                        <a href="product.html?id=${product.id}" class="cart-item-image">
-                            <img src="${product.image}" alt="${product.name}">
+                    <div class="cart-item" data-variant="${escapeHtml(variant.id)}">
+                        <a href="${href}" class="cart-item-image">
+                            <img src="${escapeHtml(img)}" alt="${escapeHtml(product.name)}" loading="lazy" onerror="imgFallback(this)">
                         </a>
                         <div class="cart-item-details">
-                            <a href="product.html?id=${product.id}" class="cart-item-name">${product.name}</a>
-                            <span class="cart-item-size">Size: ${item.size}</span>
-                            <span class="cart-item-price">${formatPrice(product.price)}</span>
+                            <a href="${href}" class="cart-item-name">${escapeHtml(product.name)}</a>
+                            <span class="cart-item-size">${escapeHtml(color.name)} · Size ${escapeHtml(variant.size)}</span>
+                            <span class="cart-item-price">${formatPrice(product.price)}${product.mrp ? ` <s class="cart-item-mrp" aria-label="MRP ${formatPrice(product.mrp)}">${formatPrice(product.mrp)}</s>` : ''}</span>
+                            <span class="cart-item-warning" data-warning></span>
                             <div class="cart-item-controls">
                                 <div class="qty-control">
-                                    <button class="qty-btn" onclick="changeQty('${product.id}','${item.size}',-1)" aria-label="Decrease">−</button>
+                                    <button class="qty-btn" data-action="dec" aria-label="Decrease quantity">−</button>
                                     <span class="qty-value">${item.qty}</span>
-                                    <button class="qty-btn" onclick="changeQty('${product.id}','${item.size}',1)" aria-label="Increase">+</button>
+                                    <button class="qty-btn" data-action="inc" aria-label="Increase quantity" ${item.qty >= max ? 'disabled' : ''}>+</button>
                                 </div>
-                                <button class="cart-item-remove" onclick="removeItem('${product.id}','${item.size}')">
+                                <button class="cart-item-remove" data-action="remove">
                                     <svg viewBox="0 0 24 24" width="16" height="16"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                                     Remove
                                 </button>
                             </div>
                         </div>
-                        <div class="cart-item-total">
-                            ${formatPrice(product.price * item.qty)}
-                        </div>
-                    </div>
-                `;
+                        <div class="cart-item-total">${formatPrice(product.price * item.qty)}</div>
+                    </div>`;
             }).join('');
 
+            document.querySelectorAll('.cart-item [data-action]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const variantId = btn.closest('.cart-item').dataset.variant;
+                    const line = Cart.getItems().find(i => i.variantId === variantId);
+                    if (!line) return;
+                    if (btn.dataset.action === 'remove') Cart.remove(variantId);
+                    else Cart.updateQty(variantId, line.qty + (btn.dataset.action === 'inc' ? 1 : -1));
+                    renderCart();
+                });
+            });
+
             updateCartSummary();
         }
 
-        let appliedCoupon = null;
+        // Totals always come from the server, which prices from the database
+        async function updateCartSummary() {
+            const seq = ++quoteSeq;
+            const checkoutBtn = document.getElementById('checkoutBtn');
+            let quote;
+            try {
+                quote = await mrgApi('/api/checkout/quote', { items: Cart.getItems() });
+            } catch (e) {
+                if (seq !== quoteSeq) return;
+                document.getElementById('summaryTotal').textContent = '—';
+                document.getElementById('cartNotice').textContent = e.message;
+                return;
+            }
+            if (seq !== quoteSeq) return;   // a newer update is in flight
 
-        function updateCartSummary() {
-            const total = Cart.getTotal();
-            // Calculate shipping per item
-            let totalShipping = 0;
-            Cart.getItems().forEach(item => {
-                const product = getProductById(item.productId);
-                if (product) totalShipping += 99 * item.qty;
+            // Stock problems (e.g. someone bought the last piece)
+            document.querySelectorAll('.cart-item [data-warning]').forEach(w => { w.textContent = ''; });
+            quote.problems.forEach(p => {
+                const row = document.querySelector(`.cart-item[data-variant="${p.variantId}"] [data-warning]`);
+                if (row) row.textContent = p.message;
             });
+            checkoutBtn.classList.toggle('is-disabled', quote.problems.length > 0);
+            checkoutBtn.setAttribute('aria-disabled', quote.problems.length > 0);
 
-            let couponDiscount = 0;
-            const couponRow = document.getElementById('couponDiscountRow');
-
-            if (appliedCoupon) {
-                couponDiscount = appliedCoupon.discount;
-                couponRow.style.display = 'flex';
-                document.getElementById('appliedCouponName').textContent = appliedCoupon.code;
-                document.getElementById('couponDiscountAmt').textContent = `-${formatPrice(couponDiscount)}`;
-            } else {
-                couponRow.style.display = 'none';
-            }
-
-            document.getElementById('summarySubtotal').textContent = formatPrice(total);
-            document.getElementById('summaryShipping').textContent = totalShipping === 0 ? 'Free' : formatPrice(totalShipping);
-            document.getElementById('summaryTotal').textContent = formatPrice(total + totalShipping - couponDiscount);
+            document.getElementById('cartNotice').textContent = '';
+            document.getElementById('summarySubtotal').textContent = formatPrice(quote.subtotal);
+            document.getElementById('summaryShipping').textContent = formatPrice(quote.shipping);
+            document.getElementById('summaryTotal').textContent = formatPrice(quote.total);
         }
 
-        // Coupon logic
-        document.getElementById('cartCouponApply').addEventListener('click', () => {
-            const code = document.getElementById('cartCouponInput').value.trim().toUpperCase();
-            const total = Cart.getTotal();
-            const result = validateCoupon(code, total);
-            const msg = document.getElementById('cartCouponMsg');
-
-            if (result.valid) {
-                appliedCoupon = { ...result.coupon, code: code };
-                msg.textContent = result.message;
-                msg.className = 'coupon-message show success';
-                document.getElementById('cartCouponApplied').classList.add('show');
-                document.getElementById('cartAppliedCode').textContent = code;
-                document.getElementById('cartCouponInput').style.display = 'none';
-                document.getElementById('cartCouponApply').style.display = 'none';
-                // Store coupon for checkout
-                sessionStorage.setItem('mrignaini_coupon', JSON.stringify(appliedCoupon));
-                updateCartSummary();
-            } else {
-                msg.textContent = result.message;
-                msg.className = 'coupon-message show error';
+        document.getElementById('checkoutBtn').addEventListener('click', e => {
+            if (e.currentTarget.classList.contains('is-disabled')) {
+                e.preventDefault();
+                document.querySelector('.cart-item-warning:not(:empty)')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
         });
 
-        document.getElementById('cartCouponRemove').addEventListener('click', () => {
-            appliedCoupon = null;
-            sessionStorage.removeItem('mrignaini_coupon');
-            document.getElementById('cartCouponApplied').classList.remove('show');
-            document.getElementById('cartCouponInput').style.display = '';
-            document.getElementById('cartCouponInput').value = '';
-            document.getElementById('cartCouponApply').style.display = '';
-            document.getElementById('cartCouponMsg').className = 'coupon-message';
-            updateCartSummary();
-        });
-
-        // Codes available toggle
-        document.getElementById('codesToggle').addEventListener('click', () => {
-            const list = document.getElementById('codesList');
-            const toggle = document.getElementById('codesToggle');
-            const isOpen = list.style.display !== 'none';
-            list.style.display = isOpen ? 'none' : 'block';
-            toggle.classList.toggle('open', !isOpen);
-        });
-
-        // Click code to fill input
-        document.querySelectorAll('.code-item').forEach(item => {
-            item.addEventListener('click', () => {
-                const code = item.dataset.code;
-                document.getElementById('cartCouponInput').value = code;
-                document.getElementById('codesList').style.display = 'none';
-                document.getElementById('codesToggle').classList.remove('open');
-            });
-        });
-
-        function changeQty(productId, size, delta) {
-            const items = Cart.getItems();
-            let sizeStr = size === 'undefined' ? undefined : size;
-            const item = items.find(i => i.productId === productId && String(i.size) === String(sizeStr));
-            if (item) {
-                const newQty = item.qty + delta;
-                if (newQty <= 0) {
-                    Cart.remove(productId, sizeStr);
-                } else {
-                    Cart.updateQty(productId, sizeStr, Math.min(newQty, 10));
-                }
-                renderCart();
-            }
-        }
-
-        function removeItem(productId, size) {
-            let sizeStr = size === 'undefined' ? undefined : size;
-            Cart.remove(productId, sizeStr);
-            renderCart();
-        }
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="auth.js"></script>
-    <script src="coupons.js"></script>
 </body>
 </html>

@@ -76,6 +76,35 @@
             padding-top: 30px;
             border-top: 1px solid rgba(198,165,107,0.1);
         }
+        .order-card {
+            border: 1px solid rgba(198,165,107,0.25);
+            border-radius: 10px;
+            padding: 16px 18px;
+            margin-bottom: 14px;
+            font-family: var(--font-body);
+        }
+        .order-card-head {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 6px 16px;
+            margin-bottom: 10px;
+        }
+        .order-num { font-weight: 600; color: var(--clr-forest); }
+        .order-date { color: gray; font-size: 0.85rem; }
+        .order-status {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            text-transform: capitalize;
+            background: #EADFCF;
+            color: #5C1A33;
+        }
+        .order-line { display: flex; justify-content: space-between; gap: 12px; font-size: 0.92rem; padding: 3px 0; }
+        .order-line small { color: gray; }
+        .order-total { border-top: 1px dashed rgba(198,165,107,0.4); margin-top: 8px; padding-top: 8px; font-weight: 600; display: flex; justify-content: space-between; }
+        .orders-loading { color: gray; font-family: var(--font-body); }
         .orders-empty {
             text-align: center;
             padding: 40px;
@@ -96,10 +125,9 @@
             </a>
             <div class="nav-links" id="navLinks">
                 <div class="nav-dropdown">
-                    <a href="category.html?cat=tops" class="nav-link nav-link-dropdown">Shop <svg viewBox="0 0 12 8" width="10" height="8"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
+                    <a href="category.html?cat=all" class="nav-link nav-link-dropdown">Shop <svg viewBox="0 0 12 8" width="10" height="8"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
                     <div class="dropdown-menu">
                         <a href="category.html?cat=tops" class="dropdown-item">Tops</a>
-                        <a href="category.html?cat=kurtis" class="dropdown-item">Kurtis</a>
                         <a href="category.html?cat=sets" class="dropdown-item">Sets</a>
                         <a href="category.html?cat=layers" class="dropdown-item">Layers</a>
                     </div>
@@ -140,9 +168,10 @@
             
             <div class="orders-section">
                 <h3 class="font-heading text-2xl text-forest mb-4">Order History</h3>
-                <div class="orders-empty">
+                <div id="ordersList"><p class="orders-loading">Loading your orders…</p></div>
+                <div class="orders-empty" id="ordersEmpty" hidden>
                     <p>You haven't placed any orders yet.</p>
-                    <a href="category.html?cat=tops" class="inline-block mt-4 text-mustard border border-mustard px-6 py-2 rounded font-body hover:bg-mustard hover:text-white transition-colors">Start Shopping</a>
+                    <a href="category.html?cat=all" class="inline-block mt-4 text-mustard border border-mustard px-6 py-2 rounded font-body hover:bg-mustard hover:text-white transition-colors">Start Shopping</a>
                 </div>
             </div>
         </div>
@@ -150,23 +179,63 @@
 
     <!-- Supabase JS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script src="products.js"></script>
+    <script src="cart.js"></script>
     <script src="auth.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
-            if (typeof supabaseClient !== 'undefined') {
-                try {
-                    const { data: { session } } = await supabaseClient.auth.getSession();
-                    if (!session) {
-                        window.location.href = 'auth.html';
-                        return;
-                    }
-                    const user = session.user;
-                    document.getElementById('profileEmail').innerText = user.email;
-                    document.getElementById('profileName').innerText = user.user_metadata?.full_name || 'Guest User';
-                } catch (e) {
-                    console.error('Session error', e);
-                }
+            const navToggle = document.getElementById('navToggle');
+            const navLinks = document.getElementById('navLinks');
+            if (navToggle && navLinks) {
+                navToggle.addEventListener('click', () => {
+                    navToggle.classList.toggle('active');
+                    navLinks.classList.toggle('open');
+                });
             }
+
+            const sb = getSupabase();
+            const { data: { session } } = sb ? await sb.auth.getSession() : { data: { session: null } };
+            if (!session) {
+                window.location.href = 'auth.html';
+                return;
+            }
+            const user = session.user;
+            document.getElementById('profileEmail').innerText = user.email;
+            document.getElementById('profileName').innerText = (user.user_metadata && user.user_metadata.full_name) || '—';
+
+            // RLS only returns this customer's own orders
+            const list = document.getElementById('ordersList');
+            const { data: orders, error } = await sb
+                .from('orders')
+                .select('order_number, created_at, items, total, status, payment_status')
+                .eq('user_id', user.id)
+                .eq('payment_status', 'paid')
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                list.innerHTML = '<p class="orders-loading">Could not load your orders right now.</p>';
+                return;
+            }
+            if (!orders.length) {
+                list.innerHTML = '';
+                document.getElementById('ordersEmpty').hidden = false;
+                return;
+            }
+            list.innerHTML = orders.map(o => `
+                <div class="order-card">
+                    <div class="order-card-head">
+                        <span class="order-num">${escapeHtml(o.order_number)}</span>
+                        <span class="order-date">${new Date(o.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'Asia/Kolkata' })}</span>
+                        <span class="order-status">${escapeHtml(o.status)}</span>
+                    </div>
+                    ${(o.items || []).map(i => `
+                        <div class="order-line">
+                            <span>${escapeHtml(i.qty)} × ${escapeHtml(i.name || 'Item')}<br><small>${escapeHtml([i.color, i.size && 'Size ' + i.size].filter(Boolean).join(' · '))}</small></span>
+                            <span>${i.lineTotal != null ? formatPrice(i.lineTotal) : ''}</span>
+                        </div>`).join('')}
+                    <div class="order-total"><span>Total paid</span><span>${formatPrice(o.total)}</span></div>
+                </div>`).join('');
         });
     </script>
 </body>

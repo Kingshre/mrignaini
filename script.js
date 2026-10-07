@@ -174,6 +174,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         revealElements.forEach(el => observer.observe(el));
+        // Exposed so elements added after load can be revealed too
+        window.observeReveal = (els) => els.forEach(el => observer.observe(el));
         initScrollParallax();
     }
 
@@ -358,7 +360,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ---- COLLECTION CARD 3D TILT ----
-    document.querySelectorAll('.collection-card').forEach((card) => {
+    // Exposed so cards rendered later (homepage products) get the same effect
+    window.bindCollectionCardTilt = (cards) => cards.forEach((card) => {
         card.addEventListener('mousemove', (e) => {
             const rect = card.getBoundingClientRect();
             const x = (e.clientX - rect.left) / rect.width;
@@ -378,6 +381,7 @@ document.addEventListener('DOMContentLoaded', () => {
             card.style.transition = 'all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)';
         });
     });
+    window.bindCollectionCardTilt(document.querySelectorAll('.collection-card'));
 
     // ---- PARALLAX FLOATING MOTIFS ----
     const motifs = document.querySelectorAll('.section-motif, .hero-motif, .floating-petal');
@@ -492,42 +496,5 @@ document.addEventListener('DOMContentLoaded', () => {
             : 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
     });
 
-    // ---- ONE-TIME COUPON POPUP ----
-    // Show ₹200 off welcome popup only once per session
-    if (!sessionStorage.getItem('mrignaini_popup_shown')) {
-        sessionStorage.setItem('mrignaini_popup_shown', '1');
-        
-        setTimeout(() => {
-            const overlay = document.createElement('div');
-            overlay.className = 'coupon-popup-overlay';
-            overlay.innerHTML = `
-                <div class="coupon-popup">
-                    <button class="coupon-popup-close" aria-label="Close">&times;</button>
-                    <div class="coupon-popup-emoji text-[#B8945A] mb-3 flex justify-center">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
-                            <rect x="3" y="8" width="18" height="12" rx="2" ry="2"/>
-                            <path d="M12 8v12"/><path d="M16 8V6a2 2 0 00-2-2h-1a2 2 0 00-2 2v2"/><path d="M8 8V6a2 2 0 012-2h1a2 2 0 012 2v2"/>
-                        </svg>
-                    </div>
-                    <h3>Welcome to Mrignaini!</h3>
-                    <p>Use this code at checkout for <strong>₹200 off</strong></p>
-                    <div class="coupon-popup-code">MRIG200</div>
-                </div>
-            `;
-            document.body.appendChild(overlay);
-
-            // Close handlers
-            overlay.querySelector('.coupon-popup-close').addEventListener('click', () => {
-                overlay.style.opacity = '0';
-                setTimeout(() => overlay.remove(), 300);
-            });
-            overlay.addEventListener('click', (e) => {
-                if (e.target === overlay) {
-                    overlay.style.opacity = '0';
-                    setTimeout(() => overlay.remove(), 300);
-                }
-            });
-        }, 3000); // Show after 3 seconds
-    }
 
 });

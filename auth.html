@@ -165,10 +165,9 @@
             </a>
             <div class="nav-links" id="navLinks">
                 <div class="nav-dropdown">
-                    <a href="category.html?cat=tops" class="nav-link nav-link-dropdown">Shop <svg viewBox="0 0 12 8" width="10" height="8"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
+                    <a href="category.html?cat=all" class="nav-link nav-link-dropdown">Shop <svg viewBox="0 0 12 8" width="10" height="8"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
                     <div class="dropdown-menu">
                         <a href="category.html?cat=tops" class="dropdown-item">Tops</a>
-                        <a href="category.html?cat=kurtis" class="dropdown-item">Kurtis</a>
                         <a href="category.html?cat=sets" class="dropdown-item">Sets</a>
                         <a href="category.html?cat=layers" class="dropdown-item">Layers</a>
                     </div>
@@ -197,83 +196,138 @@
             <div class="auth-logo">mrignaini</div>
             <div class="auth-subtitle" id="authSubtitle">Welcome back to our heritage</div>
             
-            <form class="auth-form" id="authForm">
+            <form class="auth-form" id="authForm" novalidate>
                 <div class="form-group" id="nameGroup" style="display: none;">
                     <label for="authName">Full Name</label>
-                    <input type="text" id="authName" placeholder="Enter your full name">
+                    <input type="text" id="authName" placeholder="Enter your full name" autocomplete="name">
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="emailGroup">
                     <label for="authEmail">Email Address</label>
-                    <input type="email" id="authEmail" placeholder="you@example.com" required>
+                    <input type="email" id="authEmail" placeholder="you@example.com" autocomplete="email" required>
                 </div>
-                <div class="form-group">
-                    <label for="authPassword">Password</label>
-                    <input type="password" id="authPassword" placeholder="••••••••" required>
+                <div class="form-group" id="passwordGroup">
+                    <label for="authPassword" id="authPasswordLabel">Password</label>
+                    <input type="password" id="authPassword" placeholder="••••••••" autocomplete="current-password" minlength="6" required>
                 </div>
-                <div id="authMsg" class="auth-msg"></div>
+                <div id="authMsg" class="auth-msg" role="alert"></div>
                 <button type="submit" class="auth-btn" id="authSubmitBtn">Log In</button>
             </form>
 
-            <div class="auth-toggle">
-                <span id="authToggleText">Don't have an account?</span> 
-                <a onclick="toggleAuthMode()" id="authToggleBtn">Sign up</a>
+            <div class="auth-toggle" id="forgotRow">
+                <a href="#" id="forgotLink">Forgot password?</a>
+            </div>
+            <div class="auth-toggle" id="toggleRow">
+                <span id="authToggleText">Don&rsquo;t have an account?</span>
+                <a href="#" id="authToggleBtn">Sign up</a>
             </div>
         </div>
     </main>
 
     <!-- Supabase JS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script src="cart.js"></script>
     <script src="auth.js"></script>
     <script>
-        let isLoginMode = true;
+        // Modes: login | signup | forgot | reset (arrived from a password-reset email)
+        let mode = 'login';
+        const params = new URLSearchParams(window.location.search);
+        const el = id => document.getElementById(id);
 
-        function toggleAuthMode() {
-            isLoginMode = !isLoginMode;
-            document.getElementById('nameGroup').style.display = isLoginMode ? 'none' : 'block';
-            document.getElementById('authSubmitBtn').innerText = isLoginMode ? 'Log In' : 'Create Account';
-            document.getElementById('authSubtitle').innerText = isLoginMode ? 'Welcome back to our heritage' : 'Join our vibrant community';
-            document.getElementById('authToggleText').innerText = isLoginMode ? 'Don\'t have an account?' : 'Already have an account?';
-            document.getElementById('authToggleBtn').innerText = isLoginMode ? 'Sign up' : 'Log in';
-            document.getElementById('authMsg').innerText = '';
+        function setMode(next) {
+            mode = next;
+            el('nameGroup').style.display = mode === 'signup' ? 'block' : 'none';
+            el('emailGroup').style.display = mode === 'reset' ? 'none' : 'block';
+            el('passwordGroup').style.display = mode === 'forgot' ? 'none' : 'block';
+            el('authPasswordLabel').textContent = mode === 'reset' ? 'New Password' : 'Password';
+            el('authPassword').autocomplete = mode === 'login' ? 'current-password' : 'new-password';
+            el('authSubmitBtn').innerText = { login: 'Log In', signup: 'Create Account', forgot: 'Send Reset Link', reset: 'Set New Password' }[mode];
+            el('authSubtitle').innerText = {
+                login: 'Welcome back to our heritage',
+                signup: 'Join our vibrant community',
+                forgot: 'We will email you a link to reset your password',
+                reset: 'Choose a new password'
+            }[mode];
+            el('forgotRow').style.display = mode === 'login' ? '' : 'none';
+            el('toggleRow').style.display = mode === 'reset' ? 'none' : '';
+            el('authToggleText').innerText = mode === 'signup' ? 'Already have an account?' : mode === 'forgot' ? 'Remembered it?' : 'Don’t have an account?';
+            el('authToggleBtn').innerText = mode === 'login' ? 'Sign up' : 'Log in';
+            el('authMsg').innerText = '';
         }
 
-        document.getElementById('authForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('authEmail').value;
-            const password = document.getElementById('authPassword').value;
-            const name = document.getElementById('authName').value;
-            const msgEl = document.getElementById('authMsg');
-            const submitBtn = document.getElementById('authSubmitBtn');
-            
-            msgEl.innerText = '';
-            msgEl.style.color = '#A82039'; // maroon
-            submitBtn.disabled = true;
-            submitBtn.innerText = 'Please wait...';
+        el('authToggleBtn').addEventListener('click', e => { e.preventDefault(); setMode(mode === 'login' ? 'signup' : 'login'); });
+        el('forgotLink').addEventListener('click', e => { e.preventDefault(); setMode('forgot'); });
 
+        function showMsg(text, ok = false) {
+            el('authMsg').style.color = ok ? '#2d6a4f' : '#A82039';
+            el('authMsg').innerText = text;
+        }
+
+        el('authForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = el('authEmail').value.trim();
+            const password = el('authPassword').value;
+            const name = el('authName').value.trim();
+            const btn = el('authSubmitBtn');
+
+            if (mode !== 'reset' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showMsg('Please enter a valid email address.');
+            if (mode !== 'forgot' && password.length < 6) return showMsg('Password must be at least 6 characters.');
+            if (mode === 'signup' && name.length < 2) return showMsg('Please enter your full name.');
+
+            const label = btn.innerText;
+            btn.disabled = true;
+            btn.innerText = 'Please wait...';
+            el('authMsg').innerText = '';
             try {
-                if (isLoginMode) {
-                    const { data, error } = await mockSignIn(email, password);
-                    if (error) throw new Error(error.message);
-                    window.location.href = 'index.html';
-                } else {
-                    const { data, error } = await mockSignUp(email, password, name);
-                    if (error) throw new Error(error.message);
-                    msgEl.style.color = '#2d6a4f'; // green success
-                    msgEl.innerText = 'Account created successfully! Please log in.';
-                    setTimeout(toggleAuthMode, 1500);
+                if (mode === 'login') {
+                    const { error } = await authSignIn(email, password);
+                    if (error) throw error;
+                    window.location.href = params.get('next') === 'checkout' ? 'checkout.html' : 'index.html';
+                } else if (mode === 'signup') {
+                    const { data, error } = await authSignUp(email, password, name);
+                    if (error) throw error;
+                    if (data.session) {
+                        window.location.href = 'index.html';
+                    } else {
+                        showMsg('Account created! Check your email for a confirmation link, then log in.', true);
+                        setTimeout(() => setMode('login'), 4000);
+                    }
+                } else if (mode === 'forgot') {
+                    const { error } = await authResetPassword(email);
+                    if (error) throw error;
+                    showMsg('If an account exists for that email, a reset link is on its way.', true);
+                } else if (mode === 'reset') {
+                    const { error } = await getSupabase().auth.updateUser({ password });
+                    if (error) throw error;
+                    showMsg('Password updated. Redirecting…', true);
+                    setTimeout(() => { window.location.href = 'index.html'; }, 1500);
                 }
             } catch (err) {
-                msgEl.innerText = err.message;
+                showMsg(err.message === 'Invalid login credentials' ? 'Incorrect email or password.' : err.message);
             } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerText = isLoginMode ? 'Log In' : 'Create Account';
+                btn.disabled = false;
+                btn.innerText = label;
             }
         });
 
-        // Redirect if already logged in
-        document.addEventListener('DOMContentLoaded', () => {
-            if (localStorage.getItem('mrignaini_session')) {
-                window.location.href = 'index.html';
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Mobile nav
+            const navToggle = el('navToggle');
+            const navLinks = el('navLinks');
+            if (navToggle && navLinks) {
+                navToggle.addEventListener('click', () => {
+                    navToggle.classList.toggle('active');
+                    navLinks.classList.toggle('open');
+                });
+            }
+
+            if (params.get('mode') === 'reset') { setMode('reset'); return; }
+
+            // Already signed in → nothing to do here
+            const sb = getSupabase();
+            if (sb) {
+                const { data: { session } } = await sb.auth.getSession();
+                if (session) window.location.href = 'index.html';
             }
         });
     </script>

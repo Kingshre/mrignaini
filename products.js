@@ -1,4 +1,8 @@
 /* ======================================
+   MRIGNAINI — CATALOG
+   Products, colours, variants and stock live in Supabase (single source of truth).
+   This file loads them and provides shared display helpers.
+   Requires: supabase-js CDN + config.js loaded first.
    ====================================== */
 
 const ICONS = {
@@ -10,326 +14,7 @@ const ICONS = {
     wrap: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M4 19V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v14M8 3v18M16 3v18"/></svg>'
 };
 
-const PRODUCTS = [
-    {
-        id: 'top-iktara',
-        name: 'Iktara Indigo Hand-Block Printed Cotton Peplum Top',
-        category: 'tops',
-        price: 1399,
-        originalPrice: 1599,
-        images: [
-            'assets/images/iktaratop1.jpg',
-            'assets/images/iktaratop2.jpg',
-            'assets/images/iktaratop3.jpg',
-            'assets/images/iktaratop4.jpg'
-        ],
-        image: 'assets/images/iktaratop1.jpg',
-        sizes: ['XS', 'S', 'M', 'L'],
-        tag: 'New Arrival',
-        description: 'The Iktara Indigo Hand-Block Printed Cotton Peplum Top blends traditional craft with a playful silhouette. Made from soft, breathable cotton and adorned with hand-stamped indigo motifs by Jaipur artisans, this peplum top is perfect for casual outings, festive occasions, or everyday ethnic charm.',
-        details: [
-            'Fabric: 100% Cotton',
-            'Print: Hand Block Printed',
-            'Dye: Indigo',
-            'Style: Peplum silhouette',
-            'Wash & Care: Treat your handcrafted piece to a gentle hand wash in cold water. Dry in the shade to preserve the artisanal vibrancy of the hand-blocked prints.'
-        ],
-        trustBadges: [
-            { icon: ICONS.cotton, label: '100% Cotton' },
-            { icon: ICONS.print, label: 'Hand Block Printed' },
-            { icon: ICONS.indigo, label: 'Indigo Dyed' }
-        ]
-    },
-    {
-        id: 'layer-paltu',
-        name: 'Paltu Reversible Patchwork Cotton Jacket',
-        category: 'layers',
-        price: 1199,
-        originalPrice: 1399,
-        images: [
-            'assets/images/paltujacket1.jpg',
-            'assets/images/paltujacket2.jpg',
-            'assets/images/paltujacket3.jpg',
-            'assets/images/paltujacket4.jpg',
-            'assets/images/paltujacket5.jpg',
-            'assets/images/paltujacket6.jpg'
-        ],
-        image: 'assets/images/paltujacket1.jpg',
-        sizes: ['Free Size'],
-        tag: 'Upcycled',
-        description: 'The Paltu Reversible Upcycled Patchwork Cotton Jacket is a playful statement layer that celebrates craft, colour, and conscious fashion. Handcrafted in breathable pure cotton, the jacket features a striking patchwork design where different hand-block printed fabrics come together to create a vibrant, one-of-a-kind composition.\n\nEach piece is completely unique and reversible — flip it inside out to reveal a new combination of prints, giving you two distinct looks in one garment.\n\nMade using carefully selected leftover fabrics from handcrafted pieces, this jacket embraces an upcycled design philosophy, ensuring beautiful textiles are repurposed rather than wasted.\n\nLightweight yet statement-making, it layers effortlessly over shirts, dresses, kurtas, or denims.',
-        details: [
-            'Fabric: 100% Pure Cotton',
-            'Craft: Hand Block Printed Patchwork',
-            'Technique: Reversible Construction',
-            'Sustainability: Upcycled',
-            'Colour: Multicolour Patchwork',
-            'Neckline: Round neck with soft gathered collar',
-            'Sleeves: Sleeveless',
-            'Fit: Relaxed fit',
-            'Length: Waist length',
-            'Wash & Care: Treat your handcrafted piece to a gentle hand wash in cold water. Dry in the shade to preserve the artisanal vibrancy of the hand-blocked prints.'
-        ],
-        specialNote: 'Every piece is unique. The design may vary slightly from the images.',
-        trustBadges: [
-            { icon: ICONS.upcycled, label: 'Upcycled' },
-            { icon: ICONS.wrap, label: 'Reversible' },
-            { icon: ICONS.cotton, label: '100% Cotton' }
-        ]
-    },
-    {
-        id: 'top-basanti',
-        name: 'Basanti Hand-Block Printed Cotton Wrap Top',
-        category: 'tops',
-        price: 1499,
-        originalPrice: 1699,
-        // Default images (Blue variant shown by default)
-        images: [
-            'assets/images/basanti1.jpg',
-            'assets/images/basanti2.jpg',
-            'assets/images/basanti3.jpg',
-            'assets/images/basanti4.jpg'
-        ],
-        image: 'assets/images/basanti1.jpg',
-        sizes: ['XS', 'S', 'M', 'L'],
-        tag: 'New Arrival',
-        selectedColor: 'Blue',
-        colorVariants: {
-            'Blue': {
-                images: [
-                    'assets/images/basanti1.jpg',
-                    'assets/images/basanti2.jpg',
-                    'assets/images/basanti3.jpg',
-                    'assets/images/basanti4.jpg'
-                ],
-                hex: '#4A7C9B'
-            },
-            'Rose Pink': {
-                images: [
-                    'assets/images/pinkbasanti1.jpg',
-                    'assets/images/pinkbasanti2.jpg',
-                    'assets/images/pinkbasanti3.jpg',
-                    'assets/images/pinkbasanti4.jpg'
-                ],
-                hex: '#D4838F'
-            }
-        },
-        description: 'The Basanti Hand-Block Printed Cotton Wrap Top is designed for effortless everyday elegance. Crafted in soft, breathable pure cotton, the top features delicate hand-block printed floral motifs inspired by traditional Jaipuri textiles.\n\nDesigned in a flattering wrap silhouette, the top ties securely with two tie-up strings — one inside for structure and one outside for the visible wrap detail, allowing the fit to be adjusted comfortably to your shape. The V-neckline enhances the feminine silhouette while keeping the look relaxed and easy to wear.\n\nLightweight, breathable, and versatile, this handcrafted piece moves easily between everyday moments — from college days to coffee outings — making it a staple for those who love traditional prints styled in modern silhouettes.\n\nAvailable in two beautiful colourways, Blue and Rose Pink, each highlighting the intricate hand-block printed patterns.',
-        details: [
-            'Fabric: 100% Pure Cotton',
-            'Craft: Hand Block Printed',
-            'Technique: Wrap Construction with Dual Tie-Up Detail',
-            'Print: Floral Jaal Block Print',
-            'Neckline: V-neck wrap neckline',
-            'Sleeves: Three-quarter sleeves',
-            'Fit: Adjustable wrap fit',
-            'Length: Waist length',
-            'Wash & Care: Treat your handcrafted piece to a gentle hand wash in cold water. Dry in the shade to preserve the artisanal vibrancy of the hand-blocked prints.'
-        ],
-        trustBadges: [
-            { icon: ICONS.cotton, label: '100% Cotton' },
-            { icon: ICONS.print, label: 'Hand Block Printed' },
-            { icon: ICONS.wrap, label: 'Wrap Construction' }
-        ]
-    },
-    {
-        id: 'top-basanti-pink',
-        name: 'Basanti Hand-Block Printed Cotton Wrap Top — Rose Pink',
-        category: 'tops',
-        price: 1499,
-        originalPrice: 1699,
-        images: [
-            'assets/images/pinkbasanti1.jpg',
-            'assets/images/pinkbasanti2.jpg',
-            'assets/images/pinkbasanti3.jpg',
-            'assets/images/pinkbasanti4.jpg'
-        ],
-        image: 'assets/images/pinkbasanti1.jpg',
-        sizes: ['XS', 'S', 'M', 'L'],
-        tag: 'New Arrival',
-        selectedColor: 'Rose Pink',
-        colorVariants: {
-            'Blue': {
-                images: [
-                    'assets/images/basanti1.jpg',
-                    'assets/images/basanti2.jpg',
-                    'assets/images/basanti3.jpg',
-                    'assets/images/basanti4.jpg'
-                ],
-                hex: '#4A7C9B'
-            },
-            'Rose Pink': {
-                images: [
-                    'assets/images/pinkbasanti1.jpg',
-                    'assets/images/pinkbasanti2.jpg',
-                    'assets/images/pinkbasanti3.jpg',
-                    'assets/images/pinkbasanti4.jpg'
-                ],
-                hex: '#D4838F'
-            }
-        },
-        description: 'The Basanti Hand-Block Printed Cotton Wrap Top is designed for effortless everyday elegance. Crafted in soft, breathable pure cotton, the top features delicate hand-block printed floral motifs inspired by traditional Jaipuri textiles.\n\nDesigned in a flattering wrap silhouette, the top ties securely with two tie-up strings — one inside for structure and one outside for the visible wrap detail, allowing the fit to be adjusted comfortably to your shape. The V-neckline enhances the feminine silhouette while keeping the look relaxed and easy to wear.\n\nLightweight, breathable, and versatile, this handcrafted piece moves easily between everyday moments — from college days to coffee outings — making it a staple for those who love traditional prints styled in modern silhouettes.\n\nAvailable in two beautiful colourways, Blue and Rose Pink, each highlighting the intricate hand-block printed patterns.',
-        details: [
-            'Fabric: 100% Pure Cotton',
-            'Craft: Hand Block Printed',
-            'Technique: Wrap Construction with Dual Tie-Up Detail',
-            'Print: Floral Jaal Block Print',
-            'Neckline: V-neck wrap neckline',
-            'Sleeves: Three-quarter sleeves',
-            'Fit: Adjustable wrap fit',
-            'Length: Waist length',
-            'Wash & Care: Treat your handcrafted piece to a gentle hand wash in cold water. Dry in the shade to preserve the artisanal vibrancy of the hand-blocked prints.'
-        ],
-        trustBadges: [
-            { icon: ICONS.cotton, label: '100% Cotton' },
-            { icon: ICONS.print, label: 'Hand Block Printed' },
-            { icon: ICONS.wrap, label: 'Wrap Construction' }
-        ]
-    },
-    {
-        id: 'top-dopatti',
-        name: 'Do Patti Upcycled Spaghetti Strap Top',
-        category: 'tops',
-        price: 899,
-        originalPrice: 1099,
-        images: [
-            'assets/images/dopatti1.png',
-            'assets/images/dopatti2.png',
-            'assets/images/dopatti3.png',
-            'assets/images/dopatti4.png',
-            'assets/images/dopatti5.png',
-            'assets/images/dopatti6.png',
-            'assets/images/dopatti7.png'
-        ],
-        image: 'assets/images/dopatti1.png',
-        sizes: ['XS', 'S', 'M', 'L'],
-        tag: 'Upcycled',
-        description: 'The Do Patti Upcycled Spaghetti Strap Top is a celebration of sustainable fashion and artisanal craft. Handcrafted using carefully repurposed hand-block printed cotton offcuts, each top is a unique patchwork of heritage prints.\n\nThe relaxed spaghetti strap silhouette keeps it breezy and effortless, making it perfect for layering with jackets or wearing solo on warm days. Each piece is one-of-a-kind — embracing the beauty of imperfection and circular fashion.',
-        details: [
-            'Fabric: 100% Pure Cotton (Upcycled)',
-            'Craft: Hand Block Printed Patchwork',
-            'Sustainability: Upcycled from leftover fabrics',
-            'Strap: Adjustable spaghetti straps',
-            'Fit: Relaxed fit',
-            'Length: Waist length',
-            'Wash & Care: Treat your handcrafted piece to a gentle hand wash in cold water. Dry in the shade to preserve the artisanal vibrancy of the hand-blocked prints.'
-        ],
-        specialNote: 'Every piece is unique. The patchwork design may vary slightly from the images.',
-        trustBadges: [
-            { icon: ICONS.upcycled, label: 'Upcycled' },
-            { icon: ICONS.cotton, label: '100% Cotton' },
-            { icon: ICONS.statement, label: 'One-of-a-Kind' }
-        ]
-    },
-    {
-        id: 'kurti-afsana',
-        name: 'Afsana Hand-Block Printed Cotton Corset Kurti Top',
-        category: 'kurtis',
-        price: 850,
-        originalPrice: 1099,
-        images: [
-            'assets/images/afsana1.png',
-            'assets/images/afsana2.png',
-            'assets/images/afsana3.png',
-            'assets/images/afsana4.png',
-            'assets/images/afsana5.png'
-        ],
-        image: 'assets/images/afsana1.png',
-        sizes: ['XS', 'S', 'M', 'L'],
-        tag: 'New Arrival',
-        description: 'The Afsana Hand-Block Printed Cotton Corset Kurti Top is a statement piece that blends traditional craft with a bold, contemporary silhouette. Crafted in breathable pure cotton, the kurti features intricate hand-block printed patterns inspired by classic Jaipuri motifs.\n\nDesigned for both comfort and style, the fitted silhouette with corset drawstring detailing allows for an adjustable, flattering fit while maintaining a structured look. Perfect for everyday wear, casual outings, or styled-up moments, making it a versatile addition to your wardrobe.\n\nWith its vibrant print and effortless silhouette, Afsana captures the essence of modern Indian wear — rooted in tradition yet designed for today.',
-        details: [
-            'Fabric: 100% Pure Cotton',
-            'Craft: Hand Block Printed',
-            'Colour: Red / Rust printed base',
-            'Neckline: Straight-cut neckline',
-            'Sleeves: Sleeveless / slim strap style',
-            'Fit: Fitted with corset drawstring',
-            'Length: Little below hip',
-            'Wash & Care: Treat your handcrafted piece to a gentle hand wash in cold water. Dry in the shade to preserve the artisanal vibrancy of the hand-blocked prints.'
-        ],
-        trustBadges: [
-            { icon: ICONS.cotton, label: '100% Cotton' },
-            { icon: ICONS.print, label: 'Hand Block Printed' },
-            { icon: ICONS.statement, label: 'Statement Piece' }
-        ]
-    },
-    {
-        id: 'set-afreen',
-        name: 'Afreen Hand-Block Printed Blue Cotton Skirt-Top Set',
-        category: 'sets',
-        price: 2200,
-        originalPrice: 2499,
-        images: [
-            'assets/images/afreen1.png',
-            'assets/images/afreen2.png',
-            'assets/images/afreen3.png',
-            'assets/images/afreen4.png',
-            'assets/images/afreen5.png',
-            'assets/images/afreen6.png'
-        ],
-        image: 'assets/images/afreen1.png',
-        sizes: ['S', 'M', 'L', 'XL', 'XXL'],
-        sizeLabel: 'Select Top Size',
-        sizeNote: 'Skirt is Free Size — fits all',
-        tag: 'Exclusive Drop',
-        description: 'Afreen is a soulful celebration of craft and silhouette. Dipped in the deepest hues of blue dye, this handcrafted set features intricate Sanganeri block prints that tell a story of heritage. The tiered skirt offers a dramatic flare for every twirl moment, while the square-neck top\u2014designed with a functional drawstring back\u2014allows for an adjustable fit that beautifully cinches the waist.',
-        detailSections: [
-            {
-                title: 'Afreen Top',
-                items: [
-                    'Square neckline',
-                    'Sleeveless',
-                    'Adjustable drawstring back-tie',
-                    'Waist-length cropped silhouette',
-                    'Blue with Sanganeri print'
-                ]
-            },
-            {
-                title: 'Afreen Skirt',
-                items: [
-                    'High-waisted',
-                    'Tiered flare',
-                    'Full-length maxi',
-                    'Gota trim at hem',
-                    'Blue with Sanganeri print'
-                ]
-            }
-        ],
-        details: [
-            'Fabric: 100% Pure Cotton',
-            'Craft: Hand Block Printed',
-            'Print: Sanganeri Block Print',
-            'Dye: Blue dye',
-            'Set includes: Top + Skirt',
-            'Wash & Care: Treat your handcrafted piece to a gentle hand wash in cold water. Dry in the shade to preserve the artisanal vibrancy of the hand-blocked prints.'
-        ],
-        careNote: 'This garment is dyed using blue dye. Colour bleeding during initial washes is normal. Hand wash separately in cold water and dry in shade.',
-        trustBadges: [
-            { icon: ICONS.cotton, label: '100% Cotton' },
-            { icon: ICONS.print, label: 'Sanganeri Print' },
-            { icon: ICONS.indigo, label: 'Blue Dyed' }
-        ]
-    },
-    // ── HIDDEN TEST PRODUCT (₹2) — Remove after testing ──
-    {
-        id: 'test-product',
-        name: 'Test Product',
-        category: 'test',
-        hidden: true,
-        price: 2,
-        originalPrice: 2,
-        images: ['assets/images/iktaratop1.jpg'],
-        image: 'assets/images/iktaratop1.jpg',
-        sizes: ['Free Size'],
-        tag: 'Test',
-        description: 'This is a hidden test product used to verify the end-to-end payment and order flow. Price: ₹2.',
-        details: ['This is a test product.', 'Do not ship.'],
-        trustBadges: []
-    }
-];
-
-// Category metadata
+// Category metadata (display copy only — which products belong where comes from the DB)
 const CATEGORIES = {
     tops: {
         name: 'Tops',
@@ -343,12 +28,6 @@ const CATEGORIES = {
         description: 'Statement layers handcrafted with patchwork, block printing, and upcycled cotton — for those who wear their values.',
         banner: 'Layer Up, Stand Out'
     },
-    kurtis: {
-        name: 'Kurtis',
-        fullName: 'Block Print Kurtis',
-        description: 'Statement kurtis that blend traditional hand-block printing with contemporary silhouettes — for every occasion.',
-        banner: 'Wear the Art'
-    },
     sets: {
         name: 'Sets',
         fullName: 'Block Print Sets',
@@ -356,6 +35,10 @@ const CATEGORIES = {
         banner: 'Complete the Look'
     }
 };
+
+// Old category / product links that should keep working
+const CATEGORY_ALIASES = { kurtis: 'tops', dresses: 'tops' };
+const PRODUCT_ALIASES = { 'dress-afsana': 'kurti-afsana', 'top-basanti-pink': 'top-basanti' };
 
 // Size guide data
 const SIZE_GUIDE = {
@@ -370,23 +53,142 @@ const SIZE_GUIDE = {
     ]
 };
 
-// Helper functions
-function getProductById(id) {
-    // Support legacy 'dress-afsana' ID redirect to 'kurti-afsana'
-    if (id === 'dress-afsana') id = 'kurti-afsana';
-    return PRODUCTS.find(p => p.id === id);
+// Shown wherever a product photo is missing or fails to load
+const PLACEHOLDER_IMG = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500"><rect width="400" height="500" fill="#F3EDE3"/>' +
+    '<g fill="none" stroke="#C8A96E" stroke-width="6" opacity="0.7"><path d="M150 170l50-30 50 30 40 25-20 40-25-12v137H155V223l-25 12-20-40z"/></g>' +
+    '<text x="200" y="420" text-anchor="middle" font-family="sans-serif" font-size="22" fill="#9C8B6E">Photo coming soon</text></svg>');
+
+// <img onerror="imgFallback(this)">
+function imgFallback(img) {
+    img.onerror = null;
+    img.src = PLACEHOLDER_IMG;
+    img.classList.add('img-placeholder');
 }
 
-function getProductsByCategory(category) {
-    // Support legacy 'dresses' category redirect to 'kurtis'
-    if (category === 'dresses') category = 'kurtis';
-    return PRODUCTS.filter(p => p.category === category && !p.hidden);
-}
-
-function getAllProducts() {
-    return PRODUCTS.filter(p => !p.hidden);
-}
-
+// Indian-style money: ₹1,299
 function formatPrice(price) {
-    return '₹' + price.toLocaleString('en-IN');
+    return '₹' + Number(price || 0).toLocaleString('en-IN', { maximumFractionDigits: 2 });
+}
+
+const Catalog = (() => {
+    let loading = null;
+    let products = [];
+    const variantIndex = new Map();
+
+    const bySort = (a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0);
+
+    function normalize(p) {
+        const colors = (p.product_colors || [])
+            .filter(c => c.is_active !== false)
+            .sort(bySort)
+            .map(c => ({
+                id: c.id,
+                name: c.name,
+                hex: c.hex || '#cccccc',
+                images: (Array.isArray(c.images) ? c.images : []).filter(Boolean),
+                variants: (c.variants || []).sort(bySort).map(v => ({
+                    id: v.id,
+                    size: v.size,
+                    stock: v.stock,
+                    soldOut: !!v.is_sold_out || v.stock <= 0
+                }))
+            }));
+
+        const sizes = [];
+        colors.forEach(c => c.variants.forEach(v => { if (!sizes.includes(v.size)) sizes.push(v.size); }));
+        const available = colors.some(c => c.variants.some(v => !v.soldOut));
+        const cardColor = colors.find(c => c.images.length && c.variants.some(v => !v.soldOut)) || colors.find(c => c.images.length);
+
+        return {
+            id: p.id,
+            name: p.name,
+            shortName: p.short_name || p.name,
+            shortDescription: p.short_description || '',
+            category: p.category,
+            price: p.price,
+            // MRP is shown crossed out only when it is higher than the selling price
+            mrp: p.mrp && p.mrp > p.price ? p.mrp : null,
+            discountPct: p.mrp && p.mrp > p.price ? Math.round((1 - p.price / p.mrp) * 100) : 0,
+            description: p.description || '',
+            specs: Array.isArray(p.specs) ? p.specs : [],
+            care: p.care || '',
+            specialNote: p.special_note || '',
+            careNote: p.care_note || '',
+            tag: p.tag || '',
+            trustBadges: (Array.isArray(p.trust_badges) ? p.trust_badges : []).map(b => ({ icon: ICONS[b.icon] || '', label: b.label })),
+            sizeLabel: p.size_label || '',
+            sizeNote: p.size_note || '',
+            isTest: !!p.is_test,
+            isActive: p.is_active !== false,
+            colors,
+            sizes,
+            available,
+            image: (cardColor && cardColor.images[0]) || PLACEHOLDER_IMG
+        };
+    }
+
+    async function load() {
+        if (loading) return loading;
+        loading = (async () => {
+            const sb = getSupabase();
+            if (!sb) throw new Error('Store is unavailable (Supabase library failed to load).');
+            const { data, error } = await sb
+                .from('products')
+                .select('*, product_colors(*, variants(*))')
+                .order('sort_order');
+            if (error) throw error;
+            products = data.map(normalize);
+            variantIndex.clear();
+            products.forEach(p => p.colors.forEach(c => c.variants.forEach(v => variantIndex.set(v.id, { product: p, color: c, variant: v }))));
+            return products;
+        })();
+        loading.catch(() => { loading = null; });
+        return loading;
+    }
+
+    return {
+        load,
+        // Shop-visible products (admins also receive hidden/test products from the DB, so filter them here)
+        async all() {
+            return (await load()).filter(p => p.isActive && !p.isTest);
+        },
+        async byCategory(category) {
+            const cat = CATEGORY_ALIASES[category] || category;
+            return (await this.all()).filter(p => p.category === cat);
+        },
+        async get(id) {
+            const real = PRODUCT_ALIASES[id] || id;
+            return (await load()).find(p => p.id === real) || null;
+        },
+        // { product, color, variant } for a cart line, or null if it no longer exists
+        async findVariant(variantId) {
+            await load();
+            return variantIndex.get(variantId) || null;
+        }
+    };
+})();
+
+// Selling price, crossed-out MRP and "% off". Classes are styled in shop.css / product.html.
+function priceHtml(p) {
+    return `<span class="price-current">${formatPrice(p.price)}</span>` +
+        (p.mrp ? ` <span class="price-original">${formatPrice(p.mrp)}</span> <span class="price-discount">${p.discountPct}% off</span>` : '');
+}
+
+// Shop grid card (category page)
+function renderProductCard(p, index = 0) {
+    const soldOut = !p.available;
+    return `
+        <a href="product.html?id=${encodeURIComponent(p.id)}" class="product-card anim-reveal${soldOut ? ' is-soldout' : ''}" style="animation-delay: ${index * 0.1}s">
+            <div class="product-card-image">
+                <img src="${escapeHtml(p.image)}" alt="${escapeHtml(p.name)}" loading="lazy" decoding="async" onerror="imgFallback(this)">
+                ${p.tag ? `<span class="product-card-tag">${escapeHtml(p.tag)}</span>` : ''}
+                ${soldOut ? '<span class="product-card-soldout">Sold out</span>' : ''}
+                <div class="product-card-quick">View →</div>
+            </div>
+            <div class="product-card-info">
+                <h3 class="product-card-name">${escapeHtml(p.name)}</h3>
+                <div class="product-card-price">${priceHtml(p)}</div>
+            </div>
+        </a>`;
 }

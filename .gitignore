@@ -1,3 +1,7 @@
 .env
 node_modules/
 .DS_Store
+
+# Private: contains cost/second prices (repo is public)
+products-catalog.txt
+scripts/*.local.json
