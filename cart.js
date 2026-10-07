@@ -101,12 +101,5 @@ const Cart = {
     }
 };
 
-// Coupon chosen on the cart page, carried to checkout
-const CartCoupon = {
-    get() { try { return sessionStorage.getItem('mrignaini_coupon') || ''; } catch (e) { return ''; } },
-    set(code) { try { sessionStorage.setItem('mrignaini_coupon', code); } catch (e) { /* ignore */ } },
-    clear() { try { sessionStorage.removeItem('mrignaini_coupon'); } catch (e) { /* ignore */ } }
-};
-
 // Initialize badge on page load
 document.addEventListener('DOMContentLoaded', () => Cart.updateBadge());

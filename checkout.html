@@ -662,10 +662,6 @@
                             <span>Shipping</span>
                             <span id="checkShipping">₹99</span>
                         </div>
-                        <div class="summary-row" id="checkDiscountRow" style="display:none">
-                            <span>Coupon (<span id="checkCouponCode"></span>)</span>
-                            <span class="summary-savings" id="checkDiscount">₹0</span>
-                        </div>
                         <div class="summary-divider"></div>
                         <div class="summary-row summary-total">
                             <span>Total</span>
@@ -745,7 +741,6 @@
             } else {
                 checkoutItems = Cart.getItems();
             }
-            const couponCode = CartCoupon.get();
 
             if (checkoutItems.length === 0) {
                 document.getElementById('checkoutEmpty').style.display = 'block';
@@ -773,7 +768,7 @@
             let quote = null;
             async function loadQuote() {
                 try {
-                    quote = await mrgApi('/api/checkout/quote', { items: checkoutItems, couponCode });
+                    quote = await mrgApi('/api/checkout/quote', { items: checkoutItems });
                 } catch (e) {
                     showNotice(e.message);
                     placeBtn.disabled = true;
@@ -806,15 +801,6 @@
 
                 document.getElementById('checkSubtotal').textContent = formatPrice(quote.subtotal);
                 document.getElementById('checkShipping').textContent = formatPrice(quote.shipping);
-                const discountRow = document.getElementById('checkDiscountRow');
-                if (quote.coupon && quote.coupon.valid) {
-                    discountRow.style.display = '';
-                    document.getElementById('checkCouponCode').textContent = quote.coupon.code;
-                    document.getElementById('checkDiscount').textContent = `-${formatPrice(quote.discount)}`;
-                } else {
-                    discountRow.style.display = 'none';
-                    if (quote.coupon && !quote.coupon.valid) CartCoupon.clear();
-                }
                 document.getElementById('checkTotal').textContent = formatPrice(quote.total);
 
                 if (quote.problems.length) {
@@ -876,7 +862,6 @@
                 } else {
                     Cart.clear();
                 }
-                CartCoupon.clear();
             }
 
             // --- PLACE ORDER ---
@@ -904,7 +889,7 @@
                 let created;
                 try {
                     // The server recalculates the amount from the database
-                    created = await mrgApi('/api/checkout/create-order', { items: checkoutItems, couponCode: CartCoupon.get(), customer });
+                    created = await mrgApi('/api/checkout/create-order', { items: checkoutItems, customer });
                 } catch (e) {
                     const fields = e.body && e.body.fields;
                     if (fields) {
@@ -914,7 +899,7 @@
                         });
                     }
                     showNotice(e.message);
-                    if (e.status === 409) await loadQuote();   // stock or coupon changed
+                    if (e.status === 409) await loadQuote();   // stock changed
                     resetBtn();
                     return;
                 }

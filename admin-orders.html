@@ -318,7 +318,6 @@
                     ${row('Order Number', o.order_number)}
                     ${row('Date', o.created_at ? new Date(o.created_at).toLocaleString('en-IN', { timeZone: IST }) + ' IST' : '')}
                     ${o.subtotal != null ? row('Subtotal', formatINR(o.subtotal)) : ''}
-                    ${Number(o.discount) ? row('Coupon ' + esc(o.coupon_code || ''), '−' + formatINR(o.discount)) : ''}
                     ${o.shipping != null ? row('Shipping', formatINR(o.shipping)) : ''}
                     ${row('Total', formatINR(o.total), 'font-weight:700;color:var(--accent)')}
                     ${o.stock_issue ? `<div class="detail-row"><span class="label" style="color:var(--danger-text)">⚠ ${esc(o.stock_issue)}</span></div>` : ''}

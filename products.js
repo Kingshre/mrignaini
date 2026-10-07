@@ -107,6 +107,9 @@ const Catalog = (() => {
             shortDescription: p.short_description || '',
             category: p.category,
             price: p.price,
+            // MRP is shown crossed out only when it is higher than the selling price
+            mrp: p.mrp && p.mrp > p.price ? p.mrp : null,
+            discountPct: p.mrp && p.mrp > p.price ? Math.round((1 - p.price / p.mrp) * 100) : 0,
             description: p.description || '',
             specs: Array.isArray(p.specs) ? p.specs : [],
             care: p.care || '',
@@ -166,7 +169,13 @@ const Catalog = (() => {
     };
 })();
 
-// Shop grid card (category page). Prices shown are the prices charged.
+// Selling price, crossed-out MRP and "% off". Classes are styled in shop.css / product.html.
+function priceHtml(p) {
+    return `<span class="price-current">${formatPrice(p.price)}</span>` +
+        (p.mrp ? ` <span class="price-original">${formatPrice(p.mrp)}</span> <span class="price-discount">${p.discountPct}% off</span>` : '');
+}
+
+// Shop grid card (category page)
 function renderProductCard(p, index = 0) {
     const soldOut = !p.available;
     return `
@@ -179,9 +188,7 @@ function renderProductCard(p, index = 0) {
             </div>
             <div class="product-card-info">
                 <h3 class="product-card-name">${escapeHtml(p.name)}</h3>
-                <div class="product-card-price">
-                    <span class="price-current">${formatPrice(p.price)}</span>
-                </div>
+                <div class="product-card-price">${priceHtml(p)}</div>
             </div>
         </a>`;
 }

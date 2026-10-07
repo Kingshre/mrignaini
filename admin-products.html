@@ -68,7 +68,6 @@
         .field small { font-size: 0.72rem; color: var(--text-muted); }
         .field textarea { min-height: 90px; resize: vertical; line-height: 1.45; }
         .field textarea.tall { min-height: 160px; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.78rem; }
-        .field .private { color: #92400e; }
 
         .actions-row { display: flex; gap: 0.6rem; justify-content: flex-end; margin-top: 1rem; flex-wrap: wrap; }
 
@@ -197,7 +196,6 @@
 
         const slugify = s => String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
         const bySort = (a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0);
-        const privateOf = p => Array.isArray(p.product_private) ? (p.product_private[0] || {}) : (p.product_private || {});
         const sizesOf = p => {
             const sizes = [];
             (p.product_colors || []).slice().sort(bySort).forEach(c => (c.variants || []).slice().sort(bySort).forEach(v => { if (!sizes.includes(v.size)) sizes.push(v.size); }));
@@ -234,7 +232,7 @@
         async function loadProducts(selectId) {
             const { data, error } = await sb
                 .from('products')
-                .select('*, product_private(*), product_colors(*, variants(*))')
+                .select('*, product_colors(*, variants(*))')
                 .order('sort_order');
             if (error) { toast('Could not load products: ' + error.message, false); return; }
             products = data;
@@ -251,7 +249,7 @@
                     <img src="${esc(img)}" alt="" loading="lazy" onerror="imgFallback(this)">
                     <div class="meta">
                         <div class="name">${esc(p.short_name || p.name)}</div>
-                        <div class="sub">${formatINR(p.price)} · ${stock} in stock</div>
+                        <div class="sub">${formatINR(p.price)}${p.mrp > p.price ? ` <s>${formatINR(p.mrp)}</s>` : ''} · ${stock} in stock</div>
                         <div class="sub">${!p.is_active ? '<span class="badge badge-hidden">hidden</span> ' : ''}${p.is_test ? '<span class="badge badge-test">test</span> ' : ''}${stock === 0 ? '<span class="badge badge-cancelled">sold out</span>' : ''}</div>
                     </div>
                 </button>`;
@@ -276,7 +274,6 @@
             renderList();
             const p = id ? products.find(x => x.id === id) : null;
             if (id && !p) { document.getElementById('editor').innerHTML = '<div class="card empty-editor">Product not found.</div>'; return; }
-            const priv = p ? privateOf(p) : {};
             const v = (field, fallback = '') => esc(p ? (p[field] ?? fallback) : fallback);
 
             const detailsHtml = `
@@ -287,8 +284,8 @@
                         <div class="field full"><label for="f_name">Full name *</label><input id="f_name" required value="${v('name')}"></div>
                         <div class="field"><label for="f_id">URL id *</label><input id="f_id" required pattern="[a-z0-9]+(-[a-z0-9]+)*" value="${v('id')}" ${p ? 'readonly' : ''}><small>${p ? 'Fixed once created (links and orders use it).' : 'Lowercase letters, numbers and dashes, e.g. top-meher'}</small></div>
                         <div class="field"><label for="f_category">Category</label><select id="f_category">${CATEGORY_OPTIONS.map(c => `<option value="${c}" ${(p ? p.category : 'tops') === c ? 'selected' : ''}>${c}</option>`).join('')}</select></div>
-                        <div class="field"><label for="f_price">Price charged (₹) *</label><input id="f_price" type="number" min="0" step="1" required value="${v('price')}"></div>
-                        <div class="field"><label for="f_second" class="private">Second price (₹) — private, never shown on the site</label><input id="f_second" type="number" min="0" step="1" value="${esc(priv.second_price ?? '')}"></div>
+                        <div class="field"><label for="f_price">Selling price (₹) — what customers pay *</label><input id="f_price" type="number" min="0" step="1" required value="${v('price')}"></div>
+                        <div class="field"><label for="f_mrp">MRP (₹) — shown crossed out</label><input id="f_mrp" type="number" min="0" step="1" value="${v('mrp')}"><small id="mrpHint">Leave empty for no crossed-out price.</small></div>
                         <div class="field"><label for="f_short">Short name (homepage card)</label><input id="f_short" value="${v('short_name')}"></div>
                         <div class="field"><label for="f_tag">Tag</label><input id="f_tag" value="${v('tag')}" placeholder="New Arrival, Upcycled, Exclusive Drop…"></div>
                         <div class="field full"><label for="f_shortdesc">Short description (homepage card)</label><input id="f_shortdesc" value="${v('short_description')}"></div>
@@ -313,7 +310,16 @@
             document.getElementById('editor').innerHTML = detailsHtml + variantsHtml;
 
             const form = document.getElementById('detailsForm');
-            form.addEventListener('input', () => { dirty = true; document.getElementById('dirtyNote').hidden = false; });
+            const updateMrpHint = () => {
+                const price = parseInt(document.getElementById('f_price').value, 10);
+                const mrp = parseInt(document.getElementById('f_mrp').value, 10);
+                document.getElementById('mrpHint').textContent = mrp > price
+                    ? `Shows as ${formatINR(mrp)} crossed out, ${Math.round((1 - price / mrp) * 100)}% off.`
+                    : mrp === price ? 'Same as selling price: no crossed-out price is shown.'
+                    : mrp < price ? 'MRP is lower than the selling price — please fix.' : 'Leave empty for no crossed-out price.';
+            };
+            updateMrpHint();
+            form.addEventListener('input', () => { dirty = true; document.getElementById('dirtyNote').hidden = false; updateMrpHint(); });
             if (!p) document.getElementById('f_name').addEventListener('input', e => { document.getElementById('f_id').value = slugify(e.target.value); });
             document.getElementById('saveDetailsBtn').addEventListener('click', () => saveDetails(p));
             if (p) bindVariantsSection(p);
@@ -325,6 +331,9 @@
             const val = id => document.getElementById(id).value.trim();
             const nullable = id => val(id) || null;
             const id = p ? p.id : slugify(val('f_id'));
+            const price = parseInt(val('f_price'), 10);
+            const mrp = val('f_mrp') === '' ? null : parseInt(val('f_mrp'), 10);
+            if (mrp !== null && mrp < price) { toast('MRP must be the same as or higher than the selling price.', false); return; }
             if (!p && products.some(x => x.id === id)) { toast(`A product with id "${id}" already exists.`, false); return; }
 
             const row = {
@@ -333,7 +342,8 @@
                 short_name: nullable('f_short'),
                 short_description: nullable('f_shortdesc'),
                 category: val('f_category'),
-                price: parseInt(val('f_price'), 10),
+                price,
+                mrp,
                 tag: nullable('f_tag'),
                 description: document.getElementById('f_desc').value.trim(),
                 specs: textToSpecs(document.getElementById('f_specs').value),
@@ -352,11 +362,6 @@
             const { error } = p
                 ? await sb.from('products').update(row).eq('id', id)
                 : await sb.from('products').insert(row);
-            if (!error) {
-                const second = val('f_second');
-                const res = await sb.from('product_private').upsert({ product_id: id, second_price: second === '' ? null : parseInt(second, 10) });
-                if (res.error) toast('Saved, but the second price failed: ' + res.error.message, false);
-            }
             btn.disabled = false;
             if (error) { toast('Could not save: ' + error.message, false); return; }
             dirty = false;

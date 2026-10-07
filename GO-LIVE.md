@@ -4,13 +4,15 @@ Work in order. Each step says how to check it worked. Nothing here prints or sha
 
 ---
 
-## 0. Before anything: run migrations 004 and 005
+## 0. Before anything: migrations 004, 005 and 006
 
-Supabase → SQL Editor → run `supabase/migrations/004_admin_tools.sql` (done), then
-`supabase/migrations/005_exact_restock.sql`.
-004: admin photo uploads/deletes and "return to stock" on cancelled orders.
-005: records exactly how much stock each paid order took, so "return to stock" is exact
-even when two buyers raced for the last piece. Neither touches the live checkout.
+Supabase → SQL Editor, in order (004 and 005 are already done):
+- `004_admin_tools.sql` — admin photo uploads/deletes, "return to stock" on cancelled orders
+- `005_exact_restock.sql` — "return to stock" puts back exactly what an order took
+- `006_mrp_pricing_no_coupons.sql` — selling price + crossed-out MRP; all coupons switched off
+
+None of them touch the live checkout or old orders. **006 must run before the merge**: the new
+site reads the MRP column it adds.
 
 ---
 
@@ -112,7 +114,8 @@ git push origin main
 **Vercel** (Dashboard → Deployments → latest "Ready"), then on https://www.shopmrignaini.com:
 - [ ] Homepage shows all 7 products with photos
 - [ ] A product page: pick colour + size, add to cart
-- [ ] Cart shows colour/size, ₹99 shipping; MRIG200 applies on ₹999+
+- [ ] Product cards and pages show the crossed-out MRP and % off (e.g. Afsana ~~₹850~~ ₹650, 24% off)
+- [ ] Cart shows colour/size and flat ₹99 shipping (one Afsana = ₹749); no coupon box anywhere
 - [ ] Checkout shows the same total (stop before paying, or do step 6)
 - [ ] `/admin-orders.html` and `/admin-products.html` sign in and load
 - [ ] `https://www.shopmrignaini.com/server.js` → **404** (confirms `.vercelignore` works)

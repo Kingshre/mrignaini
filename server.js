@@ -125,32 +125,14 @@ function normalizeCartItems(items) {
     return [...merged].map(([variantId, qty]) => ({ variantId, qty }));
 }
 
-async function loadCoupon(code) {
-    const { data, error } = await supabase.from('coupons').select('*').eq('code', code).maybeSingle();
-    if (error) throw error;
-    return data;
-}
-
-function evaluateCoupon(coupon, subtotal) {
-    const now = new Date();
-    if (!coupon || !coupon.is_active) return { ok: false, message: 'Invalid coupon code. Please check and try again.' };
-    if (coupon.starts_at && new Date(coupon.starts_at) > now) return { ok: false, message: 'This coupon is not active yet.' };
-    if (coupon.ends_at && new Date(coupon.ends_at) < now) return { ok: false, message: 'This coupon has expired.' };
-    if (coupon.max_uses != null && coupon.uses >= coupon.max_uses) return { ok: false, message: 'This coupon has reached its usage limit.' };
-    if (subtotal < Number(coupon.min_order)) {
-        return { ok: false, message: `Minimum order of ₹${Number(coupon.min_order).toLocaleString('en-IN')} required for this coupon.` };
-    }
-    const raw = coupon.type === 'percent' ? Math.floor(subtotal * Number(coupon.value) / 100) : Number(coupon.value);
-    return { ok: true, discount: Math.min(raw, subtotal), message: coupon.description || 'Coupon applied.' };
-}
-
 // The single source of truth for what an order costs. Prices always come from the DB.
-async function priceCart(rawItems, couponCode, { allowTest = false } = {}) {
+// No coupons: discount is always 0 and any coupon code sent by a browser is ignored.
+async function priceCart(rawItems, { allowTest = false } = {}) {
     requireDb();
     const items = normalizeCartItems(rawItems);
     const { data: rows, error } = await supabase
         .from('variants')
-        .select('id, size, stock, is_sold_out, color_id, product_colors(id, name, images, is_active), products(id, name, price, is_active, is_test)')
+        .select('id, size, stock, is_sold_out, color_id, product_colors(id, name, images, is_active), products(id, name, price, mrp, is_active, is_test)')
         .in('id', items.map(i => i.variantId));
     if (error) throw error;
     const byId = new Map(rows.map(r => [r.id, r]));
@@ -180,7 +162,7 @@ async function priceCart(rawItems, couponCode, { allowTest = false } = {}) {
             variantId, productId: p.id, colorId: c.id,
             name: p.name, color: c.name, size: v.size,
             image: (c.images && c.images[0]) || null,
-            qty, unitPrice: p.price, lineTotal: p.price * qty,
+            qty, unitPrice: p.price, unitMrp: p.mrp && p.mrp > p.price ? p.mrp : null, lineTotal: p.price * qty,
             isTest: !!p.is_test
         });
     }
@@ -188,16 +170,7 @@ async function priceCart(rawItems, couponCode, { allowTest = false } = {}) {
     const subtotal = lines.reduce((s, l) => s + l.lineTotal, 0);
     const shipping = lines.length ? SHIPPING_FEE : 0;
 
-    let coupon = null;
-    let discount = 0;
-    const code = String(couponCode || '').trim().toUpperCase();
-    if (code) {
-        const result = evaluateCoupon(await loadCoupon(code), subtotal);
-        coupon = { code, valid: result.ok, message: result.message };
-        if (result.ok) discount = result.discount;
-    }
-
-    return { lines, problems, subtotal, shipping, discount, coupon, total: subtotal - discount + shipping };
+    return { lines, problems, subtotal, shipping, discount: 0, total: subtotal + shipping };
 }
 
 function validateCustomer(c) {
@@ -225,7 +198,7 @@ function orderItemsForStorage(lines) {
     return lines.map(l => ({
         variantId: l.variantId, productId: l.productId, colorId: l.colorId,
         name: l.name, color: l.color, size: l.size,
-        qty: l.qty, unitPrice: l.unitPrice, lineTotal: l.lineTotal
+        qty: l.qty, unitPrice: l.unitPrice, unitMrp: l.unitMrp, lineTotal: l.lineTotal
     }));
 }
 
@@ -244,10 +217,10 @@ app.get('/api/health', (req, res) => {
     res.json({ ok: true, database: !!supabase, payments: !!razorpay, paymentMode: razorpay ? rzpMode : null });
 });
 
-// Price a cart (used by cart + checkout to display totals and validate coupons)
+// Price a cart (used by cart + checkout to display totals)
 app.post('/api/checkout/quote', asyncRoute(async (req, res) => {
     const { isAdmin } = await getRequestUser(req);
-    const quote = await priceCart(req.body.items, req.body.couponCode, { allowTest: isAdmin });
+    const quote = await priceCart(req.body.items, { allowTest: isAdmin });
     res.json({ success: true, ...quote });
 }));
 
@@ -258,10 +231,9 @@ app.post('/api/checkout/create-order', asyncRoute(async (req, res) => {
 
     const { user, isAdmin } = await getRequestUser(req);
     const customer = validateCustomer(req.body.customer);
-    const quote = await priceCart(req.body.items, req.body.couponCode, { allowTest: isAdmin });
+    const quote = await priceCart(req.body.items, { allowTest: isAdmin });
     if (quote.problems.length) throw new HttpError(409, quote.problems[0].message, { problems: quote.problems });
     if (!quote.lines.length) throw new HttpError(400, 'Your cart is empty.');
-    if (quote.coupon && !quote.coupon.valid) throw new HttpError(409, quote.coupon.message, { coupon: quote.coupon });
 
     const isTest = quote.lines.every(l => l.isTest);
     const record = {
@@ -275,8 +247,8 @@ app.post('/api/checkout/create-order', asyncRoute(async (req, res) => {
         items: orderItemsForStorage(quote.lines),
         subtotal: quote.subtotal,
         shipping: quote.shipping,
-        discount: quote.discount,
-        coupon_code: quote.coupon && quote.coupon.valid ? quote.coupon.code : null,
+        discount: 0,
+        coupon_code: null,
         total: quote.total,
         status: 'pending',
         payment_status: 'pending',
@@ -401,7 +373,6 @@ function sendOrderEmails(order) {
     const address = escapeHtml([order.address, order.city, order.state, order.pincode].filter(Boolean).join(', '));
     const totals = `
         <p>Subtotal: ${fmt(order.subtotal)}<br>
-        ${Number(order.discount) ? `Discount (${escapeHtml(order.coupon_code)}): −${fmt(order.discount)}<br>` : ''}
         Shipping: ${fmt(order.shipping)}<br>
         <strong>Total paid: ${fmt(order.total)}</strong></p>`;
 

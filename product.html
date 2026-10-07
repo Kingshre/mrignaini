@@ -926,17 +926,17 @@
     <div class="announcement-bar" id="announcementBar">
         <div class="announcement-track">
             <div class="announcement-content">
-                <span class="ann-item">Use code <span class="ann-code" data-code="MRIG500">MRIG500</span> for <strong>₹500 off</strong> above ₹3999</span>
+                <span class="ann-item">Flat ₹99 shipping across India</span>
                 <span class="ann-sep">✦</span>
-                <span class="ann-item">Use code <span class="ann-code" data-code="MRIG1000">MRIG1000</span> for <strong>₹1000 off</strong> above ₹7999</span>
+                <span class="ann-item">Delivery in 0–7 days</span>
                 <span class="ann-sep">✦</span>
                 <span class="ann-item">✋ Handcrafted in Jaipur</span>
                 <span class="ann-sep">✦</span>
                 <span class="ann-item">🎨 Block printed with love</span>
                 <span class="ann-sep">✦</span>
-                <span class="ann-item">Use code <span class="ann-code" data-code="MRIG500">MRIG500</span> for <strong>₹500 off</strong> above ₹3999</span>
+                <span class="ann-item">Flat ₹99 shipping across India</span>
                 <span class="ann-sep">✦</span>
-                <span class="ann-item">Use code <span class="ann-code" data-code="MRIG1000">MRIG1000</span> for <strong>₹1000 off</strong> above ₹7999</span>
+                <span class="ann-item">Delivery in 0–7 days</span>
                 <span class="ann-sep">✦</span>
                 <span class="ann-item">✋ Handcrafted in Jaipur</span>
                 <span class="ann-sep">✦</span>
@@ -1016,14 +1016,12 @@
                 <h1 class="product-title" id="productTitle"></h1>
                 <div class="product-pricing">
                     <span class="price-sale" id="priceSale"></span>
+                    <span class="price-original" id="priceOriginal" hidden></span>
+                    <span class="price-discount" id="priceDiscount" hidden></span>
                 </div>
                 <div class="delivery-message">
                     <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                     Delivery in 0–7 days
-                </div>
-                <div class="offers-hint" id="offersHint">
-                    <svg viewBox="0 0 24 24" width="14" height="14"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    <span>Offers available at checkout — check codes above</span>
                 </div>
 
                 <p class="product-desc" id="productDesc"></p>
@@ -1179,7 +1177,6 @@
     <script src="products.js"></script>
     <script src="cart.js"></script>
     <script src="auth.js"></script>
-    <script src="coupons.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
             // --- MOBILE NAV ---
@@ -1224,6 +1221,15 @@
             else tagEl.style.display = 'none';
             document.getElementById('productTitle').textContent = product.name;
             document.getElementById('priceSale').textContent = formatPrice(product.price);
+            if (product.mrp) {
+                const mrpEl = document.getElementById('priceOriginal');
+                mrpEl.textContent = formatPrice(product.mrp);
+                mrpEl.setAttribute('aria-label', 'MRP ' + formatPrice(product.mrp));
+                mrpEl.hidden = false;
+                const off = document.getElementById('priceDiscount');
+                off.textContent = `${product.discountPct}% off`;
+                off.hidden = false;
+            }
             document.getElementById('productDesc').innerHTML = escapeHtml(product.description).replace(/\n/g, '<br>');
 
             // --- STATE ---

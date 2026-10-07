@@ -1317,3 +1317,21 @@ img.img-placeholder {
     opacity: 0.5;
     cursor: not-allowed;
 }
+
+.cart-item-mrp {
+    margin-left: 0.4rem;
+    font-size: 0.85em;
+    font-weight: 400;
+    color: var(--clr-text-light);
+}
+
+.cart-notice {
+    font-size: 0.8rem;
+    color: #A82039;
+    text-align: center;
+    margin: 0 0 0.75rem;
+}
+
+.cart-notice:empty {
+    display: none;
+}
