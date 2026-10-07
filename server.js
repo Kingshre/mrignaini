@@ -46,6 +46,9 @@ const transporter = process.env.SMTP_USER ? nodemailer.createTransport({
     auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS }
 }) : null;
 
+// Gmail (and most SMTP providers) only send "from" the authenticated account
+const MAIL_FROM = process.env.SMTP_FROM || `"Mrignaini" <${process.env.SMTP_USER}>`;
+
 function escapeHtml(value) {
     return String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
@@ -403,7 +406,7 @@ function sendOrderEmails(order) {
         <strong>Total paid: ${fmt(order.total)}</strong></p>`;
 
     const customerMail = {
-        from: '"Mrignaini Store" <no-reply@mrignaini.com>',
+        from: MAIL_FROM,
         to: order.email,
         subject: `Order Confirmation - ${order.order_number}`,
         html: `<div style="font-family:sans-serif;color:#333">
@@ -415,7 +418,7 @@ function sendOrderEmails(order) {
             <p>Thank you for shopping with Mrignaini.</p></div>`
     };
     const adminMail = {
-        from: '"Mrignaini System" <no-reply@mrignaini.com>',
+        from: MAIL_FROM,
         to: process.env.STORE_OWNER_EMAIL,
         subject: `New Order Received - ${order.order_number}`,
         html: `<div style="font-family:sans-serif;color:#333">
