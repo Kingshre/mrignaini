@@ -4,11 +4,13 @@ Work in order. Each step says how to check it worked. Nothing here prints or sha
 
 ---
 
-## 0. Before anything: run migration 004
+## 0. Before anything: run migrations 004 and 005
 
-Supabase → SQL Editor → run `supabase/migrations/004_admin_tools.sql`.
-Needed for admin photo uploads/deletes and "return to stock" on cancelled orders.
-It does not touch the live checkout.
+Supabase → SQL Editor → run `supabase/migrations/004_admin_tools.sql` (done), then
+`supabase/migrations/005_exact_restock.sql`.
+004: admin photo uploads/deletes and "return to stock" on cancelled orders.
+005: records exactly how much stock each paid order took, so "return to stock" is exact
+even when two buyers raced for the last piece. Neither touches the live checkout.
 
 ---
 
