@@ -29,6 +29,10 @@ const transporter = nodemailer.createTransport({
     }
 });
 
+function escapeHtml(value) {
+    return String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -36,7 +40,10 @@ const PORT = process.env.PORT || 3000;
 const allowedOrigins = [
     'https://www.shopmrignaini.com',
     'https://shopmrignaini.com',
-    'http://localhost:3000'
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+    'http://localhost:5500',
+    'http://127.0.0.1:5500'
 ];
 
 if (process.env.FRONTEND_URL) {
@@ -60,7 +67,7 @@ const razorpayKeyId = process.env.RAZORPAY_KEY_ID;
 const razorpayKeySecret = process.env.RAZORPAY_KEY_SECRET;
 
 console.log('\n--- RAZORPAY DEBUG INFO ---');
-console.log('Loaded RAZORPAY_KEY_ID:', razorpayKeyId ? razorpayKeyId : 'UNDEFINED');
+console.log('RAZORPAY_KEY_ID:', !razorpayKeyId ? 'UNDEFINED' : razorpayKeyId.startsWith('rzp_test_') ? 'set (TEST mode)' : razorpayKeyId.startsWith('rzp_live_') ? 'set (LIVE mode)' : 'set (unrecognised)');
 console.log('---------------------------\n');
 
 if (!razorpayKeyId || !razorpayKeySecret || razorpayKeySecret === 'your_razorpay_secret_here') {
@@ -149,7 +156,7 @@ app.post('/verify-payment', async (req, res) => {
                             total: total || 0,
                             payment_id: razorpay_payment_id,
                             razorpay_order_id: razorpay_order_id
-                            created_at: new Date().toISOString()
+                            // created_at is set by the database (default now())
                         });
 
                     if (error) {
@@ -168,11 +175,17 @@ app.post('/verify-payment', async (req, res) => {
 
             // 3. Prepare Email content if orderDetails exists
             if (orderDetails) {
-                const { name, email, phone, address, items, total } = orderDetails;
+                // Customer input is escaped before going into email HTML
+                const name = escapeHtml(orderDetails.name);
+                const email = escapeHtml(orderDetails.email);
+                const phone = escapeHtml(orderDetails.phone);
+                const address = escapeHtml(orderDetails.address);
+                const total = escapeHtml(orderDetails.total);
+                const items = orderDetails.items;
 
                 let itemsListHtml = '';
                 if (items && Array.isArray(items)) {
-                    itemsListHtml = items.map(i => `<li>${i.qty}x Product ID ${i.productId} (Size: ${i.size})</li>`).join('');
+                    itemsListHtml = items.map(i => `<li>${escapeHtml(i.qty)}x Product ID ${escapeHtml(i.productId)} (Size: ${escapeHtml(i.size)}${i.color ? ', Colour: ' + escapeHtml(i.color) : ''})</li>`).join('');
                 }
 
                 const customerMailOptions = {
@@ -245,6 +258,12 @@ app.post('/verify-payment', async (req, res) => {
     }
 });
 
-app.listen(PORT, () => {
+// Express 5 passes listen errors (e.g. port already in use) to this callback
+app.listen(PORT, (err) => {
+    if (err) {
+        console.error(`❌ Could not start server on port ${PORT}: ${err.code || err.message}`);
+        if (err.code === 'EADDRINUSE') console.error(`   Another app is using port ${PORT}. Set PORT=<free port> in .env or the shell.`);
+        process.exit(1);
+    }
     console.log(`Mrignaini Checkout server running on http://localhost:${PORT}`);
 });

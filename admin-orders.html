@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin — Orders Dashboard | Mrignaini</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" href="assets/images/logo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -413,6 +415,63 @@
             word-break: break-all;
         }
 
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        [hidden] {
+            display: none !important;
+        }
+
+        .badge-pending { background: #fef3c7; color: #92400e; }
+        .badge-confirmed { background: #dbeafe; color: #1e40af; }
+        .badge-shipped { background: #ede9fe; color: #5b21b6; }
+        .badge-delivered { background: var(--accent-light); color: var(--accent-text); }
+        .badge-cancelled { background: var(--danger-bg); color: var(--danger-text); }
+
+        .item-meta {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+
+        /* ── Login ── */
+        .login-wrap {
+            min-height: calc(100vh - 60px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem 1rem;
+        }
+
+        .login-card {
+            width: min(380px, 100%);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .login-card h2 { font-size: 1.15rem; }
+        .login-sub { font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 0.75rem; }
+        .login-card label { font-size: 0.78rem; font-weight: 500; color: var(--text-secondary); }
+
+        .login-card input {
+            padding: 0.6rem 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font: inherit;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-card .btn { justify-content: center; padding: 0.65rem; margin-top: 0.25rem; }
+        .login-msg { font-size: 0.8rem; color: var(--danger-text); min-height: 1.2em; }
+
         @media (max-width: 768px) {
             .container {
                 padding: 1rem;
@@ -433,13 +492,31 @@
 
     <header class="admin-header">
         <h1><span class="dot"></span> Orders Dashboard</h1>
-        <span class="header-meta" id="lastUpdated"></span>
+        <div class="header-right">
+            <span class="header-meta" id="lastUpdated"></span>
+            <span class="header-meta" id="adminEmail"></span>
+            <button class="btn" id="signOutBtn" onclick="signOut()" hidden>Sign out</button>
+        </div>
     </header>
 
-    <div class="container">
+    <!-- Admin Login -->
+    <div class="login-wrap" id="loginView" hidden>
+        <form class="login-card" id="loginForm">
+            <h2>Admin sign in</h2>
+            <p class="login-sub">Only Mrignaini admins can view orders.</p>
+            <label for="loginEmail">Email</label>
+            <input type="email" id="loginEmail" autocomplete="username" required>
+            <label for="loginPassword">Password</label>
+            <input type="password" id="loginPassword" autocomplete="current-password" required>
+            <button type="submit" class="btn btn-primary" id="loginBtn">Sign in</button>
+            <p class="login-msg" id="loginMsg" role="alert"></p>
+        </form>
+    </div>
+
+    <div class="container" id="dashboardView" hidden>
         <!-- Config Banner -->
         <div class="config-banner" id="configBanner">
-            ⚠️ Supabase credentials not configured. Set SUPABASE_URL and SUPABASE_ANON_KEY in this file.
+            ⚠️ Supabase is not configured. Check SUPABASE_URL and SUPABASE_ANON_KEY in config.js.
         </div>
 
         <!-- Stats -->
@@ -484,6 +561,7 @@
                             <th>Items</th>
                             <th>Total</th>
                             <th>Payment ID</th>
+                            <th>Status</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -517,23 +595,107 @@
 
     <!-- Supabase JS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script src="products.js"></script>
     <script>
-        // ─────────────────────────────────────────
-        // ⬇ REPLACE WITH YOUR SUPABASE CREDENTIALS
-        // ─────────────────────────────────────────
-        const SUPABASE_URL = 'https://ltdqrujonwgnfivhhfya.supabase.co';
-        const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0ZHFydWpvbndnbmZpdmhoZnlhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3NTA2MzUsImV4cCI6MjA5MTMyNjYzNX0.Di4IQ4zFpQbIIIIser_vEWtNJZX_XIg7OnYzXZSKk_s';
-
+        // Reads go straight to Supabase with the signed-in admin's session.
+        // Row Level Security only returns orders when public.is_admin() is true.
         let sb = null;
-
-        if (SUPABASE_URL && !SUPABASE_URL.includes('YOUR_')) {
-            sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
-        } else {
-            document.getElementById('configBanner').style.display = 'block';
+        if (window.supabase && typeof MRG_CONFIG !== 'undefined' && MRG_CONFIG.SUPABASE_URL && MRG_CONFIG.SUPABASE_ANON_KEY) {
+            sb = window.supabase.createClient(MRG_CONFIG.SUPABASE_URL, MRG_CONFIG.SUPABASE_ANON_KEY);
         }
 
         // ── Cached orders for drawer ──
         let ordersCache = [];
+
+        function esc(value) {
+            return String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        }
+
+        function formatINR(n) {
+            return '₹' + Number(n || 0).toLocaleString('en-IN');
+        }
+
+        // Orders store productId; older orders may have a colour suffix (e.g. top-basanti-blue).
+        function productName(item) {
+            if (item.name) return item.name;
+            const id = item.productId || '';
+            if (typeof getProductById === 'function') {
+                let p = getProductById(id);
+                for (let cut = id.lastIndexOf('-'); !p && cut > 0; cut = id.lastIndexOf('-', cut - 1)) {
+                    p = getProductById(id.slice(0, cut));
+                }
+                if (p) return p.name;
+            }
+            return id || 'Item';
+        }
+
+        function parseItems(o) {
+            try {
+                const items = typeof o.items === 'string' ? JSON.parse(o.items) : o.items;
+                return Array.isArray(items) ? items : [];
+            } catch { return []; }
+        }
+
+        function itemMeta(i) {
+            return [i.size ? `Size ${i.size}` : '', i.color ? i.color : ''].filter(Boolean).join(' · ');
+        }
+
+        // ── Auth gate ──
+        function showView(view) {
+            document.getElementById('loginView').hidden = view !== 'login';
+            document.getElementById('dashboardView').hidden = view !== 'dashboard';
+            document.getElementById('signOutBtn').hidden = view !== 'dashboard';
+        }
+
+        async function checkAccess() {
+            if (!sb) {
+                showView('dashboard');
+                document.getElementById('configBanner').style.display = 'block';
+                document.getElementById('loadingState').classList.add('hidden');
+                return;
+            }
+            const { data: { session } } = await sb.auth.getSession();
+            if (!session) { showView('login'); return; }
+
+            const { data: isAdmin, error } = await sb.rpc('is_admin');
+            if (error || !isAdmin) {
+                await sb.auth.signOut();
+                showView('login');
+                document.getElementById('loginMsg').textContent = error
+                    ? 'Could not verify admin access: ' + error.message
+                    : 'This account is not an admin.';
+                return;
+            }
+            document.getElementById('adminEmail').textContent = session.user.email;
+            showView('dashboard');
+            fetchOrders();
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('loginBtn');
+            const msg = document.getElementById('loginMsg');
+            msg.textContent = '';
+            btn.disabled = true;
+            btn.textContent = 'Signing in…';
+            const { error } = await sb.auth.signInWithPassword({
+                email: document.getElementById('loginEmail').value.trim(),
+                password: document.getElementById('loginPassword').value
+            });
+            btn.disabled = false;
+            btn.textContent = 'Sign in';
+            if (error) { msg.textContent = error.message; return; }
+            checkAccess();
+        });
+
+        async function signOut() {
+            await sb.auth.signOut();
+            ordersCache = [];
+            document.getElementById('ordersBody').innerHTML = '';
+            document.getElementById('adminEmail').textContent = '';
+            showView('login');
+        }
 
         // ── Fetch & Render ──
         async function fetchOrders() {
@@ -547,87 +709,88 @@
             error.classList.add('hidden');
             empty.classList.add('hidden');
 
-            if (!sb) { loading.classList.add('hidden'); return; }
-
             try {
                 const { data, error: err } = await sb
                     .from('orders')
                     .select('*')
-                    .order('created_at', { ascending: false });
+                    .order('created_at', { ascending: false, nullsFirst: false });
 
                 if (err) throw err;
                 loading.classList.add('hidden');
 
-                if (!data || data.length === 0) {
+                ordersCache = data || [];
+                updateStats(ordersCache);
+                if (ordersCache.length === 0) {
                     empty.classList.remove('hidden');
-                    updateStats([]);
                     return;
                 }
-
-                ordersCache = data;
-                updateStats(data);
-                renderTable(data);
-                document.getElementById('lastUpdated').textContent = 'Updated ' + new Date().toLocaleTimeString();
+                renderTable(ordersCache);
+                document.getElementById('lastUpdated').textContent = 'Updated ' + new Date().toLocaleTimeString('en-IN');
 
             } catch (e) {
                 console.error('Fetch error:', e);
                 loading.classList.add('hidden');
                 error.classList.remove('hidden');
-                error.textContent = 'Error: ' + e.message;
+                error.textContent = 'Error loading orders: ' + (e.message || e);
             }
+        }
+
+        function formatDate(value) {
+            if (!value) return { date: '—', time: '' };
+            const d = new Date(value);
+            return {
+                date: d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: '2-digit' }),
+                time: d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })
+            };
+        }
+
+        function statusBadge(status) {
+            const s = status || 'pending';
+            return `<span class="badge badge-${esc(s)}">${esc(s)}</span>`;
         }
 
         function renderTable(orders) {
             const tbody = document.getElementById('ordersBody');
             tbody.innerHTML = orders.map((o, idx) => {
-                const date = new Date(o.created_at);
-                const dateStr = date.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: '2-digit' });
-                const timeStr = date.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+                const { date, time } = formatDate(o.created_at);
 
-                // Build address string
+                // The address column may already contain city/state/pincode (checkout builds a full address).
                 let addr = o.address || '';
-                if (o.city) addr += (addr ? ', ' : '') + o.city;
-                if (o.state) addr += ', ' + o.state;
-                if (o.pincode) addr += ' – ' + o.pincode;
+                for (const part of [o.city, o.state, o.pincode]) {
+                    if (part && !addr.includes(part)) addr += (addr ? ', ' : '') + part;
+                }
 
-                // Format items
-                let itemsHtml = '';
-                try {
-                    const items = typeof o.items === 'string' ? JSON.parse(o.items) : o.items;
-                    if (Array.isArray(items) && items.length) {
-                        itemsHtml = items.map(i => {
-                            const name = i.name || i.productId || 'Item';
-                            const size = i.size ? ` (${i.size})` : '';
-                            return `<div class="item-line">${i.qty || 1}× ${name}${size}</div>`;
-                        }).join('');
-                    } else {
-                        itemsHtml = '<span style="color:var(--text-muted)">—</span>';
-                    }
-                } catch { itemsHtml = '<span style="color:var(--text-muted)">—</span>'; }
+                const items = parseItems(o);
+                const itemsHtml = items.length
+                    ? items.map(i => `<div class="item-line">${esc(i.qty || 1)}× ${esc(productName(i))}
+                        <div class="item-meta">${esc(itemMeta(i))}</div></div>`).join('')
+                    : '<span style="color:var(--text-muted)">—</span>';
 
                 return `<tr onclick="openDrawer(${idx})" style="cursor:pointer">
-                    <td class="col-order">${o.order_number || '—'}</td>
-                    <td class="col-date">${dateStr}<br>${timeStr}</td>
-                    <td class="col-name">${o.customer_name || '—'}</td>
-                    <td class="col-contact">${o.phone || ''}<br>${o.email || ''}</td>
-                    <td class="col-address">${addr || '—'}</td>
+                    <td class="col-order">${esc(o.order_number || '—')}</td>
+                    <td class="col-date">${esc(date)}<br>${esc(time)}</td>
+                    <td class="col-name">${esc(o.customer_name || '—')}</td>
+                    <td class="col-contact">${esc(o.phone)}<br>${esc(o.email)}</td>
+                    <td class="col-address">${esc(addr || '—')}</td>
                     <td class="col-items">${itemsHtml}</td>
-                    <td class="col-total">₹${Number(o.total || 0).toLocaleString('en-IN')}</td>
-                    <td class="col-payment">${o.payment_id || '—'}</td>
+                    <td class="col-total">${formatINR(o.total)}</td>
+                    <td class="col-payment">${esc(o.payment_id || '—')}</td>
+                    <td>${statusBadge(o.status)}</td>
                     <td><button class="btn" onclick="event.stopPropagation(); openDrawer(${idx})">View</button></td>
                 </tr>`;
             }).join('');
         }
 
         function updateStats(orders) {
+            const live = orders.filter(o => o.status !== 'cancelled');
             document.getElementById('statTotal').textContent = orders.length;
 
             const todayStart = new Date(); todayStart.setHours(0, 0, 0, 0);
-            const todayCount = orders.filter(o => new Date(o.created_at) >= todayStart).length;
+            const todayCount = orders.filter(o => o.created_at && new Date(o.created_at) >= todayStart).length;
             document.getElementById('statToday').textContent = todayCount;
 
-            const revenue = orders.reduce((sum, o) => sum + Number(o.total || 0), 0);
-            document.getElementById('statRevenue').textContent = '₹' + revenue.toLocaleString('en-IN');
+            const revenue = live.reduce((sum, o) => sum + Number(o.total || 0), 0);
+            document.getElementById('statRevenue').textContent = formatINR(revenue);
         }
 
         // ── Drawer ──
@@ -637,44 +800,34 @@
 
             document.getElementById('drawerTitle').textContent = o.order_number || 'Order Details';
 
-            const date = new Date(o.created_at);
+            const items = parseItems(o);
+            const itemsHtml = items.length
+                ? items.map(i => `<div class="detail-row"><span class="label">${esc(i.qty || 1)}× ${esc(productName(i))}</span><span class="value">${esc(itemMeta(i))}</span></div>`).join('')
+                : '<div class="detail-row"><span class="label">No items data</span></div>';
 
-            // Format items for drawer
-            let itemsHtml = '';
-            try {
-                const items = typeof o.items === 'string' ? JSON.parse(o.items) : o.items;
-                if (Array.isArray(items) && items.length) {
-                    itemsHtml = items.map(i => {
-                        const name = i.name || i.productId || 'Item';
-                        const size = i.size ? `Size: ${i.size}` : '';
-                        const color = i.color ? `Color: ${i.color}` : '';
-                        const meta = [size, color].filter(Boolean).join(' · ');
-                        return `<div class="detail-row"><span class="label">${i.qty || 1}× ${name}</span><span class="value">${meta}</span></div>`;
-                    }).join('');
-                } else {
-                    itemsHtml = '<div class="detail-row"><span class="label">No items data</span></div>';
-                }
-            } catch { itemsHtml = '<div class="detail-row"><span class="label">Invalid items data</span></div>'; }
+            const row = (label, value, style = '') =>
+                `<div class="detail-row"><span class="label">${label}</span><span class="value" style="${style}">${esc(value || '—')}</span></div>`;
 
             document.getElementById('drawerBody').innerHTML = `
                 <div class="detail-section">
                     <h4>Order Info</h4>
-                    <div class="detail-row"><span class="label">Order Number</span><span class="value">${o.order_number || '—'}</span></div>
-                    <div class="detail-row"><span class="label">Date</span><span class="value">${date.toLocaleString('en-IN')}</span></div>
-                    <div class="detail-row"><span class="label">Total</span><span class="value" style="font-weight:700;color:var(--accent)">₹${Number(o.total || 0).toLocaleString('en-IN')}</span></div>
+                    ${row('Order Number', o.order_number)}
+                    ${row('Date', o.created_at ? new Date(o.created_at).toLocaleString('en-IN') : '')}
+                    <div class="detail-row"><span class="label">Status</span><span class="value">${statusBadge(o.status)}</span></div>
+                    ${row('Total', formatINR(o.total), 'font-weight:700;color:var(--accent)')}
                 </div>
                 <div class="detail-section">
                     <h4>Customer</h4>
-                    <div class="detail-row"><span class="label">Name</span><span class="value">${o.customer_name || '—'}</span></div>
-                    <div class="detail-row"><span class="label">Phone</span><span class="value">${o.phone || '—'}</span></div>
-                    <div class="detail-row"><span class="label">Email</span><span class="value">${o.email || '—'}</span></div>
+                    ${row('Name', o.customer_name)}
+                    ${row('Phone', o.phone)}
+                    ${row('Email', o.email)}
                 </div>
                 <div class="detail-section">
                     <h4>Shipping Address</h4>
-                    <div class="detail-row"><span class="label">Address</span><span class="value">${o.address || '—'}</span></div>
-                    <div class="detail-row"><span class="label">City</span><span class="value">${o.city || '—'}</span></div>
-                    <div class="detail-row"><span class="label">State</span><span class="value">${o.state || '—'}</span></div>
-                    <div class="detail-row"><span class="label">Pincode</span><span class="value">${o.pincode || '—'}</span></div>
+                    ${row('Address', o.address)}
+                    ${row('City', o.city)}
+                    ${row('State', o.state)}
+                    ${row('Pincode', o.pincode)}
                 </div>
                 <div class="detail-section">
                     <h4>Items</h4>
@@ -682,8 +835,8 @@
                 </div>
                 <div class="detail-section">
                     <h4>Payment</h4>
-                    <div class="detail-row"><span class="label">Payment ID</span><span class="value" style="font-family:monospace;font-size:0.75rem">${o.payment_id || '—'}</span></div>
-                    <div class="detail-row"><span class="label">Razorpay Order ID</span><span class="value" style="font-family:monospace;font-size:0.75rem">${o.razorpay_order_id || '—'}</span></div>
+                    ${row('Payment ID', o.payment_id, 'font-family:monospace;font-size:0.75rem')}
+                    ${row('Razorpay Order ID', o.razorpay_order_id, 'font-family:monospace;font-size:0.75rem')}
                 </div>
             `;
 
@@ -700,7 +853,7 @@
         document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
 
         // Init
-        document.addEventListener('DOMContentLoaded', fetchOrders);
+        document.addEventListener('DOMContentLoaded', checkAccess);
     </script>
 </body>
 
