@@ -145,9 +145,11 @@ drop trigger if exists orders_default_paid on public.orders;
 create trigger orders_default_paid before insert on public.orders
     for each row execute function public.orders_default_paid();
 
-create unique index if not exists orders_order_number_key on public.orders (order_number);
-create unique index if not exists orders_razorpay_order_id_key on public.orders (razorpay_order_id)
-    where razorpay_order_id is not null;
+-- Unique indexes on order_number / razorpay_order_id are deliberately NOT here:
+-- the live server (7903ea3) could hit them (same-millisecond order numbers,
+-- repeated verify calls). They are in 003, to run after the new server is live.
+create index if not exists orders_order_number_idx on public.orders (order_number);
+create index if not exists orders_razorpay_order_id_idx on public.orders (razorpay_order_id);
 create index if not exists orders_user_idx on public.orders (user_id);
 
 -- ── Mark an order paid + decrement stock, atomically & idempotently ──
